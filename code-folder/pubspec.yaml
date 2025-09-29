@@ -103,7 +103,7 @@ dev_dependencies:
   flutter_launcher_icons: ^0.14.2
   flutter_localization: ^0.3.3
   db_codegen:
-    path: C:\Users\BOSS\Downloads\Dukhan DevOps Docs\jenkins\dkb_retail\ret_components\packages\db_codegen
+    path: "%WORKSPACE%\\ret_components\\packages\\db_codegen"
 
 dependency_overrides:
   intl: ">=0.17.0 <0.21.0"
