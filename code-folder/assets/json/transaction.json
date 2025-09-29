@@ -1,0 +1,38 @@
+{
+  "status": "SUCCESS",
+  "message": "Account detail fetch successfully",
+    "transactions": [
+      {
+        "txn_id": "TXN213SKDJ91032",
+        "name": "Salary",
+        "amount": 12500,
+        "time_stamp": 1732784577,
+        "logo": "http: //surl.li/nyxorr",
+        "txn_type": "debit"
+      },
+      {
+        "txn_id": "TXN213SKDJ91032",
+        "name": "Wifi Bill",
+        "amount": 2500,
+        "time_stamp": 1732784577,
+        "logo": "http: //surl.li/nyxorr",
+        "txn_type": "credit"
+      },
+      {
+        "txn_id": "TXN213SKDJ91032",
+        "name": "EB ill",
+        "amount": 2500,
+        "time_stamp": 1732784577,
+        "logo": "http: //surl.li/nyxorr",
+        "txn_type": "credit"
+      },
+      {
+        "txn_id": "TXN213SKDJ91032",
+        "name": "Rent",
+        "amount": 1800,
+        "time_stamp": 1732784577,
+        "logo": "http: //surl.li/nyxorr",
+        "txn_type": "debit"
+      }
+    ]
+}

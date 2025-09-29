@@ -1,0 +1,42 @@
+{
+  "status": "SUCCESS",
+  "message": "Card list fetch successfully",
+  "data": [
+    {
+      "id": "f0d68e54-1be5-46f0-9676-8d351742d30a",
+      "holder_name": "CIROMA CHINEYE ADEKUNLE",
+      "validity_month": 12,
+      "validity_year": 24,
+      "number": "5355 0348 5945 5045",
+      "card_type": "master",
+      "card_type_logo": "http://surl.li/cocqew",
+      "bank_name": "master",
+      "account_type": "debit",
+      "bank_logo": "http://surl.li/dwcdqc"
+    },
+    {
+      "id": "a91c07d2-b64d-4055-ba5a-ecac202813df",
+      "holder_name": "CIROMA CHINEYE ADEKUNLE",
+      "validity_month": 10,
+      "validity_year": 25,
+      "number": "5355 4567 9876 5045",
+      "card_type": "master",
+      "card_type_logo": "http://surl.li/cocqew",
+      "bank_name": "KVB",
+      "account_type": "credit",
+      "bank_logo": "http://surl.li/dwcdqc"
+    },
+    {
+      "id": "a91c07d2-b64d-4055-ba5a-ecac202813df",
+      "holder_name": "CIROMA CHINEYE ADEKUNLE",
+      "validity_month": 10,
+      "validity_year": 25,
+      "number": "5355 4567 9876 5045",
+      "card_type": "master",
+      "card_type_logo": "http://surl.li/cocqew",
+      "bank_name": "KVB",
+      "account_type": "credit",
+      "bank_logo": "http://surl.li/dwcdqc"
+    }
+  ]
+}

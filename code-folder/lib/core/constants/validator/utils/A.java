@@ -1,0 +1,1 @@
+flutter config --jdk-dir=<DIRECTORY>

@@ -1,0 +1,11 @@
+{
+  "status": "SUCCESS",
+  "message": "Account created successfully",
+  "data": {
+    "acount_id": "asdkj129213jasdj",
+    "first_name": "Samitha",
+    "email": "samitha001@gmail.com",
+    "phone": "9210191817",
+    "is_email_verified": false
+  }
+}

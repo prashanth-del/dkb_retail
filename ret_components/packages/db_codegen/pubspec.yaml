@@ -1,0 +1,17 @@
+name: db_codegen
+description: JSON -> Freezed DTO + Entity generator (envelope-aware) for Flutter apps.
+version: 0.1.0
+publish_to: "none"
+
+environment:
+  sdk: ">=3.3.0 <4.0.0"
+
+# only the generator needs this
+dependencies:
+  recase: ^4.1.0
+
+dev_dependencies: {}
+
+executables:
+  schemacast: bin/json2freezed.dart
+  seed: bin/seed.dart

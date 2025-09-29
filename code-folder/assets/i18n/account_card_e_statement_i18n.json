@@ -1,0 +1,53 @@
+{
+  "status": {
+    "code": "0000000"
+  },
+  "data": {
+    "en": {
+      "eStatement": {
+        "intro": "By choosing the e-Statement option with respect to your account, you hereby agree to the following terms and conditions and any other terms and conditions relevant to this account.",
+        "termsAndConditions": [
+          {
+            "id": 1,
+            "text": "Sending of printed bank statement to the account holders' given address will be stopped accordingly."
+          },
+          {
+            "id": 2,
+            "text": "The account holder understands that the Bank will send or deliver an e-Statement of account(s) at the authorized e-mail ID at least once every month. (In respect of any account that has, in the sole opinion of the Bank, been inactive for a period of one year or more such e-Statement of accounts will be sent or delivered by the Bank annually). The e-Statements of account(s) issued by the bank clarifies the due balance of the accounts at any time and if not rejected by the system within fifteen days from the e-Statement was sent will be considered as accepted by the client."
+          },
+          {
+            "id": 3,
+            "text": "e-Statements facility is currently Free-of-Charge* and for any future changes in the fees and charges structure, corresponding service notice will be displayed accordingly."
+          }
+        ],
+        "footer": {
+          "note": "* Fees and Charges structure subject to change.",
+          "additional_info": "In addition to the terms and conditions of your account, the regular terms, conditions and general provisions for other accounts apply. Exception being paper statements are replaced with electronic statements."
+        }
+      }
+    },
+    "ar": {
+      "eStatement": {
+        "intro": "باختيارك خيار كشف الحساب الإلكتروني فيما يتعلق بحسابك، فإنك توافق بموجب هذا على الشروط والأحكام التالية وأي شروط وأحكام أخرى ذات صلة بهذا الحساب.",
+        "termsAndConditions": [
+          {
+            "id": 1,
+            "text": "سيتم وقف إرسال كشف الحساب الورقي إلى عنوان الحساب المقدم وفقًا لذلك."
+          },
+          {
+            "id": 2,
+            "text": "يدرك حامل الحساب أن البنك سيرسل أو يقدم كشف حساب إلكتروني إلى البريد الإلكتروني المعتمد على الأقل مرة واحدة في الشهر. (بالنسبة لأي حساب يعتبره البنك غير نشط لمدة سنة أو أكثر، سيتم إرسال أو تسليم كشف الحساب الإلكتروني لهذا الحساب سنويًا). يوضح كشف الحساب الإلكتروني الصادر عن البنك الرصيد المستحق للحسابات في أي وقت، وإذا لم يتم رفضه من قبل النظام خلال خمسة عشر يومًا من إرسال كشف الحساب، فسيتم اعتباره مقبولًا من قبل العميل."
+          },
+          {
+            "id": 3,
+            "text": "خدمة كشف الحساب الإلكتروني مجانية حاليًا*، وأي تغييرات مستقبلية في هيكل الرسوم والتكاليف سيتم عرض إشعار الخدمة المقابل وفقًا لذلك."
+          }
+        ],
+        "footer": {
+          "note": "* هيكل الرسوم والتكاليف عرضة للتغيير.",
+          "additional_info": "بالإضافة إلى الشروط والأحكام الخاصة بحسابك، تسري الشروط والأحكام العامة والأحكام الخاصة بحسابات أخرى. الاستثناء هو استبدال البيانات الورقية بكشوفات إلكترونية."
+        }
+      }
+    }
+  }
+}

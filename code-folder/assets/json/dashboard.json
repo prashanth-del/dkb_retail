@@ -1,0 +1,23 @@
+{
+  "status": "SUCCESS",
+  "message": "Account detail fetch successfully",
+  "data": {
+    "CardDetails": {
+      "id": "f0d68e54-1be5-46f0-9676-8d351742d30a",
+      "holder_name": "CIROMA CHINEYE ADEKUNLE",
+      "validity_month": 12,
+      "validity_year": 24,
+      "number": "5355 0348 5945 5045",
+      "card_type": "master",
+      "card_type_logo": "http://surl.li/cocqew",
+      "bank_name": "indian",
+      "account_type": "debit",
+      "bank_logo": "http://surl.li/dwcdqc"
+    },
+    "InsightsDetails": {
+      "current_balence": 50769,
+      "percentage": 4.3,
+      "type": "positive"
+    }
+  }
+}

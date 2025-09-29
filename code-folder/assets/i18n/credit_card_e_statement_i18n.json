@@ -1,0 +1,57 @@
+{
+  "status": {
+    "code": "0000000"
+  },
+  "data": {
+    "en": {
+      "eStatement": {
+        "intro": "E-Statement: Statement of Customer Credit Card Account at Dukhan Bank sent through electronic methods such as, but not limited to, e-mails. The Customer has chosen to convert to Credit Card e-Statement and complies with the Terms & Conditions mentioned below and any other Terms and Conditions applied by Dukhan Bank in the general Credit Card Contract previously signed by the customer.",
+        "agreement": "By choosing the Credit Card e-Statement option with respect to a particular Credit Card account, you hereby agree to the following Terms and Conditions and any other Terms and Conditions relevant to this Credit Card account.",
+        "termsAndConditions": [
+          {
+            "id": 1,
+            "text": "The Credit Card account holder understands that the Bank will send or deliver an e-Statement of Credit Card account(s) to the authorized e-mail ID at least every six months. (In respect of any Credit Card account that has, in the sole opinion of the Bank, been inactive for a period of one year or more, such e-Statement of Credit Card accounts will be sent or delivered by the Bank annually). The e-Statement(s) of Credit Card account(s) issued by the Bank clarifies the due balance of the Credit Card account(s) at any time and if not objected by the customer within fifteen days from the e-Statement being sent will be considered as accepted by the client."
+          },
+          {
+            "id": 2,
+            "text": "The e-Statement facility is currently Free-of-Charge. The Bank reserves the right to make future changes in the fees and charges structure with or without prior notice to the customer."
+          },
+          {
+            "id": 3,
+            "text": "The electronic delivery notice of the e-Statement will be considered as legal evidence of customer acknowledgment, and will be taken as the basis for counting all formal and legal durations."
+          },
+          {
+            "id": 4,
+            "text": "In case the customer’s e-mail ID account has been closed, changed, lost, hacked, erased or been subject to any circumstances that lead the customer to lose control over his e-mail account, the Bank shall not be held responsible for any e-Statement abuse, secret disclosure, damage, claim, or indemnity that may arise from such action. All formal and legal durations will be applied unless the Bank receives a formal written notice from the customer of such circumstances."
+          }
+        ],
+        "note": "* The above Terms and Conditions are an integral part of Dukhan Bank's Credit Card Contract.\n\nIn addition to the Terms and Conditions of your Credit Card Account, the regular terms, conditions, and general provisions of the Dukhan Bank Credit Card Contract shall apply. The word 'statement(s)' will be replaced with 'electronic statements.'"
+      }
+    },
+    "ar": {
+      "eStatement": {
+        "intro": "كشف الحساب الإلكتروني: كشف حساب بطاقة الائتمان الخاصة بالعميل في بنك الدوحة المرسل عبر الوسائل الإلكترونية مثل؛ وليس على سبيل الحصر، البريد الإلكتروني. لقد اختار العميل التحويل إلى كشف حساب بطاقة الائتمان الإلكتروني ويلتزم بالشروط والأحكام المذكورة أدناه وأي شروط وأحكام أخرى يطبقها بنك الدوحة في عقد بطاقة الائتمان العام الذي وقعه العميل سابقاً.",
+        "agreement": "باختيارك خيار كشف حساب بطاقة الائتمان الإلكتروني فيما يتعلق بحساب بطاقة الائتمان المعني، فإنك توافق بموجب هذا على الشروط والأحكام التالية وأي شروط وأحكام أخرى ذات صلة بهذا الحساب.",
+        "termsAndConditions": [
+          {
+            "id": 1,
+            "text": "يدرك حامل حساب بطاقة الائتمان أن البنك سيرسل أو يقدم كشف حساب إلكتروني لحساب بطاقة الائتمان إلى البريد الإلكتروني المعتمد كل ستة أشهر على الأقل. (بالنسبة لأي حساب بطاقة ائتمان يعتبره البنك غير نشط لمدة سنة أو أكثر، سيتم إرسال أو تسليم كشف الحساب الإلكتروني لهذا الحساب سنويًا). يوضح كشف الحساب الإلكتروني الصادر عن البنك الرصيد المستحق لحساب بطاقة الائتمان في أي وقت، وإذا لم يعترض العميل عليه خلال خمسة عشر يومًا من إرساله، سيتم اعتباره مقبولاً من قبل العميل."
+          },
+          {
+            "id": 2,
+            "text": "خدمة كشف الحساب الإلكتروني مجانية حاليًا*. يحتفظ البنك بحق إجراء تغييرات مستقبلية في هيكل الرسوم والتكاليف مع أو بدون إشعار مسبق للعميل."
+          },
+          {
+            "id": 3,
+            "text": "سيتم اعتبار الإشعار الإلكتروني بتسليم كشف الحساب الإلكتروني بمثابة دليل قانوني على إقرار العميل، وسيتم اعتماده كأساس لحساب جميع الفترات الرسمية والقانونية."
+          },
+          {
+            "id": 4,
+            "text": "في حالة إغلاق حساب البريد الإلكتروني للعميل، أو تغييره، أو فقده، أو تعرضه للاختراق، أو مسحه أو تعرضه لأي ظروف تؤدي إلى فقدان العميل السيطرة على حساب بريده الإلكتروني، فإن البنك لن يكون مسؤولاً عن أي إساءة استخدام لكشف الحساب الإلكتروني أو إفشاء السر أو أي ضرر أو مطالبة أو تعويض قد ينشأ عن هذا الإجراء. سيتم تطبيق جميع الفترات الرسمية والقانونية ما لم يتلق البنك إشعاراً خطياً رسمياً من العميل حول تلك الظروف."
+          }
+        ],
+        "note": "* الشروط والأحكام المذكورة أعلاه جزء لا يتجزأ من عقد بطاقة الائتمان لبنك الدوحة. بالإضافة إلى الشروط والأحكام الخاصة بحساب بطاقة الائتمان الخاصة بك، تسري الشروط والأحكام العامة وأحكام عقد بطاقة الائتمان لبنك الدوحة. سيتم استبدال كلمة 'كشف الحساب' بـ 'كشف الحساب الإلكتروني'."
+      }
+    }
+  }
+}
