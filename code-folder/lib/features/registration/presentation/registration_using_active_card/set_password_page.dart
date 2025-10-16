@@ -1,7 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:db_uicomponents/db_uicomponents.dart';
 import 'package:dkb_retail/core/router/app_router.dart';
-import 'package:dkb_retail/features/registration/data/modals/password_validation.dart';
+import 'package:dkb_retail/features/registration/data/models/password_validation.dart';
 import 'package:dkb_retail/features/registration/presentation/controller/password_notifier.dart';
 import 'package:dkb_retail/features/registration/presentation/controller/registration_active_controllers.dart';
 import 'package:flutter/material.dart';

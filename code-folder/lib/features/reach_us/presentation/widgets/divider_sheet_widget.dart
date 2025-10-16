@@ -8,12 +8,14 @@ class DividerSheetCommon extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: Container(
+        padding: EdgeInsets.zero,
         alignment: Alignment.center,
-        width: 40,
-        height: 5,
+        width: 50,
+        height: 6,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16),
-          color: DefaultColors.white,
+
+          color: DefaultColors.grayLightBase,
         ),
       ),
     );

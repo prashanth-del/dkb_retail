@@ -6,9 +6,10 @@ import 'status_policy.dart';
 
 class ApiMapper {
   static ApiEnvelope<T> mapData<T>(
-      Map<String, dynamic> json,
-      T Function(dynamic) parseT, // closure-friendly `(data) => Model.fromJson(data)`
-      ) {
+    Map<String, dynamic> json,
+    T Function(dynamic)
+    parseT, // closure-friendly `(data) => Model.fromJson(data)`
+  ) {
     final resp = GenericResponse<T>.fromJson(json, parseT);
     final st = resp.status ?? const ApiError();
     final app = StatusPolicy.defaultPolicy(st);
@@ -33,9 +34,9 @@ class ApiMapper {
   }
 
   static ApiEnvelope<List<T>> mapList<T>(
-      Map<String, dynamic> json,
-      T Function(dynamic) parseT,
-      ) {
+    Map<String, dynamic> json,
+    T Function(dynamic) parseT,
+  ) {
     final resp = GenericListResponse<T>.fromJson(json, parseT);
     final st = resp.status ?? const ApiError();
     final app = StatusPolicy.defaultPolicy(st);

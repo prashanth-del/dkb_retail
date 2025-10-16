@@ -1,9 +1,7 @@
 import 'dart:async';
 
-import 'package:auto_route/auto_route.dart';
 import 'package:db_uicomponents/db_uicomponents.dart';
 import 'package:dkb_retail/core/constants/asset_path/asset_path.dart';
-import 'package:dkb_retail/core/router/app_router.dart';
 import 'package:dkb_retail/core/utils/extensions/locale_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -32,7 +30,7 @@ class _RegSuccessPageState extends ConsumerState<RegSuccessPage> {
         setState(() => _remainingSeconds--);
       } else {
         _timer.cancel();
-        context.router.replaceAll([(WelcomeBackRoute())]);
+        // context.router.replaceAll([(WelcomeBackRoute())]);
       }
     });
   }

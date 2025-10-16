@@ -13,11 +13,14 @@ class PrayerMethodBottomSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    final width = size.width;
+    final height = size.height;
     return Stack(
       clipBehavior: Clip.none,
       children: [
         Container(
-          padding: const EdgeInsets.only(top: 20, bottom: 20),
+          padding: const EdgeInsets.only(top: 10, bottom: 10),
           decoration: const BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
@@ -25,6 +28,18 @@ class PrayerMethodBottomSheet extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
+              Center(
+                child:
+                Container(
+                  margin: EdgeInsets.only(bottom: height * 0.01),
+                  width: width * 0.12,
+                  height: height * 0.005,
+                  decoration: BoxDecoration(
+                    color: DefaultColors.grayF9,
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                ),
+              ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Align(
@@ -73,21 +88,21 @@ class PrayerMethodBottomSheet extends StatelessWidget {
             ],
           ),
         ),
-        Positioned(
-          right: 10,
-          top: -40,
-          child: GestureDetector(
-            onTap: () => Navigator.pop(context),
-            child: Container(
-              padding: const EdgeInsets.all(5),
-              decoration: BoxDecoration(
-                color: Colors.transparent,
-                shape: BoxShape.circle,
-              ),
-              child: Icon(Icons.close, color: Colors.white, size: 30),
-            ),
-          ),
-        ),
+        // Positioned(
+        //   right: 10,
+        //   top: -40,
+        //   child: GestureDetector(
+        //     onTap: () => Navigator.pop(context),
+        //     child: Container(
+        //       padding: const EdgeInsets.all(5),
+        //       decoration: BoxDecoration(
+        //         color: Colors.transparent,
+        //         shape: BoxShape.circle,
+        //       ),
+        //       child: Icon(Icons.close, color: Colors.white, size: 30),
+        //     ),
+        //   ),
+        // ),
       ],
     );
   }

@@ -14,8 +14,8 @@ import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
 
 import '../../../../core/constants/colors.dart';
-import '../../../common/components/auto_leading_widget.dart';
-import '../../../common/dialog/ui_dialogs.dart';
+import '../../../common/presentation/components/auto_leading_widget.dart';
+import '../../../common/presentation/dialog/ui_dialogs.dart';
 import '../controller/notifier/onboarding_block_journey_notifier.dart';
 import '../controller/notifier/onboarding_file_upload_notifier.dart';
 import '../controller/notifier/onboarding_save_stage_data_notifier.dart';

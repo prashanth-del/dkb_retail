@@ -12,11 +12,11 @@ class AnimatedProfilePhoto extends StatefulWidget {
 }
 
 class _AnimatedProfilePhotoState extends State<AnimatedProfilePhoto> {
-  double currentSize = 50; // initial size of the animated container
+  double currentSize = 50;
   late List<double> sizes;
-  bool isAnimating = false;
-  bool _initialized = false; // ensure didChangeDependencies runs only once
+  bool _initialized = false;
   bool showLogo = false;
+  bool _isDisposed = false; // 👈 cleanup flag
 
   @override
   void didChangeDependencies() {
@@ -29,38 +29,44 @@ class _AnimatedProfilePhotoState extends State<AnimatedProfilePhoto> {
       sizes = [width * 0.11, width * 0.14, width * 0.2];
       currentSize = sizes[0];
 
-      // Start the recursive animation loop
       _startAnimationLoop();
     }
   }
 
   Future<void> _startAnimationLoop() async {
-    // Wait 4 seconds before first animation
     await Future.delayed(const Duration(seconds: 4));
 
-    while (mounted) {
-      setState(() => currentSize = sizes[2]); // first step
+    while (mounted && !_isDisposed) {
+      if (!mounted) return;
+      setState(() => currentSize = sizes[2]);
       await Future.delayed(const Duration(milliseconds: 200));
+      if (!mounted) return;
+
       showLogo = false;
-      setState(() => currentSize = sizes[1]); // second step
+      setState(() => currentSize = sizes[1]);
       await Future.delayed(const Duration(seconds: 2));
+      if (!mounted) return;
 
       showLogo = true;
-      setState(() => currentSize = sizes[0]); // reset
-      await Future.delayed(
-        const Duration(seconds: 4),
-      ); // wait before next cycle
+      setState(() => currentSize = sizes[0]);
+      await Future.delayed(const Duration(seconds: 4));
     }
+  }
+
+  @override
+  void dispose() {
+    _isDisposed = true; // 👈 stops future loops instantly
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    final photoRadius = size.width * 0.05;
+    final photoRadius = size.aspectRatio * 45;
 
     return SizedBox(
-      width: size.width * 0.175,
-      height: size.height * 0.075,
+      width: size.width * 0.15,
+      height: size.height * 0.07,
       child: Stack(
         alignment: Alignment.center,
         children: [
@@ -85,7 +91,7 @@ class _AnimatedProfilePhotoState extends State<AnimatedProfilePhoto> {
             crossFadeState: showLogo
                 ? CrossFadeState.showFirst
                 : CrossFadeState.showSecond,
-            duration: Duration(milliseconds: 300),
+            duration: const Duration(milliseconds: 300),
             firstChild: CircleAvatar(
               radius: photoRadius,
               child: Image.asset(

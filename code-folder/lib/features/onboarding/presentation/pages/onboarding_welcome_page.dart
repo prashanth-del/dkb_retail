@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:dkb_retail/core/router/app_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../common/components/auto_leading_widget.dart';
-import '../../../common/dialog/ui_dialogs.dart';
+import '../../../common/presentation/components/auto_leading_widget.dart';
+import '../../../common/presentation/dialog/ui_dialogs.dart';
 import '../controller/notifier/onboarding_save_stage_data_notifier.dart';
 import '../provider/onboarding_provider.dart';
 
@@ -15,7 +15,9 @@ class OnboardingWelcomePage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
-    final currentStageIndex = ref.watch(currentStageProvider); // Current stage index
+    final currentStageIndex = ref.watch(
+      currentStageProvider,
+    ); // Current stage index
     final stageDataProvider = ref.watch(stageSumProvider);
     final currentStage = getStageById(ref, "OPEN_NEW_ACC_REQ");
     // final currentStage = getStageByPriority(ref, currentStageIndex);
@@ -51,9 +53,9 @@ class OnboardingWelcomePage extends ConsumerWidget {
     //   }
     // });
 
-    return  Scaffold(
+    return Scaffold(
       appBar: const UIAppBar.secondary(
-        autoLeadingWidget:  AutoLeadingWidget(),
+        autoLeadingWidget: AutoLeadingWidget(),
         title: "Open New Account",
         appBarColor: DefaultColors.white,
       ),
@@ -62,7 +64,10 @@ class OnboardingWelcomePage extends ConsumerWidget {
           children: [
             Expanded(
               child: SingleChildScrollView(
-                padding: const  EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 20,
+                ),
                 child: Column(
                   children: [
                     const UiTextNew.customRubik(
@@ -70,7 +75,7 @@ class OnboardingWelcomePage extends ConsumerWidget {
                       fontSize: 18,
                       color: Colors.black,
                     ),
-                    const SizedBox(height: 20,),
+                    const SizedBox(height: 20),
                     Container(
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(8),
@@ -83,7 +88,10 @@ class OnboardingWelcomePage extends ConsumerWidget {
                           ),
                         ],
                       ),
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 16,
+                      ),
                       child: Column(
                         children: [
                           const UiTextNew.customRubik(
@@ -91,22 +99,32 @@ class OnboardingWelcomePage extends ConsumerWidget {
                             fontSize: 14,
                             color: DefaultColors.white_800,
                           ),
-                          const SizedBox(height: 20,),
-                          _buildRow('1.  ', 'Are you a Qatari or a Qatar resident with valid ID?'),
+                          const SizedBox(height: 20),
+                          _buildRow(
+                            '1.  ',
+                            'Are you a Qatari or a Qatar resident with valid ID?',
+                          ),
                           _buildRow('2.  ', 'You are above the age of 18'),
-                          _buildRow('3.  ', 'You have a valid passport (Expatriates only)'),
-                          _buildRow('4.  ', 'Salary certificate from your Employer (For current account only)'),
-                          _buildRow('5.  ', 'A document with your signature as per passport'),
+                          _buildRow(
+                            '3.  ',
+                            'You have a valid passport (Expatriates only)',
+                          ),
+                          _buildRow(
+                            '4.  ',
+                            'Salary certificate from your Employer (For current account only)',
+                          ),
+                          _buildRow(
+                            '5.  ',
+                            'A document with your signature as per passport',
+                          ),
                           _buildRow('6.  ', 'Tax residency information'),
                           _buildRow('7.  ', 'Proof of Address'),
                           _buildRow('8.  ', 'A smiley face...!'),
 
                           // Spacer(),
-
                         ],
                       ),
                     ),
-
                   ],
                 ),
               ),
@@ -114,25 +132,31 @@ class OnboardingWelcomePage extends ConsumerWidget {
 
             Padding(
               padding: const EdgeInsets.all(15.0),
-              child: UIButton.rounded(onPressed: () async {
-                bool value = await ref.read(onboardingSaveStageDataNotifierProvider.notifier).fetch(
-                    custJourneyId: ref.watch(customerJourneyId),
-                    stageId: "${currentStage?.stageId}",
-                    data: {
-                      "requirements": "${currentStage?.stageDesc}"
-                    });
-                if(value) {
-                  context.router.push(const OnboardingDetailsRoute());
-                }else {
-                  UiDialogs.showErrorDialog(
-                    context: context,
-                    description: "Data Not Saved",
-                    bknOkPressed: () {
-                      context.router.maybePop();
-                    },
-                  );
-                }
-              }, label: 'Next',maxWidth: context.screenWidth,height: 45,),
+              child: UIButton.rounded(
+                onPressed: () async {
+                  bool value = await ref
+                      .read(onboardingSaveStageDataNotifierProvider.notifier)
+                      .fetch(
+                        custJourneyId: ref.watch(customerJourneyId),
+                        stageId: "${currentStage?.stageId}",
+                        data: {"requirements": "${currentStage?.stageDesc}"},
+                      );
+                  if (value) {
+                    context.router.push(const OnboardingDetailsRoute());
+                  } else {
+                    UiDialogs.showErrorDialog(
+                      context: context,
+                      description: "Data Not Saved",
+                      bknOkPressed: () {
+                        context.router.maybePop();
+                      },
+                    );
+                  }
+                },
+                label: 'Next',
+                maxWidth: context.screenWidth,
+                height: 45,
+              ),
             ),
           ],
         ),
@@ -141,25 +165,23 @@ class OnboardingWelcomePage extends ConsumerWidget {
   }
 }
 
-
-
 Widget _buildRow(String text1, String text2) {
   return Row(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
       UiTextNew.h4Regular(
         text1,
-        color: DefaultColors.white_800,// Bold number with period
+        color: DefaultColors.white_800, // Bold number with period
       ),
       // const SizedBox(width: 8), // Space between number and text
       Expanded(
         child: Wrap(
-            children:[
-              UiTextNew.h4Regular(
-                text2,
-                color: DefaultColors.white_800,// Bold number with period
-              ),
-            ]
+          children: [
+            UiTextNew.h4Regular(
+              text2,
+              color: DefaultColors.white_800, // Bold number with period
+            ),
+          ],
         ),
       ),
     ],

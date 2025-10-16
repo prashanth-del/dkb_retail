@@ -2,57 +2,63 @@ import 'dart:async';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:db_uicomponents/db_uicomponents.dart';
+import 'package:dkb_retail/features/login/domain/entities/user.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:local_session_timeout/local_session_timeout.dart';
 import 'package:pinput/pinput.dart';
 
+import 'package:dkb_retail/core/constants/app_strings/default_string.dart';
+import 'package:dkb_retail/features/common/presentation/components/auth_header_wrapper.dart';
+
 import '../../../../core/cache/global_cache.dart';
 import '../../../../core/router/app_router.dart';
 import '../../../../core/services/session_manager/session_manager.dart';
-import '../../../../network/domain/models/auth_tokens.dart';
-import '../../../../network/network_client_provider.dart';
-import '../../../common/components/dialogs.dart';
-import '../../domain/entities/user.dart';
+import '../../../common/data/models/otp_generate_models/generate_otp_request.dart';
+import '../../../common/data/models/otp_generate_models/generate_otp_request_request_info_dto.dart';
+import '../../../common/data/models/otp_validate_models/validate_otp_request.dart';
+import '../../../common/data/models/otp_validate_models/validate_otp_request_request_info_dto.dart';
+import '../../../common/domain/locators/common_locators.dart';
+import '../../../common/presentation/components/dialogs.dart';
+import '../../domain/entities/sign_with_credentials_entity/login_response.dart';
 import '../controller/state/login_notifiers.dart';
 
 @RoutePage()
 class LoginOtpPage extends ConsumerStatefulWidget {
-  final User userdetail;
-  const LoginOtpPage({super.key, required this.userdetail});
+  final LoginResponse userDetails;
+
+  const LoginOtpPage({super.key, required this.userDetails});
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _OtpPageState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _CommonOtpPageState();
 }
 
-class _OtpPageState extends ConsumerState<LoginOtpPage> {
+class _CommonOtpPageState extends ConsumerState<LoginOtpPage> {
   late Timer _timer;
   bool canResend = false;
   final FocusNode otpFocusNode = FocusNode();
-  TextEditingController otpController = TextEditingController();
-  int _remainingSeconds = 0;
+  late TextEditingController otpController;
+  late int _remainingSeconds;
+  String otpLenght = '';
 
   @override
   void initState() {
     super.initState();
-    startTimer();
+    otpController = TextEditingController();
+    _startTimer();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       FocusScope.of(context).requestFocus(otpFocusNode);
     });
   }
 
-  void startTimer() {
-    _remainingSeconds = 15;
+  void _startTimer() {
+    _remainingSeconds = 60;
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      canResend = false;
       if (_remainingSeconds > 0) {
-        setState(() {
-          _remainingSeconds--;
-        });
+        setState(() => _remainingSeconds--);
       } else {
         _timer.cancel();
-        canResend = true;
-        setState(() {});
+        setState(() => canResend = true);
       }
     });
   }
@@ -60,7 +66,7 @@ class _OtpPageState extends ConsumerState<LoginOtpPage> {
   String get _formattedTime {
     final minutes = (_remainingSeconds ~/ 60).toString().padLeft(2, '0');
     final seconds = (_remainingSeconds % 60).toString().padLeft(2, '0');
-    return '$minutes: $seconds';
+    return '$minutes:$seconds';
   }
 
   @override
@@ -74,15 +80,15 @@ class _OtpPageState extends ConsumerState<LoginOtpPage> {
   @override
   Widget build(BuildContext context) {
     final defaultPinTheme = PinTheme(
-      width: 56,
-      height: 56,
-      textStyle: TextStyle(
+      width: MediaQuery.of(context).size.width,
+      height: MediaQuery.of(context).size.height * 0.07,
+      textStyle: const TextStyle(
         fontSize: 16,
-        color: DefaultColors.blue9D,
         fontWeight: FontWeight.w600,
+        color: DefaultColors.black,
       ),
       decoration: BoxDecoration(
-        border: Border.all(color: DefaultColors.grey_05),
+        border: Border.all(color: Colors.grey.shade400),
         borderRadius: BorderRadius.circular(12),
       ),
     );
@@ -95,37 +101,71 @@ class _OtpPageState extends ConsumerState<LoginOtpPage> {
     ref.listen(loginNotifierProvider, (previous, next) {
       next.maybeWhen(
         failure: (message) async {
-          showErrorDialog(message, context, ref);
-        },
-        maxAttempted: (message) async {
+          _resetForm();
           showErrorDialog(message, context, ref);
         },
         otpValid: () async {
-          await _handleOtpSuccess(widget.userdetail);
+          _resetForm();
+          _handleOtpSuccess();
         },
         orElse: () {},
       );
     });
 
-    return Scaffold(
-      resizeToAvoidBottomInset: true,
-      backgroundColor: DefaultColors.white,
-      body: UiBackgroundWrapper(
-        child: SingleChildScrollView(
+    return PopScope(
+      canPop: false,
+
+      child: Scaffold(
+        resizeToAvoidBottomInset: true,
+        backgroundColor: Colors.white,
+        bottomNavigationBar: SafeArea(
+          child: Padding(
+            padding: EdgeInsets.only(
+              bottom: MediaQuery.of(context).viewInsets.bottom,
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  margin: EdgeInsets.symmetric(horizontal: 16),
+                  width: double.infinity,
+                  child: UIButton.rounded(
+                    height: 48,
+                    btnCurve: 30,
+                    isDisabled: otpController.text.length == 6 ? false : true,
+                    backgroundColor: DefaultColors.blue9D,
+                    txtColor: Colors.white,
+                    onPressed: () {
+                      if (otpController.text.length == 6) {
+                        verifyOtp(otpController.text);
+                      }
+                    },
+                    label: DefaultString.instance.verify,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        body: AuthHeaderWrapper(
+          headerText: DefaultString.instance.enterOtp,
+
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              UiSpace.vertical(40),
-              CommonAuthAppBar(title: 'Enter OTP'),
-              UiSpace.vertical(16),
+              UiSpace.vertical(20),
+
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: UiTextNew.b14Regular(
-                  'You will receive the OTP on your registered mobile number.',
+                padding: EdgeInsets.symmetric(
+                  horizontal: MediaQuery.of(context).size.width * 0.04,
+                ),
+                child: UiTextNew.b1Semibold(
+                  DefaultString.instance.otpReceiveMessage,
                   maxLines: 2,
                 ),
               ),
               UiSpace.vertical(20),
+
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Center(
@@ -135,6 +175,11 @@ class _OtpPageState extends ConsumerState<LoginOtpPage> {
                     defaultPinTheme: defaultPinTheme,
                     focusedPinTheme: focusedPinTheme,
                     length: 6,
+                    onChanged: (value) {
+                      if (value.length == 6) {
+                        verifyOtp(otpController.text);
+                      }
+                    },
                   ),
                 ),
               ),
@@ -151,7 +196,7 @@ class _OtpPageState extends ConsumerState<LoginOtpPage> {
                       : SizedBox(),
                   canResend
                       ? GestureDetector(
-                          onTap: startTimer,
+                          onTap: _startTimer,
                           child: UiTextNew.b14Regular(
                             "Resend OTP",
                             decoration: TextDecoration.underline,
@@ -167,57 +212,24 @@ class _OtpPageState extends ConsumerState<LoginOtpPage> {
           ),
         ),
       ),
-      bottomNavigationBar: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.only(
-            bottom: MediaQuery.of(context).viewInsets.bottom,
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Container(
-                margin: EdgeInsets.symmetric(horizontal: 16),
-                width: double.infinity,
-                child: UIButton.rounded(
-                  height: 48,
-                  btnCurve: 30,
-                  isDisabled: otpController.text.length == 6 ? false : true,
-                  backgroundColor: DefaultColors.blue9D,
-                  txtColor: Colors.white,
-                  onPressed: () {
-                    if (otpController.text.length == 6) {
-                      verifyOtp(otpController.text);
-                    }
-                  },
-                  label: 'Verify',
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
     );
+  }
+
+  void _resetForm() {
+    otpController.clear();
   }
 
   void verifyOtp(String otp) async {
-    ref.read(loginNotifierProvider.notifier).validateOtp(otp);
+    final request = ValidateOtpRequest(
+      requestInfo: ValidateOtpRequestRequestInfoDto(otp: otp),
+    );
+    await ref.read(commonRepositoryProvider).validateOtp(request: request);
   }
 
-  Future _handleOtpSuccess(User user) async {
+  Future _handleOtpSuccess() async {
     ref.read(sessionStateStreamProvider).add(SessionState.startListening);
 
-    if (user.atkn != null && user.reftkn != null) {
-      ref.read(authTokenProvider.notifier).state = AuthTokens(
-        atkn: user.atkn!,
-        reftkn: user.reftkn!,
-      );
-    }
-
-    await GlobalCache.instance.setPreferenceSeen();
-    print('Username to be saved: ${widget.userdetail.username}');
-    await GlobalCache.instance.setUsername(
-      widget.userdetail.username ?? 'chetan',
-    );
+    await GlobalCache.instance.setUsername(widget.userDetails.userId);
 
     if (mounted) {
       context.router.popAndPush(DashboardRoute());

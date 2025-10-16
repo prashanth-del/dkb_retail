@@ -7,7 +7,7 @@ import 'package:flutter_svg/svg.dart';
 
 import '../../../../core/constants/app_strings/default_string.dart';
 import '../../../../core/constants/asset_path/asset_path.dart';
-import '../../../common/components/info_card.dart';
+import '../../../common/presentation/components/info_card.dart';
 import '../provider/transfer_provider.dart';
 
 class TransactionSuccessPage extends ConsumerStatefulWidget {

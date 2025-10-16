@@ -1,7 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:db_uicomponents/db_uicomponents.dart';
 import 'package:dkb_retail/core/constants/asset_path/asset_path.dart';
-import 'package:dkb_retail/features/common/components/auto_leading_widget.dart';
+import 'package:dkb_retail/features/common/presentation/components/auto_leading_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

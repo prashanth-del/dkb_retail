@@ -1,8 +1,12 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:db_uicomponents/db_uicomponents.dart';
+import 'package:dkb_retail/common/utils.dart';
+import 'package:dkb_retail/core/constants/app_strings/default_string.dart';
 import 'package:dkb_retail/core/router/app_router.dart';
-import 'package:dkb_retail/core/utils/extensions/locale_extension.dart';
+import 'package:dkb_retail/features/common/presentation/components/auth_header_wrapper.dart';
+import 'package:dkb_retail/features/registration/presentation/controller/state/username_validation_state.dart';
 import 'package:dkb_retail/features/registration/presentation/controller/username_notifier.dart';
+import 'package:dkb_retail/features/registration/presentation/controller/username_rule_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -24,131 +28,201 @@ class _CreateUsernamePageState extends ConsumerState<CreateUsernamePage> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       FocusScope.of(context).requestFocus(usernameFocusNode);
     });
+
+    Future.microtask(() {
+      ref.watch(usernameRuleNotifierProvider.notifier).getUsernameValidations();
+    });
   }
 
   List availableUsernames = ['userName1', 'userName2', 'userName3'];
   bool isAvailable = false;
-  bool isDisabled = true;
+  bool isDisabled = false;
 
   @override
   Widget build(BuildContext context) {
     final usernameState = ref.watch(usernamevalidationProvider);
     final usernameNotifier = ref.read(usernamevalidationProvider.notifier);
-    isDisabled = usernameState.isValid;
+    final rules = ref.watch(usernamerulesProvider);
+    final validationState = ref.watch(usernamevalidationNotifierProvider);
+    consoleLog('rules $rules');
+
+    // isDisabled = usernameState.isValid;
+    isDisabled = rules.isEmpty ? false : validationState.isValid;
     return Scaffold(
       resizeToAvoidBottomInset: true,
-      backgroundColor: DefaultColors.white,
-      body: SingleChildScrollView(
-        child: UiBackgroundWrapper(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              UiSpace.vertical(40),
-              CommonAuthAppBar(
-                title: ref.getLocaleString(
-                  "Create Username",
-                  defaultValue: "Create Username",
-                ),
+      body: AuthHeaderWrapper(
+        headerText: DefaultString.instance.createUsername,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            UiSpace.vertical(30),
+            Padding(
+              padding: const EdgeInsets.only(left: 16),
+              child: UiTextNew.b1Semibold(
+                DefaultString.instance.createOrSelectAUsername,
               ),
+            ),
+            UiSpace.vertical(30),
+            UiTextField(
+              autoFocus: true,
+              controller: userNameController,
+              label: DefaultString.instance.createUsername,
+              keyboardType: TextInputType.name,
+              // inputFormatters: [NoSpaceInputFormatter()],
+              onChanged: (value) {
+                if (rules.isNotEmpty) {
+                  ref
+                      .read(usernamevalidationNotifierProvider.notifier)
+                      .validate(value, rules);
+                }
+                // usernameNotifier.validate(value);
+                if (value.trim().length > 8) {
+                  isAvailable = true;
+                  setState(() {});
+                } else if (value.isEmpty) {
+                  isAvailable = false;
+                  setState(() {});
+                }
+              },
+              suffix: isAvailable
+                  ? Icon(
+                      size: 18,
+                      Icons.check_circle,
+                      color: DefaultColors.green89,
+                    )
+                  : SizedBox(),
+            ),
 
-              UiSpace.vertical(16),
-              UiTextField(
-                autoFocus: true,
-                controller: userNameController,
-                label: ref.getLocaleString(
-                  'Create Username',
-                  defaultValue: 'Create Username',
-                ),
-                keyboardType: TextInputType.name,
-                onChanged: (value) {
-                  usernameNotifier.validate(value);
-                  if (value.length > 7) {
-                    isAvailable = true;
-                    setState(() {});
-                  } else if (value.isEmpty) {
-                    isAvailable = false;
-                    setState(() {});
-                  }
-                },
-                suffix: isAvailable
-                    ? Icon(
-                        size: 18,
-                        Icons.check_circle,
-                        color: DefaultColors.green89,
-                      )
-                    : SizedBox(),
+            UiSpace.vertical(20),
+            Padding(
+              padding: const EdgeInsets.only(left: 16),
+              child: UiTextNew.h5Medium(
+                DefaultString.instance.availableUsernames,
               ),
+            ),
+            UiSpace.vertical(6),
+            Padding(
+              padding: EdgeInsetsGeometry.symmetric(horizontal: 16),
+              child: Wrap(
+                children: [
+                  ...availableUsernames.map((item) {
+                    return GestureDetector(
+                      onTap: () {
+                        userNameController.text = item;
+                        usernameNotifier.validate(item);
 
-              UiSpace.vertical(20),
-              Padding(
-                padding: const EdgeInsets.only(left: 16),
-                child: UiTextNew.h5Medium(
-                  ref.getLocaleString(
-                    'Available usernames for you',
-                    defaultValue: 'Available usernames for you',
-                  ),
-                ),
-              ),
-              UiSpace.vertical(6),
-              Padding(
-                padding: EdgeInsetsGeometry.symmetric(horizontal: 16),
-                child: Wrap(
-                  children: [
-                    ...availableUsernames.map((item) {
-                      return GestureDetector(
-                        onTap: () {
-                          userNameController.text = item;
-                          usernameNotifier.validate(item);
-
-                          isAvailable = true;
-                          setState(() {});
-                        },
-                        child: Container(
-                          margin: EdgeInsets.only(right: 6, top: 6),
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 8,
-                            vertical: 4,
-                          ),
-                          decoration: BoxDecoration(
-                            color: Colors.transparent,
-                            borderRadius: BorderRadius.circular(30),
-                            border: Border.all(color: DefaultColors.blue60),
-                          ),
-                          child: UiTextNew.h5Medium(
-                            item,
-                            color: DefaultColors.blue60,
-                          ),
+                        isAvailable = true;
+                        setState(() {});
+                      },
+                      child: Container(
+                        margin: EdgeInsets.only(right: 6, top: 6),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 4,
                         ),
-                      );
-                    }),
-                  ],
-                ),
+                        decoration: BoxDecoration(
+                          color: Colors.transparent,
+                          borderRadius: BorderRadius.circular(30),
+                          border: Border.all(color: DefaultColors.blue60),
+                        ),
+                        child: UiTextNew.h5Medium(
+                          item,
+                          color: DefaultColors.blue60,
+                        ),
+                      ),
+                    );
+                  }),
+                ],
               ),
-              UiSpace.vertical(26),
+            ),
+            UiSpace.vertical(26),
 
-              if (!usernameState.isEmpty) ...[
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: Wrap(
-                    runSpacing: 6,
-                    spacing: 12,
-                    children: [
-                      /// Rules
-                      _buildRuleItem(
-                        "Between a-z characters",
-                        usernameState.hasChars,
-                      ),
-                      _buildRuleItem("No space", usernameState.hasNoSpace),
-                      _buildRuleItem(
-                        "No special characters",
-                        usernameState.hasNoSpecialChars,
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ],
-          ),
+            // if (!usernameState.isEmpty) ...[
+            //   Padding(
+            //     padding: const EdgeInsets.symmetric(horizontal: 16),
+            //     child: Wrap(
+            //       runSpacing: 6,
+            //       spacing: 12,
+            //       children: [
+            //         /// Rules
+            //         _buildRuleItem(
+            //           "Between a-z characters",
+            //           usernameState.hasChars,
+            //         ),
+            //         _buildRuleItem("No space", usernameState.hasNoSpace),
+            //         _buildRuleItem(
+            //           "No special characters",
+            //           usernameState.hasNoSpecialChars,
+            //         ),
+            //       ],
+            //     ),
+            //   ),
+            // ],
+            rules.isNotEmpty
+                ? Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Wrap(
+                      runSpacing: 6,
+                      spacing: 12,
+                      children: rules.map((rule) {
+                        // Color iconColor;
+                        // bool isPassed = false;
+                        // if (validationState.failedRules.isEmpty) {
+                        //   // Initial state
+                        //   iconColor = Colors.grey;
+                        // } else {
+                        //   // After validation
+                        //   isPassed = !validationState.failedRules.contains(
+                        //     rule.ruleDescription,
+                        //   );
+                        //   iconColor = isPassed ? Colors.green : Colors.red;
+                        // }
+                        final isPassed = !validationState.failedRules.contains(
+                          rule.ruleDescription,
+                        );
+                        return Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(
+                              isPassed
+                                  ? Icons.check_circle
+                                  : Icons.cancel_outlined,
+
+                              color: validationState.input.isEmpty
+                                  ? Colors.grey
+                                  : isPassed
+                                  ? Colors.green
+                                  : Colors.red,
+                              size: 18,
+                            ),
+                            const SizedBox(width: 8),
+                            Text(
+                              rule.ruleDescription ?? '',
+                              style: TextStyle(fontSize: 12),
+                            ),
+                          ],
+                        );
+                      }).toList(),
+                    ),
+                  )
+                : SizedBox(),
+
+            //  ...rules.map((rule) {
+            //       final isPassed =
+            //           !validationState.failedRules.contains(rule.ruleDescription);
+            //       return Row(
+            //         children: [
+            //           Icon(
+            //             isPassed ? Icons.check_circle : Icons.cancel,
+            //             color: isPassed ? Colors.green : Colors.red,
+            //             size: 18,
+            //           ),
+            //           const SizedBox(width: 8),
+            //           Text(rule.ruleDescription),
+            //         ],
+            //       );
+            //     }).toList(),
+          ],
         ),
       ),
       bottomNavigationBar: SafeArea(
@@ -170,22 +244,15 @@ class _CreateUsernamePageState extends ConsumerState<CreateUsernamePage> {
                   onPressed: () {
                     context.router.push(
                       CommonSetPasswordRoute(
-                        title: ref.getLocaleString(
-                          "Set New Password",
-                          defaultValue: "Set New Password",
-                        ),
-                        // description:,
-                        buttonLabel: ref.getLocaleString(
-                          "Confirm Password",
-                          defaultValue: "Confirm Password",
-                        ),
+                        title: DefaultString.instance.setNewPassword,
+                        buttonLabel: DefaultString.instance.confirmPassword,
                         onConfirmed: (password) {
                           context.router.push(UserInterestsRoute());
                         },
                       ),
                     );
                   },
-                  label: ref.getLocaleString('Next', defaultValue: 'Next'),
+                  label: DefaultString.instance.nextTitle,
                 ),
               ),
             ],

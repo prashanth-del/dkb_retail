@@ -1,4 +1,4 @@
-import 'package:dkb_retail/features/registration/data/modals/password_validation.dart';
+import 'package:dkb_retail/features/registration/data/models/password_validation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class PasswordNotifier extends StateNotifier<PasswordValidation> {

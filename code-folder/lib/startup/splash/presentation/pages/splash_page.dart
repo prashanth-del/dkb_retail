@@ -22,7 +22,7 @@ class SplashPage extends ConsumerWidget {
           localUsername.isEmpty ? LoginRoute() : WelcomeBackRoute(),
         );
       } else {
-        context.router.replace(const WalletRoute());
+        context.router.replace(const IntroductionRoute());
       }
     }
 

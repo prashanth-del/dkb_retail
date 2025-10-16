@@ -141,7 +141,6 @@ String _readFileStrict(String path) {
   } on FileSystemException catch (e) {
     _fatal('Cannot read file: $path\nReason: ${e.message}', 66);
   }
-  return '';
 }
 
 Future<String> _readAllStdin() async {
@@ -157,7 +156,6 @@ dynamic _safeDecode(String raw, String origin) {
   } on FormatException catch (e) {
     _fatal('Invalid JSON in $origin:\n${e.message}', 65);
   }
-  return null;
 }
 
 Never _fatal(String msg, int code) {
@@ -247,7 +245,7 @@ _TObj _inferMergedRoot(String rootName, List<Map<String, dynamic>> samples) {
   _TObj? acc;
   for (final m in samples) {
     final cur = _inferObjOnce(rootName.pascalCase, m);
-    acc = acc == null ? cur : _mergeTypes(acc!, cur) as _TObj;
+    acc = acc == null ? cur : _mergeTypes(acc, cur) as _TObj;
   }
   return acc!;
 }

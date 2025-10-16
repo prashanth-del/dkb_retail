@@ -1,41 +1,33 @@
 import 'dart:io';
 
 import 'package:db_uicomponents/db_uicomponents.dart';
-import 'package:http/http.dart';
-import 'package:logger/logger.dart';
 
 import '../../../../common/utils.dart';
 import '../../../../core/utils/method_channel/custom_method_channel.dart';
 import '../../../../network/data/api_mapper.dart';
 import '../../../../network/data/execute_api_call.dart';
 import '../../../../network/data/model/app_status.dart';
-import '../../../../network/data/model/generic_response.dart';
 import '../../../../network/data/network_client.dart';
 import '../../../../network/data/status_policy.dart';
-import '../../../../network/data/types.dart';
 import '../../../../network/data/urls/login_url.dart';
 import '../../../../network/domain/models/api_envelope.dart';
 import '../../../../network/domain/models/api_error.dart';
 import '../../../../network/domain/models/api_response.dart';
-import '../models/rp_dto.dart';
-import '../models/user_dto.dart';
+import '../models/sign_in_with_credentials_models/signwith_credentials_dto.dart';
+import '../models/sign_in_with_credentials_models/signwith_credentials_request.dart';
 
 part 'src/resend_otp.dart';
-
-part 'src/validate_otp.dart';
-
 part 'src/signin_with_credentials.dart';
+part 'src/validate_otp.dart';
 
 abstract class LoginDatasource {
   Future<ApiEnvelope<void>> validateOtp({required String otp});
 
-  Future<ApiEnvelope<UserDto>> signInWithCredentials({
-    required String customerId,
-    required String username,
-    required String password,
-  });
-
   Future<ApiEnvelope<void>> resendOtp();
+
+  Future<ApiEnvelope<SignwithCredentialsDto>> signwithCredentials2({
+    required SignwithCredentialsRequest request,
+  });
   //
   // Future<ApiResponse> logout();
   //
@@ -46,6 +38,34 @@ abstract class LoginDatasource {
   // Future<ApiResponse> menuItems({
   //   required String screenId
   // });
+
+  //   Future<ApiEnvelope<SignwithCredentials2Dto>> signwithCredentials2({
+  //   required SignwithCredentials2Request request,
+  // }) async {
+  //   final dio = client.customDio(
+  //     authorizationRequired: true,
+  //     screenId: 'COMMON',
+  //     serviceId: 'TEST_SERVICE',
+  //     subModuleId: '',
+  //     moduleId: '',
+  //   );
+
+  //   // Inject DeviceModel (ignored in JSON) — and guard against null
+  //   final appVer = await getAppVersion();
+  //   final deviceModel = await DeviceInfo(appVer: appVer, endToEndId: '').deviceType();
+  //   if (deviceModel == null) {
+  //     return ApiEnvelope.error(
+  //       const ApiError(description: 'Unable to fetch device info'),
+  //       AppStatus.error,
+  //     );
+  //   }
+  //   final withDevice = request.copyWith(deviceInfo: deviceModel);
+
+  //   return executeApiCall<SignwithCredentials2Dto>(
+  //     call: () => dio.post(LoginUrl.signwithCredentials2, data: withDevice.toJson()),
+  //     mapJson: (json) => ApiMapper.mapData<SignwithCredentials2Dto>(json, (d) => SignwithCredentials2Dto.fromJson(d)),
+  //   );
+  // }
 }
 
 class LoginDatasourceImpl implements LoginDatasource {
@@ -54,17 +74,10 @@ class LoginDatasourceImpl implements LoginDatasource {
   final NetworkClient networkClient;
 
   @override
-  Future<ApiEnvelope<UserDto>> signInWithCredentials({
-    required String customerId,
-    required String username,
-    required String password,
+  Future<ApiEnvelope<SignwithCredentialsDto>> signwithCredentials2({
+    required SignwithCredentialsRequest request,
   }) {
-    return _signInWithCredentials(
-      networkClient,
-      customerId: customerId,
-      username: username,
-      password: password,
-    );
+    return _signwithCredentials2(client: networkClient, request: request);
   }
 
   @override

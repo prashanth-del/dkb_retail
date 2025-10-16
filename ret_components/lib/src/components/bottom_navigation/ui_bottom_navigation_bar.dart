@@ -129,15 +129,15 @@ class UIBottomNavigationBar extends StatefulWidget {
     this.enableBubbleAnimation = false,
   })  : assert(icons != null || itemCount != null),
         assert(
-          ((itemCount ?? icons!.length) >= 2) &&
-              ((itemCount ?? icons!.length) <= 5),
+        ((itemCount ?? icons!.length) >= 2) &&
+            ((itemCount ?? icons!.length) <= 5),
         ),
         super(key: key) {
     if (gapLocation == GapLocation.end) {
       if (rightCornerRadius != 0) {
         throw NonAppropriatePathException(
             'RightCornerRadius along with ${GapLocation.end} or/and ${FloatingActionButtonLocation.endDocked} causes render issue => '
-            'consider set rightCornerRadius to 0.');
+                'consider set rightCornerRadius to 0.');
       }
     }
     if (gapLocation == GapLocation.center) {
@@ -145,7 +145,7 @@ class UIBottomNavigationBar extends StatefulWidget {
       if (iconsCountIsOdd) {
         throw NonAppropriatePathException(
             'Odd count of icons along with $gapLocation causes render issue => '
-            'consider set gapLocation to ${GapLocation.end}');
+                'consider set gapLocation to ${GapLocation.end}');
       }
     }
   }
@@ -186,41 +186,41 @@ class UIBottomNavigationBar extends StatefulWidget {
     double scaleFactor = 1.0,
     bool enableBubbleAnimation = false,
   }) : this._internal(
-          key: key,
-          icons: icons,
-          activeIndex: activeIndex,
-          onTap: onTap,
-          height: height,
-          splashRadius: splashRadius ?? _defaultSplashRadius,
-          splashSpeedInMilliseconds: splashSpeedInMilliseconds,
-          notchMargin: notchMargin,
-          backgroundColor: backgroundColor,
-          splashColor: splashColor,
-          activeColor: activeColor,
-          inactiveColor: inactiveColor,
-          bubbleColor: bubbleColor,
-          bounceScale: bounceScale,
-          notchAndCornersAnimation: notchAndCornersAnimation,
-          leftCornerRadius: leftCornerRadius ?? 0,
-          rightCornerRadius: rightCornerRadius ?? 0,
-          iconSize: iconSize,
-          notchSmoothness: notchSmoothness,
-          gapLocation: gapLocation ?? GapLocation.end,
-          gapWidth: gapWidth,
-          elevation: elevation,
-          shadow: shadow,
-          boxShadows: boxShadows,
-          borderColor: borderColor,
-          borderWidth: borderWidth,
-          safeAreaValues: safeAreaValues,
-          hideAnimationCurve: hideAnimationCurve,
-          hideAnimationController: hideAnimationController,
-          backgroundGradient: backgroundGradient,
-          blurFilter: imageFilter,
-          blurEffect: blurEffect,
-          scaleFactor: scaleFactor,
-          enableBubbleAnimation: enableBubbleAnimation,
-        );
+    key: key,
+    icons: icons,
+    activeIndex: activeIndex,
+    onTap: onTap,
+    height: height,
+    splashRadius: splashRadius ?? _defaultSplashRadius,
+    splashSpeedInMilliseconds: splashSpeedInMilliseconds,
+    notchMargin: notchMargin,
+    backgroundColor: backgroundColor,
+    splashColor: splashColor,
+    activeColor: activeColor,
+    inactiveColor: inactiveColor,
+    bubbleColor: bubbleColor,
+    bounceScale: bounceScale,
+    notchAndCornersAnimation: notchAndCornersAnimation,
+    leftCornerRadius: leftCornerRadius ?? 0,
+    rightCornerRadius: rightCornerRadius ?? 0,
+    iconSize: iconSize,
+    notchSmoothness: notchSmoothness,
+    gapLocation: gapLocation ?? GapLocation.end,
+    gapWidth: gapWidth,
+    elevation: elevation,
+    shadow: shadow,
+    boxShadows: boxShadows,
+    borderColor: borderColor,
+    borderWidth: borderWidth,
+    safeAreaValues: safeAreaValues,
+    hideAnimationCurve: hideAnimationCurve,
+    hideAnimationController: hideAnimationController,
+    backgroundGradient: backgroundGradient,
+    blurFilter: imageFilter,
+    blurEffect: blurEffect,
+    scaleFactor: scaleFactor,
+    enableBubbleAnimation: enableBubbleAnimation,
+  );
 
   UIBottomNavigationBar.builder({
     Key? key,
@@ -258,41 +258,41 @@ class UIBottomNavigationBar extends StatefulWidget {
     double scaleFactor = 1.0,
     bool enableBubbleAnimation = false,
   }) : this._internal(
-          key: key,
-          tabBuilder: tabBuilder,
-          itemCount: itemCount,
-          activeIndex: activeIndex,
-          onTap: onTap,
-          height: height,
-          splashRadius: splashRadius ?? _defaultSplashRadius,
-          splashSpeedInMilliseconds: splashSpeedInMilliseconds,
-          notchMargin: notchMargin,
-          backgroundColor: backgroundColor,
-          splashColor: splashColor,
-          activeColor: activeColor,
-          inactiveColor: inactiveColor,
-          bubbleColor: bubbleColor,
-          bounceScale: bounceScale,
-          notchAndCornersAnimation: notchAndCornersAnimation,
-          leftCornerRadius: leftCornerRadius ?? 0,
-          rightCornerRadius: rightCornerRadius ?? 0,
-          notchSmoothness: notchSmoothness,
-          gapLocation: gapLocation ?? GapLocation.end,
-          gapWidth: gapWidth,
-          elevation: elevation,
-          shadow: shadow,
-          boxShadows: boxShadows,
-          borderColor: borderColor,
-          borderWidth: borderWidth,
-          safeAreaValues: safeAreaValues,
-          hideAnimationCurve: hideAnimationCurve,
-          hideAnimationController: hideAnimationController,
-          backgroundGradient: backgroundGradient,
-          blurEffect: blurEffect,
-          blurFilter: imageFilter,
-          scaleFactor: scaleFactor,
-          enableBubbleAnimation: enableBubbleAnimation,
-        );
+    key: key,
+    tabBuilder: tabBuilder,
+    itemCount: itemCount,
+    activeIndex: activeIndex,
+    onTap: onTap,
+    height: height,
+    splashRadius: splashRadius ?? _defaultSplashRadius,
+    splashSpeedInMilliseconds: splashSpeedInMilliseconds,
+    notchMargin: notchMargin,
+    backgroundColor: backgroundColor,
+    splashColor: splashColor,
+    activeColor: activeColor,
+    inactiveColor: inactiveColor,
+    bubbleColor: bubbleColor,
+    bounceScale: bounceScale,
+    notchAndCornersAnimation: notchAndCornersAnimation,
+    leftCornerRadius: leftCornerRadius ?? 0,
+    rightCornerRadius: rightCornerRadius ?? 0,
+    notchSmoothness: notchSmoothness,
+    gapLocation: gapLocation ?? GapLocation.end,
+    gapWidth: gapWidth,
+    elevation: elevation,
+    shadow: shadow,
+    boxShadows: boxShadows,
+    borderColor: borderColor,
+    borderWidth: borderWidth,
+    safeAreaValues: safeAreaValues,
+    hideAnimationCurve: hideAnimationCurve,
+    hideAnimationController: hideAnimationController,
+    backgroundGradient: backgroundGradient,
+    blurEffect: blurEffect,
+    blurFilter: imageFilter,
+    scaleFactor: scaleFactor,
+    enableBubbleAnimation: enableBubbleAnimation,
+  );
 
   @override
   _UIBottomNavigationBarState createState() => _UIBottomNavigationBarState();
@@ -311,10 +311,15 @@ class _UIBottomNavigationBarState extends State<UIBottomNavigationBar>
   double _bubbleLeft = 0;
   int _previousIndex = 0;
 
+  late double _screenWidth;
+  late int _itemCount;
+  late double _effectiveWidth;
+  late double _tabWidth;
+
   @override
   void initState() {
     super.initState();
-    _previousIndex = widget.activeIndex; // Initialize to current active index
+    _previousIndex = widget.activeIndex;
 
     _bubbleController = AnimationController(
       vsync: this,
@@ -325,43 +330,45 @@ class _UIBottomNavigationBarState extends State<UIBottomNavigationBar>
       parent: _bubbleController,
       curve: Curves.linear,
     )..addListener(() {
-        setState(() {
-          _bubbleRadius = widget.splashRadius * _splashAnimation.value;
-          if (_bubbleRadius == widget.splashRadius) {
-            _bubbleRadius = 0;
-          }
-          if (_splashAnimation.value < 0.5) {
-            _iconScale = 1 + _splashAnimation.value * widget.scaleFactor;
-          } else {
-            _iconScale =
-                1 + widget.scaleFactor - _splashAnimation.value * widget.scaleFactor;
-          }
-        });
-      });
+      setState(() {
+        _bubbleRadius = widget.splashRadius * _splashAnimation.value;
+        if (_bubbleRadius == widget.splashRadius) _bubbleRadius = 0;
 
-    _bubbleAnimation = CurvedAnimation(
-      parent: _bubbleController,
-      curve: Curves.easeInOut,
-    )..addListener(() {
-        setState(() {
-          final screenWidth = MediaQuery.of(context).size.width;
-          final itemCount = widget.itemCount ?? widget.icons!.length;
-          final effectiveWidth = screenWidth - (widget.gapWidth ?? 0);
-          final tabWidth = effectiveWidth / itemCount;
-          final previousLeft = _previousIndex * tabWidth;
-          final targetLeft = widget.activeIndex * tabWidth;
-          _bubbleLeft = lerpDouble(previousLeft, targetLeft, _bubbleAnimation.value)!;
-        });
+        if (_splashAnimation.value < 0.5) {
+          _iconScale = 1 + _splashAnimation.value * widget.scaleFactor;
+        } else {
+          _iconScale =
+              1 + widget.scaleFactor - _splashAnimation.value * widget.scaleFactor;
+        }
       });
+    });
 
-    _bubbleController.value = 1.0; // Start at end state for initial position
+    _bubbleController.value = 1.0;
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+
+    _screenWidth = MediaQuery.of(context).size.width;
+    _itemCount = widget.itemCount ?? widget.icons!.length;
+    _effectiveWidth = _screenWidth - (widget.gapWidth ?? 0);
+    _tabWidth = _effectiveWidth / _itemCount;
+
     geometryListenable = Scaffold.geometryOf(context);
+
     widget.notchAndCornersAnimation?.addListener(() => setState(() {}));
+
+    _bubbleAnimation = CurvedAnimation(
+      parent: _bubbleController,
+      curve: Curves.easeInOut,
+    )..addListener(() {
+      setState(() {
+        final previousLeft = _previousIndex * _tabWidth;
+        final targetLeft = widget.activeIndex * _tabWidth;
+        _bubbleLeft = lerpDouble(previousLeft, targetLeft, _bubbleAnimation.value)!;
+      });
+    });
   }
 
   @override
@@ -370,9 +377,7 @@ class _UIBottomNavigationBarState extends State<UIBottomNavigationBar>
     if (widget.activeIndex != oldWidget.activeIndex) {
       _previousIndex = oldWidget.activeIndex;
       if (widget.enableBubbleAnimation) {
-        if (_bubbleController.isAnimating) {
-          _bubbleController.reset();
-        }
+        if (_bubbleController.isAnimating) _bubbleController.reset();
         _bubbleController.forward(from: 0);
       }
     }
@@ -409,10 +414,10 @@ class _UIBottomNavigationBarState extends State<UIBottomNavigationBar>
         borderWidth: widget.borderWidth ?? 2,
         child: widget.hideAnimationController != null
             ? VisibleAnimator(
-                showController: widget.hideAnimationController!,
-                curve: widget.hideAnimationCurve ?? Curves.fastOutSlowIn,
-                child: _buildBottomBar(context),
-              )
+          showController: widget.hideAnimationController!,
+          curve: widget.hideAnimationCurve ?? Curves.fastOutSlowIn,
+          child: _buildBottomBar(context),
+        )
             : _buildBottomBar(context),
       ),
     );
@@ -429,12 +434,12 @@ class _UIBottomNavigationBarState extends State<UIBottomNavigationBar>
         right: widget.safeAreaValues.right,
         child: widget.blurEffect
             ? ClipRect(
-                child: BackdropFilter(
-                  filter: widget.blurFilter ??
-                      ImageFilter.blur(sigmaX: 5, sigmaY: 10),
-                  child: _buildBody(context),
-                ),
-              )
+          child: BackdropFilter(
+            filter: widget.blurFilter ??
+                ImageFilter.blur(sigmaX: 5, sigmaY: 10),
+            child: _buildBody(context),
+          ),
+        )
             : _buildBody(context),
       ),
     );
@@ -442,7 +447,7 @@ class _UIBottomNavigationBarState extends State<UIBottomNavigationBar>
 
   Widget _buildBody(BuildContext context) {
     final bottomPadding =
-        widget.safeAreaValues.bottom ? 0 : MediaQuery.paddingOf(context).bottom;
+    widget.safeAreaValues.bottom ? 0 : MediaQuery.paddingOf(context).bottom;
     final screenWidth = MediaQuery.of(context).size.width;
     final itemCount = widget.itemCount ?? widget.icons!.length;
     final effectiveWidth = screenWidth - (widget.gapWidth ?? 0);
@@ -464,18 +469,18 @@ class _UIBottomNavigationBarState extends State<UIBottomNavigationBar>
         boxShadow: widget.boxShadows ??
             (widget.shadow != null
                 ? [
-                    BoxShadow(
-                      color: widget.shadow!.color,
-                      blurRadius: widget.shadow!.blurRadius,
-                      offset: widget.shadow!.offset,
-                    )
-                  ]
+              BoxShadow(
+                color: widget.shadow!.color,
+                blurRadius: widget.shadow!.blurRadius,
+                offset: widget.shadow!.offset,
+              )
+            ]
                 : [
-                    BoxShadow(
-                      color: Colors.black12,
-                      blurRadius: widget.elevation ?? 8,
-                    )
-                  ]),
+              BoxShadow(
+                color: Colors.black12,
+                blurRadius: widget.elevation ?? 8,
+              )
+            ]),
       ),
       child: Stack(
         children: [

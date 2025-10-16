@@ -514,6 +514,7 @@ import 'i18n_keys.dart';
 
 // add as many parts as you like
 part 'parts/errors_and_common.dart';
+part 'parts/dashboard.dart';
 part 'parts/login.dart';
 part 'parts/quick_links.dart';
 part 'parts/transfers_payments.dart';
@@ -528,6 +529,12 @@ part 'parts/apply_now.dart';
 part 'parts/country_language.dart';
 part 'parts/otp.dart';
 part 'parts/bill_payment.dart';
+part 'parts/registration.dart';
+part 'parts/rates.dart';
+part 'parts/wallet.dart';
+part 'parts/welcome_back.dart';
+part 'parts/prayer_timings.dart';
+part 'parts/forgot_password.dart';
 
 class DefaultString {
   static I18nSource? _src;

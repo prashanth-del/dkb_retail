@@ -30,7 +30,7 @@ class PrayerTimesAppBar extends StatelessWidget implements PreferredSizeWidget {
         children: [
           GestureDetector(
             onTap: onBack ?? () => Navigator.pop(context),
-            child: Icon(Icons.arrow_back, color: textColor, size: 23),
+            child: Icon(Icons.arrow_back_ios_new, color: textColor, size: 23),
           ),
           SizedBox(width: size.width * 0.02),
           Text(
@@ -49,7 +49,7 @@ class PrayerTimesAppBar extends StatelessWidget implements PreferredSizeWidget {
                 onTap: onSettings,
                 child: Padding(
                   padding: const EdgeInsets.only(right: 16.0),
-                  child: Icon(Icons.settings, color: textColor),
+                  child: Icon(Icons.settings_outlined, color: textColor),
                 ),
               ),
             ]

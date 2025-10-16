@@ -6,7 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/constants/asset_path/asset_path.dart';
 import '../../../../core/utils/ui_components/components/src/ui_error.dart';
-import '../../../common/components/auto_leading_widget.dart';
+import '../../../common/presentation/components/auto_leading_widget.dart';
 import '../../domain/entity/request/active_session_req.dart';
 import '../controller/notifier/get_active_session_notifier.dart';
 import '../widgets/active_sessions_chart.dart';

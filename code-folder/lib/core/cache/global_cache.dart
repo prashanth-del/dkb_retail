@@ -1,13 +1,11 @@
 import 'dart:convert';
 
+import 'package:dkb_retail/common/utils.dart';
 import 'package:dkb_retail/features/accounts/data/model/account_selected_items.dart';
-import 'package:dkb_retail/features/login/data/models/user_dto.dart';
-import 'package:dkb_retail/features/login/domain/entities/user.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 
 import '../../network/domain/models/auth_tokens.dart';
-import 'adapter/auth_tokens_adapter.dart';
 
 /// An example utility class to cache simple data in hive.
 /// This can be utilized like shared preferences.
@@ -37,6 +35,7 @@ class GlobalCache {
   static const String _selectedLanguage = 'selected_lang';
   static const String _selectedAccPageItemsKey = 'selected_acc_page_items';
   static const String _allAccPageItemsKey = 'all_acc_page_items';
+  static const String _applyProducts = 'apply+products';
 
   static Future<void> init() async {
     final box = await Hive.openBox<dynamic>(_boxName);
@@ -87,6 +86,122 @@ class GlobalCache {
   bool isPreferenceSeen() => _getValue(_preferenceKey, defaultValue: false);
 
   Future<void> setPreferenceSeen() => _setValue(_preferenceKey, true);
+
+  // Future<void> cacheProducts(List<BankProductsDto> items) async {
+  //   // await _box.put(_applyProducts, json);
+  //   try {
+  //     final jsonString = jsonEncode(
+  //       items.map((item) => item.toJson()).toList(),
+  //     );
+  //     await _setValue(_applyProducts, jsonString);
+  //   } catch (e) {
+  //     consoleLog('Error storing product items: $e');
+  //   }
+  // }
+
+  // Future<List<BankProductsDto>> getCachedProducts()async {
+  //   // return _box.get(_applyProducts);
+  //    try {
+  //     final jsonString = _getValue(_applyProducts);
+  //     if (jsonString == null) {
+  //       return [];
+  //     }
+  //     final List<dynamic> jsonList = jsonDecode(jsonString);
+  //     return jsonList
+  //         .map(
+  //           (json) =>
+  //               BankProductsDto.fromJson(json as Map<String, dynamic>),
+  //         )
+  //         .toList();
+  //   } catch (e) {
+  //     print('Error retrieving selected account page items: $e');
+  //     return [];
+  //   }
+  // }
+
+  // // Cache product list
+  // Future<void> cacheProducts(dynamic items) async {
+  //   try {
+  //     // final jsonString = jsonEncode(
+  //     //   items.map((item) => item.toJson()).toList(),
+  //     // );
+  //     await _setValue(_applyProducts, items);
+  //   } catch (e) {
+  //     consoleLog('❌ Error storing product items: $e');
+  //   }
+  // }
+
+  // // Retrieve cached products
+  // Future<Map<String, dynamic>> getCachedProducts() async {
+  //   try {
+  //     final jsonString = _getValue(_applyProducts);
+  //     // if (jsonString.isEmpty) {
+  //     //   return [];
+  //     // }
+  //     // consoleLog('json : $jsonString');
+
+  //     // final List<dynamic> jsonList = jsonDecode(jsonString);
+  //     // return jsonList
+  //     //     .map(
+  //     //       (json) => BankProductsDto.fromJson(
+  //     //         Map<String, dynamic>.from(json as Map),
+  //     //       ),
+  //     //     )
+  //     //     .toList();
+
+  //     return jsonString;
+  //   } catch (e) {
+  //     consoleLog('❌ Error retrieving cached products: $e');
+  //     return {};
+  //   }
+  // }
+
+  Future<void> cacheProducts(dynamic items) async {
+    try {
+      // Serialize the items (Map or List) to a JSON string
+      final jsonString = jsonEncode(items);
+
+      // Store the serialized JSON string
+      await _setValue(_applyProducts, jsonString);
+
+      print('✅ Products cached successfully');
+    } catch (e) {
+      consoleLog('❌ Error storing product items: $e');
+    }
+  }
+
+  // Retrieve cached products
+  Future<Map<String, dynamic>> getCachedProducts() async {
+    try {
+      final jsonString = await _getValue(_applyProducts);
+
+      // Check if jsonString is null or not a String
+      if (jsonString == null || jsonString is! String || jsonString.isEmpty) {
+        consoleLog('❌ No cached products found or invalid data');
+        return {};
+      }
+
+      // Decode the JSON string
+      final decoded = jsonDecode(jsonString);
+
+      // Handle different JSON structures
+      if (decoded is Map) {
+        // Convert keys to strings to ensure Map<String, dynamic>
+        return decoded.map((key, value) => MapEntry(key.toString(), value));
+      } else if (decoded is List) {
+        // If the cached data is a List, wrap it in a Map
+        return {'products': decoded};
+      } else {
+        consoleLog('❌ Unexpected cached data type: ${decoded.runtimeType}');
+        return {};
+      }
+    } catch (e) {
+      consoleLog('❌ Error retrieving cached products: $e');
+      return {};
+    }
+  }
+
+  bool get hasProductsCache => _box.containsKey(_applyProducts);
 
   bool isChangePwdSeen() => _getValue(_changePwdKey, defaultValue: false);
 

@@ -1,5 +1,5 @@
 import 'package:db_uicomponents/db_uicomponents.dart';
-import 'package:dkb_retail/features/registration/data/modals/password_validation.dart';
+import 'package:dkb_retail/features/registration/data/models/password_validation.dart';
 import 'package:flutter/material.dart';
 
 List<Widget> passwordRulesWidget(PasswordValidation validation) {

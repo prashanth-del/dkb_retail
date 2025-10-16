@@ -1,6 +1,6 @@
 import 'package:db_uicomponents/db_uicomponents.dart';
 import 'package:flutter/material.dart';
-import 'package:dkb_retail/features/common/styles/ui_text_styles.dart';
+import 'package:dkb_retail/features/common/presentation/styles/ui_text_styles.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/constants/asset_path/asset_path.dart';
@@ -61,32 +61,119 @@ class _LocalFundTransferPageState extends ConsumerState<LocalFundTransferPage> {
     switch (type) {
       case TransferType.localBank:
         txnList = [
-          {"name": "Krishna Ketan Nagu", "amount": "1,000,000.00 QAR", "status": "Transfer request sent to Beneficiary Bank", "date": "31 Dec, 2023", "color": "orange"},
-          {"name": "Abdul Sayed Pothu Kan...", "amount": "830.45 QAR", "status": "Successful", "date": "31 Dec, 2023", "color": "green"},
-          {"name": "Test UserA", "amount": "830.45 QAR", "status": "Failed", "date": "31 Dec, 2023", "color": "red"},
+          {
+            "name": "Krishna Ketan Nagu",
+            "amount": "1,000,000.00 QAR",
+            "status": "Transfer request sent to Beneficiary Bank",
+            "date": "31 Dec, 2023",
+            "color": "orange",
+          },
+          {
+            "name": "Abdul Sayed Pothu Kan...",
+            "amount": "830.45 QAR",
+            "status": "Successful",
+            "date": "31 Dec, 2023",
+            "color": "green",
+          },
+          {
+            "name": "Test UserA",
+            "amount": "830.45 QAR",
+            "status": "Failed",
+            "date": "31 Dec, 2023",
+            "color": "red",
+          },
         ];
         break;
       case TransferType.cardlessWithdrawal:
         txnList = [
-          {"name": "Mobile No : 99210984", "amount": "1,000,000.00 QAR", "status": "Success", "date": "31 Dec, 2023", "color": "green"},
-          {"name": "Mobile No : 99210984", "amount": "830.45 QAR", "status": "Success", "date": "31 Dec, 2023", "color": "green"},
-          {"name": "Mobile No : 99210984", "amount": "830.45 QAR", "status": "Success", "date": "31 Dec, 2023", "color": "green"},
-          {"name": "Mobile No : 99210984", "amount": "830.45 QAR", "status": "Failed", "date": "31 Dec, 2023", "color": "red"},
+          {
+            "name": "Mobile No : 99210984",
+            "amount": "1,000,000.00 QAR",
+            "status": "Success",
+            "date": "31 Dec, 2023",
+            "color": "green",
+          },
+          {
+            "name": "Mobile No : 99210984",
+            "amount": "830.45 QAR",
+            "status": "Success",
+            "date": "31 Dec, 2023",
+            "color": "green",
+          },
+          {
+            "name": "Mobile No : 99210984",
+            "amount": "830.45 QAR",
+            "status": "Success",
+            "date": "31 Dec, 2023",
+            "color": "green",
+          },
+          {
+            "name": "Mobile No : 99210984",
+            "amount": "830.45 QAR",
+            "status": "Failed",
+            "date": "31 Dec, 2023",
+            "color": "red",
+          },
         ];
         break;
       case TransferType.international:
         txnList = [
-          {"bank": "Dukhan Bank", "name": "Abdul Sayed Pothu Kan...", "amount": "830.45 INR", "status": "Approved", "date": "31 Dec, 2023", "color": "green"},
-          {"bank": "Dukhan Bank", "name": "Abdul Sayed Pothu Kan...", "amount": "830.45 INR", "status": "Approved", "date": "31 Dec, 2023", "color": "green"},
-          {"bank": "Dukhan Bank", "name": "Abdul Sayed Pothu Kan...", "amount": "830.45 INR", "status": "Processed by Dukhan Bank", "date": "31 Dec, 2023", "color": "orange"},
+          {
+            "bank": "Dukhan Bank",
+            "name": "Abdul Sayed Pothu Kan...",
+            "amount": "830.45 INR",
+            "status": "Approved",
+            "date": "31 Dec, 2023",
+            "color": "green",
+          },
+          {
+            "bank": "Dukhan Bank",
+            "name": "Abdul Sayed Pothu Kan...",
+            "amount": "830.45 INR",
+            "status": "Approved",
+            "date": "31 Dec, 2023",
+            "color": "green",
+          },
+          {
+            "bank": "Dukhan Bank",
+            "name": "Abdul Sayed Pothu Kan...",
+            "amount": "830.45 INR",
+            "status": "Processed by Dukhan Bank",
+            "date": "31 Dec, 2023",
+            "color": "orange",
+          },
         ];
         break;
       case TransferType.masterCard:
         txnList = [
-          {"name": "Krishna Ketan Nagu", "amount": "1,000,000.00 QAR", "status": "Transfer request sent to Beneficiary Bank", "date": "31 Dec, 2023", "color": "orange"},
-          {"name": "Abdul Sayed Pothu Kan...", "amount": "830.45 QAR", "status": "Successful", "date": "31 Dec, 2023", "color": "green"},
-          {"name": "Ahmed Ansari", "amount": "830.45 QAR", "status": "Successful", "date": "31 Dec, 2023", "color": "green"},
-          {"name": "Test UserA", "amount": "830.45 QAR", "status": "Failed", "date": "31 Dec, 2023", "color": "red"},
+          {
+            "name": "Krishna Ketan Nagu",
+            "amount": "1,000,000.00 QAR",
+            "status": "Transfer request sent to Beneficiary Bank",
+            "date": "31 Dec, 2023",
+            "color": "orange",
+          },
+          {
+            "name": "Abdul Sayed Pothu Kan...",
+            "amount": "830.45 QAR",
+            "status": "Successful",
+            "date": "31 Dec, 2023",
+            "color": "green",
+          },
+          {
+            "name": "Ahmed Ansari",
+            "amount": "830.45 QAR",
+            "status": "Successful",
+            "date": "31 Dec, 2023",
+            "color": "green",
+          },
+          {
+            "name": "Test UserA",
+            "amount": "830.45 QAR",
+            "status": "Failed",
+            "date": "31 Dec, 2023",
+            "color": "red",
+          },
         ];
         break;
     }
@@ -169,7 +256,9 @@ class _LocalFundTransferPageState extends ConsumerState<LocalFundTransferPage> {
                     ...transactions.map((transaction) {
                       return TransactionCard(
                         transferType: widget.transferType,
-                        bank: widget.transferType == TransferType.international ? transaction["bank"] : null,
+                        bank: widget.transferType == TransferType.international
+                            ? transaction["bank"]
+                            : null,
                         name: transaction["name"],
                         amount: transaction["amount"],
                         status: transaction["status"],
@@ -187,7 +276,9 @@ class _LocalFundTransferPageState extends ConsumerState<LocalFundTransferPage> {
     );
   }
 }
-Widget _buildInput(BuildContext context, {
+
+Widget _buildInput(
+  BuildContext context, {
   required String label,
   required String hint,
   required TextEditingController controller,
@@ -203,7 +294,9 @@ Widget _buildInput(BuildContext context, {
         hintText: hint,
         suffixIcon: suffixIcon,
         controller: controller,
-        textStyle: UiTextStyles.uiInfoTitleSmallBold(context)?.copyWith(color: DefaultColors.gray2D),
+        textStyle: UiTextStyles.uiInfoTitleSmallBold(
+          context,
+        )?.copyWith(color: DefaultColors.gray2D),
         readOnly: onTap != null,
         onTap: onTap,
       ),

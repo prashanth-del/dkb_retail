@@ -1,11 +1,18 @@
-import 'package:dkb_retail/features/login/presentation/controller/state/user_profile_notifier.dart';
+import 'package:dkb_retail/features/common/domain/locators/common_locators.dart';
+import 'package:dkb_retail/features/common/domain/repositories/common_repository.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import '../../../domain/entities/user_profile.dart';
+import '../../../../common/data/models/otp_generate_models/generate_otp_request.dart';
+import '../../../../common/data/models/otp_generate_models/generate_otp_request_request_info_dto.dart';
+import '../../../../common/data/models/otp_validate_models/validate_otp_request.dart';
+import '../../../../common/data/models/otp_validate_models/validate_otp_request_request_info_dto.dart';
+import '../../../data/models/sign_in_with_credentials_models/signwith_credentials_request.dart';
+import '../../../data/models/sign_in_with_credentials_models/signwith_credentials_request_body_dto.dart';
+import '../../../data/models/sign_in_with_credentials_models/signwith_credentials_request_body_raw_dto.dart';
 import '../../../domain/locator/login_locator.dart';
 import '../../../domain/repository/login_failure.dart';
 import '../../../domain/repository/login_repository.dart';
 import '../login_providers.dart';
-import 'login_state.dart';
+import '../../state/login_state.dart';
 
 part 'login_notifiers.g.dart';
 
@@ -17,47 +24,36 @@ class LoginNotifier extends _$LoginNotifier {
   }
 
   LoginRepository get _repository => ref.read(loginRepoProvider);
+  CommonRepository get _commonrepository => ref.read(commonRepositoryProvider);
 
-  Future<void> signInWithUsernamePassword({
+  Future<void> signWithUsernamePassword({
     required String customerId,
     required String username,
     required String password,
   }) async {
     ref.read(loadingProvider.notifier).state = true;
     state = const LoginState.loading();
-    final failureOrSuccess = await _repository.signInUsingUsernamePassword(
-      customerId: customerId,
-      username: username,
-      password: password,
+    final result = await _repository.signWithCredentials(
+      request: SignwithCredentialsRequest(
+        body: SignwithCredentialsRequestBodyDto(
+          raw: SignwithCredentialsRequestBodyRawDto(
+            userId: username,
+            clientSalt: 'defaultClientSalt',
+            loginChannel: "WEB",
+            password: password,
+          ),
+        ),
+      ),
     );
 
-    state = failureOrSuccess.fold(
-      (failures) {
-        ref.read(loadingProvider.notifier).state = false;
-        return LoginState.failure(switch (failures) {
-          ServiceFailure(message: var m) => m,
-          InternetFailure(message: var m) => m,
-          ServerFailure(message: var m) => m,
-          InvalidOtp() => '',
-          MaxOtpAttempted(message: var m) => m,
-        });
-      },
-      (user) {
-        ref.read(loadingProvider.notifier).state = false;
+    ref.read(loadingProvider.notifier).state = false;
 
-        // Only create UserProfile if userId and customerNumber are not null
-        if (user.userId != null && user.customerNumber != null) {
-          final userProfile = UserProfile(
-            userName: user.userId!,
-            customerNumber: user.customerNumber!,
-            dcUserName: user.dcUserName,
-            userRole: mapStringToUserRoleType(user.userRole),
-          );
-
-          ref.read(userProfileProvider.notifier).updateUserProfile(userProfile);
-        }
-
-        return LoginState.success(user);
+    result.fold(
+      (err) => state = LoginState.failure(
+        err.description ?? err.mwdesc ?? 'Server Error!',
+      ),
+      (data) {
+        state = LoginState.success(data);
       },
     );
   }
@@ -65,36 +61,28 @@ class LoginNotifier extends _$LoginNotifier {
   Future<void> validateOtp(String otp) async {
     ref.read(loadingProvider.notifier).state = true;
     state = const LoginState.loading();
-    final failureOrNone = await _repository.validateOtp(otp: otp);
+    final request = ValidateOtpRequest(
+      requestInfo: ValidateOtpRequestRequestInfoDto(otp: otp),
+    );
+    final failureOrNone = await _commonrepository.validateOtp(request: request);
 
     state = failureOrNone.fold(
-      () {
-        ref.read(loadingProvider.notifier).state = false;
-        return const LoginState.otpValid();
-      },
       (failure) {
         ref.read(loadingProvider.notifier).state = false;
-        if (failure is MaxOtpAttempted) {
-          return LoginState.maxAttempted(switch (failure) {
-            ServiceFailure(message: var m) => m,
-            InternetFailure(message: var m) => m,
-            ServerFailure(message: var m) => m,
-            InvalidOtp(message: var m) => m,
-            MaxOtpAttempted(message: var m) => m,
-          });
-        } else {
-          return LoginState.failure(switch (failure) {
-            ServiceFailure(message: var m) => m,
-            InternetFailure(message: var m) => m,
-            ServerFailure(message: var m) => m,
-            InvalidOtp(message: var m) => m,
-            MaxOtpAttempted(message: var m) => m,
-            // TODO: Handle this case.
-            Object() => throw UnimplementedError(),
-            // TODO: Handle this case.
-            null => throw UnimplementedError(),
-          });
-        }
+
+        return LoginState.failure(switch (failure) {
+          ServiceFailure(message: var m) => m,
+          InternetFailure(message: var m) => m,
+          ServerFailure(message: var m) => m,
+          InvalidOtp(message: var m) => m,
+          MaxOtpAttempted(message: var m) => m,
+          // TODO: Handle this case.
+          Object() => throw UnimplementedError(),
+        });
+      },
+      (otpvalidate) {
+        ref.read(loadingProvider.notifier).state = false;
+        return const LoginState.otpValid();
       },
     );
   }
@@ -119,14 +107,6 @@ class LoginNotifier extends _$LoginNotifier {
           MaxOtpAttempted(message: var m) => m,
         });
       },
-    );
-  }
-
-  Future<void> signInWithPassword({required String password}) async {
-    await signInWithUsernamePassword(
-      customerId: "1207026",
-      username: "apr1207026",
-      password: password,
     );
   }
 

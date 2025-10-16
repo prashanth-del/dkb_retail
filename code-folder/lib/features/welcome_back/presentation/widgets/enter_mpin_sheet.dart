@@ -1,5 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:db_uicomponents/db_uicomponents.dart' hide DefaultColors;
+import 'package:dkb_retail/core/router/app_router.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -45,43 +47,21 @@ Widget enterMpinWidget(BuildContext context) {
               color: DefaultColors.blue88,
             ),
             UiSpace.vertical(30),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(
-                  color: pinNode.hasFocus
-                      ? DefaultColors.blue98
-                      : DefaultColors.black,
-                ),
-              ),
-              child: TextFormField(
-                maxLength: 4,
-                obscureText: true,
-
-                focusNode: pinNode,
-                keyboardType: const TextInputType.numberWithOptions(),
-                style: const TextStyle(fontWeight: FontWeight.w600),
-                onFieldSubmitted: (_) => pinNode.unfocus(),
-                onChanged: (value) {
-                  // ref.read(pinNumberProvider.notifier).state = value;
-                },
-                inputFormatters: [
-                  FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-                ],
-                decoration: const InputDecoration(
-                  counterText: '',
-                  hintText: "----",
-                  label: Text('Enter PIN'),
-                  labelStyle: TextStyle(
-                    fontSize: 14,
-                    color: DefaultColors.black,
-                    fontWeight: FontWeight.w500,
-                  ),
-                  border: InputBorder.none,
-                ),
-              ),
+            UiTextField(
+              padding: EdgeInsets.zero,
+              margin: EdgeInsets.zero,
+              label: 'Enter PIN',
+              hintText: "----",
+              maxLength: 4,
+              obscureText: true,
+              onFieldSubmitted: (_) => pinNode.unfocus(),
+              focusNode: pinNode,
+              inputFormatters: [
+                FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+              ],
+              keyboardType: const TextInputType.numberWithOptions(),
             ),
+
             UiSpace.vertical(30),
             Center(
               child: RichText(
@@ -91,6 +71,10 @@ Widget enterMpinWidget(BuildContext context) {
                     TextSpan(text: "Forgot M-Pin?"),
                     TextSpan(
                       text: " Login using Password?",
+                      recognizer: TapGestureRecognizer()
+                        ..onTap = () {
+                          context.router.replace(LoginRoute());
+                        },
                       style: TextStyle(
                         color: DefaultColors.blue9B,
                         fontWeight: FontWeight.w700,

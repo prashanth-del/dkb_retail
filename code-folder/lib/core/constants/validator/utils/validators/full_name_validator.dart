@@ -2,6 +2,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../i18n/controller/i18n_providers.dart';
+import '../../../app_strings/default_string.dart';
 import '../../errors/failures.dart';
 import '../i_validator.dart';
 
@@ -23,7 +24,7 @@ class _FullNameValidatorEn implements IValidator {
     if (value == null || value.trim().isEmpty) {
       return ValidationFailure.empty(
         message: _localization.getString("MSG003").isEmpty
-            ? "This field is required MSG003"
+            ? DefaultString.instance.requiredFieldTitle
             : _localization.getString("MSG003"),
       );
     }
@@ -35,7 +36,7 @@ class _FullNameValidatorEn implements IValidator {
     if (!regex.hasMatch(name)) {
       return ValidationFailure.invalidFullName(
         message: _localization.getString("Only_Alphabets_Spaces").isEmpty
-            ? "Only alphabets and spaces are allowed"
+            ? DefaultString.instance.fullNameValidate
             : _localization.getString("Only_Alphabets_Spaces"),
       );
     }
@@ -48,7 +49,7 @@ class _FullNameValidatorEn implements IValidator {
     if (words.length < 2) {
       return ValidationFailure.invalidFullName(
         message: _localization.getString("MSG004").isEmpty
-            ? "The name should consist of two words separated by a space"
+            ? DefaultString.instance.nameSpaceValidate
             : _localization.getString("MSG004"),
       );
     }
@@ -67,7 +68,7 @@ class _FullNameValidatorEn implements IValidator {
       if (name.toLowerCase().contains(badWord.toLowerCase())) {
         return ValidationFailure.invalidFullName(
           message: _localization.getString("Profanity_Not_Allowed").isEmpty
-              ? "Inappropriate words are not allowed"
+              ? DefaultString.instance.nameProfanityValidate
               : _localization.getString("Profanity_Not_Allowed"),
         );
       }

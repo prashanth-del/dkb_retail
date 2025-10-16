@@ -1,3 +1,4 @@
+import 'package:dkb_retail/common/utils.dart';
 import 'package:dkb_retail/features/product_offering/domain/locator/product_offering_locator.dart';
 import 'package:dkb_retail/features/product_offering/domain/repository/product_offering_repository.dart';
 import 'package:dkb_retail/features/product_offering/presentation/controller/product_offering_providers.dart';
@@ -25,7 +26,10 @@ class ProductOfferingNotifier extends _$ProductOfferingNotifier {
     ref.read(productsloadingProvider.notifier).state = false;
     state = failureOrSuccess.fold(
       (l) => AsyncError(l.message, StackTrace.current),
-      (r) => AsyncData(r),
+      (r) {
+        consoleLog('products $r');
+        return AsyncData(r);
+      },
     );
   }
 }

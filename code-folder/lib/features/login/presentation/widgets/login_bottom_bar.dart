@@ -3,18 +3,22 @@ import 'package:dkb_retail/core/constants/asset_path/asset_path.dart';
 import 'package:dkb_retail/core/router/app_router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import '../../../common/dialog/custom_sheet.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../../../../core/constants/app_strings/default_string.dart';
+import '../../../../core/i18n/controller/i18n_notifiers.dart';
+import '../../../common/presentation/dialog/custom_sheet.dart';
 import '../../../reach_us/presentation/widgets/more_sheet_widget.dart';
 import 'rates_bottom_sheet.dart';
 
-class LoginBottomBar extends StatefulWidget {
+class LoginBottomBar extends ConsumerStatefulWidget {
   const LoginBottomBar({super.key});
 
   @override
-  _LoginBottomBarState createState() => _LoginBottomBarState();
+  ConsumerState<LoginBottomBar> createState() => _LoginBottomBarState();
 }
 
-class _LoginBottomBarState extends State<LoginBottomBar>
+class _LoginBottomBarState extends ConsumerState<LoginBottomBar>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
@@ -41,50 +45,57 @@ class _LoginBottomBarState extends State<LoginBottomBar>
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.symmetric(),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          _buildAnimatedTab(
-            index: 0,
-            svgIconPath: AssetPath.svg.emergencyBlockIcon,
-            title: "Emergency Block",
-            onTap: () => setState(() => _selectedIndex = 0),
-          ),
-          _buildAnimatedTab(
-            index: 1,
-            svgIconPath: AssetPath.svg.ratesIcon,
-            title: "Rates",
-            onTap: () {
-              setState(() => _selectedIndex = 1);
-              CustomSheet.show(
-                context: context,
-                isDismissible: true,
-                child: ratesBottomSheet(context),
-              );
-            },
-          ),
-          _buildAnimatedTab(
-            index: 2,
-            svgIconPath: AssetPath.svg.productsIcon,
-            title: "Products",
-            badgeCount: 5,
-            onTap: () {
-              setState(() => _selectedIndex = 2);
-              context.router.push(const ProductOfferingRoute());
-            },
-            heroTag: 'productTitleHero',
-          ),
-          _buildAnimatedTab(
-            index: 3,
-            svgIconPath: AssetPath.svg.moreIcon,
-            title: "More",
-            onTap: () {
-              setState(() => _selectedIndex = 3);
-              CustomSheet.show(context: context,isDismissible: true, child: MoreSheetWidget());
-            },
-          ),
-        ],
+      child: Directionality(
+        textDirection: TextDirection.ltr,
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            _buildAnimatedTab(
+              index: 0,
+              svgIconPath: AssetPath.svg.emergencyBlockIcon,
+              title: DefaultString.instance.emergencyBlock,
+              onTap: () => setState(() => _selectedIndex = 0),
+            ),
+            _buildAnimatedTab(
+              index: 1,
+              svgIconPath: AssetPath.svg.ratesIcon,
+              title: DefaultString.instance.rates,
+              onTap: () {
+                setState(() => _selectedIndex = 1);
+                CustomSheet.show(
+                  context: context,
+                  isDismissible: true,
+                  child: ratesBottomSheet(context),
+                );
+              },
+            ),
+            _buildAnimatedTab(
+              index: 2,
+              svgIconPath: AssetPath.svg.productsIcon,
+              title: DefaultString.instance.products,
+              badgeCount: 5,
+              onTap: () {
+                setState(() => _selectedIndex = 2);
+                context.router.push(const ProductOfferingRoute());
+              },
+              heroTag: 'productTitleHero',
+            ),
+            _buildAnimatedTab(
+              index: 3,
+              svgIconPath: AssetPath.svg.moreIcon,
+              title: DefaultString.instance.more,
+              onTap: () {
+                setState(() => _selectedIndex = 3);
+                CustomSheet.show(
+                  context: context,
+                  isDismissible: true,
+                  child: MoreSheetWidget(),
+                );
+              },
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -118,7 +129,6 @@ class _LoginBottomBarState extends State<LoginBottomBar>
           return Container(
             padding: const EdgeInsets.symmetric(vertical: 8),
             width: MediaQuery.of(context).size.width * 0.2,
-
             child: Column(
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.start,
@@ -142,7 +152,6 @@ class _LoginBottomBarState extends State<LoginBottomBar>
                         ),
                         child: Text(
                           badgeCount.toString(),
-
                           style: const TextStyle(
                             color: Colors.white,
                             fontSize: 10,

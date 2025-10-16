@@ -1,6 +1,9 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:db_uicomponents/db_uicomponents.dart';
+import 'package:dkb_retail/core/constants/app_strings/default_string.dart';
 import 'package:dkb_retail/core/router/app_router.dart';
+import 'package:dkb_retail/extensions/context_extension.dart';
+import 'package:dkb_retail/features/common/presentation/components/auth_header_wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -11,27 +14,32 @@ class RegistrationCardInactivePage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
-      body: UiBackgroundWrapper(
-        child: Stack(
-          children: [
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Center(
-                  child: UiTextNew.h1Semibold(
-                    'You card is inactive\nKindly activate your\ncard to register',
-                    textAlign: TextAlign.center,
-                  ),
+      body: AuthHeaderWrapper(
+        headerText: DefaultString.instance.registrationCard,
+
+        child: SizedBox(
+          height: context.height(90),
+          child: Column(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Center(
+                child: UiTextNew.custom(
+                  DefaultString.instance.oopsYourCardIsInactive,
+                  fontSize: 24,
+                  fontWeight: FontWeight.w600,
+                  textAlign: TextAlign.center,
+                  maxLines: 2,
                 ),
-              ],
-            ),
-            Column(
-              children: [
-                UiSpace.vertical(40),
-                CommonAuthAppBar(title: 'Register'),
-              ],
-            ),
-          ],
+              ),
+              Center(
+                child: UiTextNew.b1Regular(
+                  DefaultString.instance.cardInactiveMessage,
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
       bottomNavigationBar: SafeArea(
@@ -52,7 +60,7 @@ class RegistrationCardInactivePage extends ConsumerWidget {
                   onPressed: () {
                     context.router.push(CreatePinRoute());
                   },
-                  label: 'Activate Now',
+                  label: DefaultString.instance.activateNow,
                 ),
               ),
             ],

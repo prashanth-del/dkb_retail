@@ -1,9 +1,9 @@
 import 'dart:math';
-import 'package:dkb_retail/features/common/components/card_stack.dart';
+import 'package:dkb_retail/features/common/presentation/components/card_stack.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../common/models/account_details.dart';
+import '../../../common/data/models/account_details.dart';
 
 /// Provider for expanded state
 final expandedProvider = StateProvider<bool>((ref) => false);

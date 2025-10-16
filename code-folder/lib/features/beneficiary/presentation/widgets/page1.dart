@@ -9,7 +9,7 @@ import 'package:dkb_retail/features/beneficiary/presentation/controller/benefici
 import 'package:dkb_retail/features/beneficiary/presentation/widgets/bottomSheet/beneficiary_country_picker.dart';
 import 'package:dkb_retail/features/beneficiary/presentation/widgets/bottomSheet/view_bottom_sheet.dart';
 import 'package:dkb_retail/features/beneficiary/presentation/widgets/popUpDialog/Beneficiary_transfer_dialog.dart';
-import 'package:dkb_retail/features/common/styles/ui_text_styles.dart';
+import 'package:dkb_retail/features/common/presentation/styles/ui_text_styles.dart';
 import 'package:dkb_retail/features/transfer/data/model/beneficiary_model.dart';
 import 'package:dkb_retail/features/transfer/data/model/flag_model.dart';
 import 'package:dkb_retail/features/transfer/presentation/widgets/ben_pciker_sheet.dart';

@@ -14,7 +14,7 @@ import 'package:path/path.dart' as path;
 
 import '../../../../../core/constants/asset_path/asset_path.dart';
 import '../../../../../core/constants/colors.dart';
-import '../../../../common/dialog/ui_dialogs.dart';
+import '../../../../common/presentation/dialog/ui_dialogs.dart';
 import '../../controller/notifier/onboarding_file_upload_notifier.dart';
 import '../../controller/notifier/onboarding_save_stage_data_notifier.dart';
 import '../../widget/builf_info_row_message.dart';

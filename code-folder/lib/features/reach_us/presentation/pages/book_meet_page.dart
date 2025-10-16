@@ -3,10 +3,14 @@ import 'package:db_uicomponents/components.dart';
 import 'package:db_uicomponents/utils.dart';
 import 'package:easy_date_timeline/easy_date_timeline.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../core/constants/app_strings/default_string.dart';
 import '../../../../core/constants/colors.dart';
-import '../../../../core/utils/ui_components/auto_leading_widget.dart';
-import '../../../common/dialog/custom_sheet.dart';
+import '../../../../core/constants/validator/utils/form_validator.dart';
+import '../../../common/presentation/components/auth_header_wrapper.dart';
+import '../../../common/presentation/dialog/custom_sheet.dart';
 import '../widgets/book_meet_sheet.dart';
 import '../widgets/custom_button.dart';
 import '../widgets/select_branch_sheet.dart';
@@ -14,14 +18,14 @@ import '../widgets/service_type_widget.dart';
 import '../widgets/suffix_dropdown_widget.dart';
 
 @RoutePage(name: "BookAndMeetPageRoute")
-class BookAndMeetPage extends StatefulWidget {
+class BookAndMeetPage extends ConsumerStatefulWidget {
   const BookAndMeetPage({super.key});
 
   @override
-  State<BookAndMeetPage> createState() => _BookAndMeetPageState();
+  ConsumerState<BookAndMeetPage> createState() => _BookAndMeetPageState();
 }
 
-class _BookAndMeetPageState extends State<BookAndMeetPage> {
+class _BookAndMeetPageState extends ConsumerState<BookAndMeetPage> {
   late TextEditingController serviceTypeController;
   late TextEditingController mobileNumberController;
   late TextEditingController branchController;
@@ -58,182 +62,232 @@ class _BookAndMeetPageState extends State<BookAndMeetPage> {
   ];
   @override
   Widget build(BuildContext context) {
+    final validate = ref.watch(formValidatorNotifierProvider);
+
     return Scaffold(
       backgroundColor: DefaultColors.white,
-      appBar: UIAppBar.secondary(
-        title: '',
-        autoLeadingWidget: LeadingWidget(title: "Book and Meet"),
-      ),
-      body: Padding(
-        padding: EdgeInsetsGeometry.symmetric(vertical: 16),
-        child: Column(
-          children: [
-            Expanded(
-              child: ListView(
-                children: [
-                  UiTextField(
-                    keyboardType: TextInputType.number,
-                    controller: mobileNumberController,
-                    label: "Mobile Number",
-                    obscureText: false,
-                  ),
+      // appBar: UIAppBar.secondary(
+      //   title: '',
+      //   autoLeadingWidget: LeadingWidget(title: "Book and Meet"),
+      // ),
+      body: AuthHeaderWrapper(
+        withScroll: false,
+        headerText: "Book and Meet",
 
-                  SizedBox(height: 12),
-                  UiTextField(
-                    onTap: () {
-                      setState(
-                        () => isServiceTypeDropdownOpen = true,
-                      ); // open state
-                      CustomSheet.show(
-                        context: context,
-                        child: SelectTypeSheetWidget(
-                          currentReason: serviceTypeController
-                              .text, // 👈 pass current value
-                          serviceTypeSelected: (val) {
-                            if (val != null) {
-                              serviceTypeController.text = val;
-                              setState(() {
-                                isServiceTypeDropdownOpen =
-                                    false; // close after selecting
-                              });
-                            }
-                          },
-                        ),
-                      ).then((_) {
-                        setState(
-                          () => isServiceTypeDropdownOpen = false,
-                        ); // reset when closed
-                      });
-                    },
-                    isReadOnly: true,
-                    controller: serviceTypeController,
-                    label: "Service Type",
-                    suffix: SuffixCommonIcon(
-                      isDropdown: isServiceTypeDropdownOpen,
+        child: Padding(
+          padding: EdgeInsetsGeometry.symmetric(vertical: 16),
+          child: Column(
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              /////////////
+              Expanded(
+                child: ListView(
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: UiTextNew.customRubik(
+                        "Book your appointment at the bank you wish you meet us.",
+                        fontSize: 14,
+                        maxLines: 2,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
-                  ),
-                  SizedBox(height: 12),
-                  UiTextField(
-                    onTap: () {
-                      setState(() => isBranchDropdownOpen = true); // open state
-                      CustomSheet.show(
-                        // barrierColor: Colors.white,
-                        context: context,
-                        heightSheet: context.mediaQuery.size.height - 80,
-                        child: Container(
-                          height: context.mediaQuery.size.height - 80,
-                          child: SelectBranchSheetWidget(
-                            currentReason:
-                                branchController.text, // 👈 pass current value
+                    SizedBox(height: 32),
+                    UiTextField(
+                      maxLength: 8,
+                      keyboardType: TextInputType.number,
+                      controller: mobileNumberController,
+                      label: DefaultString.instance.mobileNum,
+                      prefix: UiTextNew.customRubik(
+                        "+974",
+                        fontSize: 15,
+                        fontWeight: FontWeight.w500,
+                      ),
+                      obscureText: false,
+
+                      // ✅ Allow paste/copy but restrict to digits only
+                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+
+                      validator: (val) {
+                        if (val != null && val.isNotEmpty) {
+                          //  return validate.qatarMobileNumberValidation(val);
+                        }
+                        return null;
+                      },
+                    ),
+
+                    SizedBox(height: 12),
+                    UiTextField(
+                      onTap: () {
+                        setState(
+                          () => isServiceTypeDropdownOpen = true,
+                        ); // open state
+                        CustomSheet.show(
+                          context: context,
+                          child: SelectTypeSheetWidget(
+                            currentReason: serviceTypeController
+                                .text, // 👈 pass current value
                             serviceTypeSelected: (val) {
                               if (val != null) {
-                                branchController.text = val;
+                                serviceTypeController.text = val;
                                 setState(() {
-                                  isBranchDropdownOpen =
+                                  isServiceTypeDropdownOpen =
                                       false; // close after selecting
                                 });
                               }
                             },
                           ),
-                        ),
-                      ).then((_) {
+                        ).then((_) {
+                          setState(
+                            () => isServiceTypeDropdownOpen = false,
+                          ); // reset when closed
+                        });
+                      },
+                      isReadOnly: true,
+                      controller: serviceTypeController,
+                      label: "Service Type",
+                      suffix: SuffixCommonIcon(
+                        isDropdown: isServiceTypeDropdownOpen,
+                      ),
+                    ),
+                    SizedBox(height: 12),
+                    UiTextField(
+                      onTap: () {
                         setState(
-                          () => isBranchDropdownOpen = false,
-                        ); // reset when closed
-                      });
-                    },
-                    isReadOnly: true,
-                    controller: branchController,
-                    label: "Select Branch",
-                    suffix: SuffixCommonIcon(isDropdown: isBranchDropdownOpen),
-                  ),
-                  SizedBox(height: 12),
-                  (branchController.text.isNotEmpty &&
-                          branchController.text != null)
-                      ? Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 12),
+                          () => isBranchDropdownOpen = true,
+                        ); // open state
+                        CustomSheet.show(
+                          // barrierColor: Colors.white,
+                          context: context,
+                          heightSheet: context.mediaQuery.size.height - 80,
                           child: Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              border: Border.all(color: DefaultColors.grayBase),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                vertical: 8,
-                                horizontal: 16,
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  UiTextNew.customRubik(
-                                    "Date",
-                                    fontSize: 12,
-                                    color: DefaultColors.grayBase,
-                                  ),
-                                  EasyDateTimeLinePicker(
-                                    headerOptions: HeaderOptions(
-                                      headerType: HeaderType
-                                          .none, // removes month/year selector
-                                    ),
-                                    firstDate: DateTime.now(),
-                                    lastDate: DateTime(2030, 3, 18),
-                                    focusedDate:
-                                        selectedDateTime ?? DateTime.now(),
-                                    onDateChange: (date) {
-                                      selectedDateTime = date;
-                                      setState(() {});
-                                    },
-                                    itemExtent: 55, // width of each day item
-                                    timelineOptions: TimelineOptions(
-                                      height: 70, // set item height here
-                                      padding: const EdgeInsets.symmetric(
-                                        vertical: 8,
-                                      ),
-                                    ),
-                                  ),
-                                  // EasyDateTimeLinePicker(
-                                  //   //  currentDate: DateTime.now(),
-                                  //   firstDate: DateTime.now(),
-                                  //   lastDate: DateTime(2030, 3, 18),
-                                  //   focusedDate: selectedDateTime ?? DateTime.now(),
-                                  //   onDateChange: (date) {
-                                  //     if (date != null) {
-                                  //       selectedDateTime = date;
-                                  //       print(selectedDateTime);
-                                  //       setState(() {});
-                                  //     }
-                                  //     // Handle the selected date.
-                                  //   },
-                                  // ),
-                                  SizedBox(height: 12),
-                                  TimeSelectorWidget(times: times),
-                                ],
-                              ),
+                            height: context.mediaQuery.size.height - 80,
+                            child: SelectBranchSheetWidget(
+                              currentReason: branchController
+                                  .text, // 👈 pass current value
+                              serviceTypeSelected: (val) {
+                                if (val != null) {
+                                  branchController.text = val;
+                                  setState(() {
+                                    isBranchDropdownOpen =
+                                        false; // close after selecting
+                                  });
+                                }
+                              },
                             ),
                           ),
-                        )
-                      : SizedBox(),
-                ],
+                        ).then((_) {
+                          setState(
+                            () => isBranchDropdownOpen = false,
+                          ); // reset when closed
+                        });
+                      },
+                      isReadOnly: true,
+                      controller: branchController,
+                      label: "Select Branch",
+                      suffix: SuffixCommonIcon(
+                        isDropdown: isBranchDropdownOpen,
+                      ),
+                    ),
+                    SizedBox(height: 12),
+                    (branchController.text.isNotEmpty &&
+                            branchController.text != null)
+                        ? Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 12),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                border: Border.all(
+                                  color: DefaultColors.grayBase,
+                                ),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 8,
+                                  horizontal: 16,
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    UiTextNew.customRubik(
+                                      "Date",
+                                      fontSize: 12,
+                                      color: DefaultColors.grayBase,
+                                    ),
+                                    EasyDateTimeLinePicker(
+                                      headerOptions: HeaderOptions(
+                                        headerType: HeaderType
+                                            .none, // removes month/year selector
+                                      ),
+                                      firstDate: DateTime.now(),
+                                      lastDate: DateTime(2030, 3, 18),
+                                      focusedDate:
+                                          selectedDateTime ?? DateTime.now(),
+                                      onDateChange: (date) {
+                                        selectedDateTime = date;
+                                        setState(() {});
+                                      },
+                                      itemExtent: 55, // width of each day item
+                                      timelineOptions: TimelineOptions(
+                                        height: 70, // set item height here
+                                        padding: const EdgeInsets.symmetric(
+                                          vertical: 8,
+                                        ),
+                                      ),
+                                    ),
+                                    // EasyDateTimeLinePicker(
+                                    //   //  currentDate: DateTime.now(),
+                                    //   firstDate: DateTime.now(),
+                                    //   lastDate: DateTime(2030, 3, 18),
+                                    //   focusedDate: selectedDateTime ?? DateTime.now(),
+                                    //   onDateChange: (date) {
+                                    //     if (date != null) {
+                                    //       selectedDateTime = date;
+                                    //       print(selectedDateTime);
+                                    //       setState(() {});
+                                    //     }
+                                    //     // Handle the selected date.
+                                    //   },
+                                    // ),
+                                    SizedBox(height: 12),
+                                    TimeSelectorWidget(times: times),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          )
+                        : SizedBox(),
+                  ],
+                ),
               ),
-            ),
-            CustomButtonNewWidget(
-              onPress: () {
-                if (serviceTypeController.text.isNotEmpty &&
-                    branchController.text.isNotEmpty &&
-                    mobileNumberController.text.isNotEmpty) {
-                  CustomSheet.show(context: context, child: BookAndMeetSheet());
-                }
-              },
-              title: "Next",
-              buttonColor:
-                  serviceTypeController.text.isNotEmpty &&
-                      branchController.text.isNotEmpty &&
-                      mobileNumberController.text.isNotEmpty
-                  ? DefaultColors.blueBase
-                  : DefaultColors.grayMedBase,
-            ),
-            SizedBox(height: 16),
-          ],
+
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: CustomButtonNewWidget(
+                  onPress: () {
+                    if (serviceTypeController.text.isNotEmpty &&
+                        branchController.text.isNotEmpty &&
+                        mobileNumberController.text.isNotEmpty) {
+                      CustomSheet.show(
+                        context: context,
+                        child: BookAndMeetSheet(),
+                      );
+                    }
+                  },
+                  title: "Next",
+                  buttonColor:
+                      serviceTypeController.text.isNotEmpty &&
+                          branchController.text.isNotEmpty &&
+                          mobileNumberController.text.isNotEmpty
+                      ? DefaultColors.blueBase
+                      : DefaultColors.grayMedBase,
+                ),
+              ),
+              SizedBox(height: 16),
+            ],
+          ),
         ),
       ),
     );

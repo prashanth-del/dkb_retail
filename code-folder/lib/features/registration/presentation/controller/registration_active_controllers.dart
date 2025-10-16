@@ -1,5 +1,5 @@
 // --- Providers ---
-import 'package:dkb_retail/features/registration/data/modals/password_validation.dart';
+import 'package:dkb_retail/features/registration/data/models/password_validation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -86,6 +86,7 @@ final isConfirmPasswordProvider = Provider.autoDispose<bool>((ref) {
   final confirmPassword = ref.watch(confirmPasswordControllerProvider);
   return password == confirmPassword && password.isNotEmpty;
 });
+
 final isConfirmPINProvider = Provider.autoDispose<bool>((ref) {
   final password = ref.watch(pinProvider);
   final confirmPassword = ref.watch(confirmPINProvider);

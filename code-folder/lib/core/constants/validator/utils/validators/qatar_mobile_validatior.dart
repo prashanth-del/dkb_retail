@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../i18n/controller/i18n_providers.dart';
+import '../../../app_strings/default_string.dart';
 import '../../errors/failures.dart';
 import '../i_validator.dart';
 
@@ -16,7 +17,7 @@ class _QatarMobileValidatorEn implements IValidator {
     if (value == null || value.trim().isEmpty) {
       return ValidationFailure.invalidQatarMobileNumber(
         message: _localization.getString("MSG008").isEmpty
-            ? "This field is required"
+            ? DefaultString.instance.requiredFieldTitle
             : _localization.getString("MSG008"),
       );
     }
@@ -32,7 +33,7 @@ class _QatarMobileValidatorEn implements IValidator {
     if (!numericRegex.hasMatch(mobile)) {
       return ValidationFailure.invalidQatarMobileNumber(
         message: _localization.getString("Only_Numeric").isEmpty
-            ? "Only numeric digits are allowed"
+            ? DefaultString.instance.onlyNumberValidate
             : _localization.getString("Only_Numeric"),
       );
     }
@@ -41,20 +42,20 @@ class _QatarMobileValidatorEn implements IValidator {
     if (mobile.length != 8) {
       return ValidationFailure.underLimitLength(
         message: _localization.getString("MSG007").isEmpty
-            ? "Mobile number should be of 8 characters."
+            ? DefaultString.instance.mobileNumberValidate
             : _localization.getString("MSG007"),
       );
     }
 
     // Rule 4: Allowed starting digits
-    // final firstDigit = mobile[0];
-    // if (!["3", "5", "6", "7"].contains(firstDigit)) {
-    //   return ValidationFailure.invalidQatarMobileNumber(
-    //     message: _localization.getString("MSG006").isEmpty
-    //         ? "Mobile number should start only with 3, 5, 6 and 7"
-    //         : _localization.getString("MSG006"),
-    //   );
-    // }
+    final firstDigit = mobile[0];
+    if (!["3", "5", "6", "7"].contains(firstDigit)) {
+      return ValidationFailure.invalidQatarMobileNumber(
+        message: _localization.getString("MSG006").isEmpty
+            ? DefaultString.instance.qatarMobileValidate
+            : _localization.getString("MSG006"),
+      );
+    }
 
     // ✅ Passed all checks
     return null;

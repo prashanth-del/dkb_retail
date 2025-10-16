@@ -112,6 +112,7 @@ class DefaultColors {
 
   static const Color blue9C = Color(0xFF01559C);
   static const Color blue9D = Color(0xFF00539D);
+  static const Color bluebase = Color(0xFF0D3E7F);
   static const Color blue9B = Color(0xFF00529B);
   static const Color blueFA = Color(0xFFC6E2FA);
   static const Color blueB9C = Color(0xFF0B4B9C);

@@ -2,6 +2,7 @@ import 'package:db_uicomponents/db_uicomponents.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import '../../core/constants/build_enviornment/build_environment.dart';
 import '../../core/router/observers/screen_tracking_observer.dart';
 import '../domain/cookie_manager_interface.dart';
@@ -20,8 +21,12 @@ class NetworkClient implements NetworkClientInterface {
   final HeaderManagerInterface headerManager;
   final NetworkInterceptor networkInterceptor;
 
-  NetworkClient._(this.ref, this.cookieManager, this.networkInterceptor,
-      this.headerManager);
+  NetworkClient._(
+    this.ref,
+    this.cookieManager,
+    this.networkInterceptor,
+    this.headerManager,
+  );
 
   factory NetworkClient(ProviderRef ref) {
     if (_instance == null) {
@@ -29,10 +34,11 @@ class NetworkClient implements NetworkClientInterface {
       final screenObserver = ref.watch(screenTrackingObserverProvider);
 
       _instance = NetworkClient._(
-          ref,
-          CookieManager(),
-          NetworkInterceptor(CookieManager(), ref),
-          HeaderManager(screenObserver));
+        ref,
+        CookieManager(),
+        NetworkInterceptor(CookieManager(), ref),
+        HeaderManager(screenObserver),
+      );
       _instance!._initialize();
     }
 
@@ -40,13 +46,11 @@ class NetworkClient implements NetworkClientInterface {
   }
 
   Future<void> _initialize() async {
-   _dio = await DioClient.getClient(
-      [
-        // "assets/security/<filename>.pem"
-      ],
-    );
+    _dio = await DioClient.getClient([
+      // "assets/security/<filename>.pem"
+    ]);
 
-   _dio.options.baseUrl = AppConfig.shared.apiBaseUrl;
+    _dio.options.baseUrl = AppConfig.shared.apiBaseUrl;
     _dio.options.connectTimeout = const Duration(seconds: 60);
     _dio.options.receiveTimeout = const Duration(seconds: 60);
 
@@ -76,16 +80,18 @@ class NetworkClient implements NetworkClientInterface {
     String? channel,
   }) {
     final dio = _dio;
-
     final latestAccessToken = ref.watch(authTokenProvider);
-
-    dio.options.headers.addAll(headerManager.getHeaders(
-      serviceId: serviceId,
-      moduleId: moduleId,
-      subModuleId: subModuleId,
-      screenId: screenId,
-      customerId: customerId,
-    ));
+    dio.options.headers.addAll(
+      headerManager.getHeaders(
+        serviceId: serviceId,
+        moduleId: moduleId,
+        subModuleId: subModuleId,
+        screenId: screenId,
+        customerId: customerId,
+        unit: unit,
+        channel: channel,
+      ),
+    );
 
     if (authorizationRequired && latestAccessToken != null) {
       dio.options.headers['Authorization'] = 'Bearer ${latestAccessToken.atkn}';

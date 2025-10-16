@@ -5,7 +5,7 @@ import 'package:dkb_retail/features/accounts/presentation/widget/searchbar_filte
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../common/components/auto_leading_widget.dart';
+import '../../../common/presentation/components/auto_leading_widget.dart';
 import '../widget/account_info_card.dart';
 import '../widget/bottomWidget.dart';
 import '../widget/manage_service_card.dart';

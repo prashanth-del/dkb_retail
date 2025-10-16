@@ -14,8 +14,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/constants/asset_path/asset_path.dart';
 import '../../../../core/constants/colors.dart';
-import '../../../common/components/auto_leading_widget.dart';
-import '../../../common/dialog/ui_dialogs.dart';
+import '../../../common/presentation/components/auto_leading_widget.dart';
+import '../../../common/presentation/dialog/ui_dialogs.dart';
 import '../controller/notifier/onboarding_create_journey_notifier.dart';
 import '../controller/notifier/onboarding_stage_sum_notifier.dart';
 import '../provider/onboarding_provider.dart';

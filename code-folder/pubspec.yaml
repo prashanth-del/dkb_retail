@@ -5,6 +5,7 @@ description: "A new Flutter project."
 publish_to: "none" # Remove this line if you wish to publish to pub.dev
 
 # of the product and file versions while build-number is used as the build suffix.
+# test 2
 version: 1.0.0+1
 
 environment:
@@ -38,7 +39,6 @@ dependencies:
   dart_jsonwebtoken: ^3.2.0
   easy_date_timeline: ^2.0.9
   flutter_email_sender: ^6.0.2
-
   path_provider: ^2.1.4
   dotted_line: ^3.2.3
   local_session_timeout: ^3.2.0
@@ -72,23 +72,23 @@ dependencies:
   crypto: ^3.0.6
   cryptography: ^2.7.0
   flutter_secure_storage: ^9.2.4
-
   camera: ^0.11.2 # For camera integration
   # google_ml_kit:
   #  google_mlkit_text_recognition: ^0.14.0
   shared_preferences: ^2.3.5
   country_list: ^0.0.5
   scroll_to_index: ^3.0.1
-
   country_state_city: ^0.1.6
   file_picker: ^8.1.7
   path: ^1.9.0
   smooth_page_indicator: ^1.2.0+3
-
   gradient_borders: ^1.0.2
   alphabet_list_view: ^1.1.6
   video_player: ^2.10.0
+  async_ui:
+    path: ../ret_components/packages/async_ui
   collection: ^1.18.0
+  flutter_html: ^3.0.0
 
 dev_dependencies:
   flutter_test:
@@ -129,6 +129,8 @@ flutter:
     - assets/video/
     - assets/json/
     - assets/images/
+    - assets/html/
+    - assets/gif/reach_us/
     - assets/icons/login/
     - assets/images/locate_image/
     - assets/images/flags/
@@ -154,6 +156,7 @@ flutter:
     - assets/images/retail/
     - assets/gif/
     - assets/gif/dashboard/
+    - assets/gif/introduction/
     - assets/json/
     - assets/images/successIcon.jpeg
     - assets/app_theme_regular.json

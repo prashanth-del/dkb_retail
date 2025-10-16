@@ -3,7 +3,7 @@ import 'package:db_uicomponents/db_uicomponents.dart';
 import 'package:dkb_retail/core/utils/extensions/locale_extension.dart';
 import 'package:dkb_retail/features/beneficiary/presentation/controller/beneficiary_provider.dart';
 import 'package:dkb_retail/features/beneficiary/presentation/widgets/page3/page3.dart';
-import 'package:dkb_retail/features/common/components/auto_leading_widget.dart';
+import 'package:dkb_retail/features/common/presentation/components/auto_leading_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

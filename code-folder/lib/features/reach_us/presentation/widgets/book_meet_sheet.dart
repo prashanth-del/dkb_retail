@@ -1,7 +1,10 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:db_uicomponents/components.dart';
 import 'package:dkb_retail/core/constants/colors.dart';
+import 'package:dkb_retail/features/reach_us/presentation/widgets/success_image_widget.dart';
 import 'package:flutter/material.dart';
 
+import '../../../../core/router/app_router.dart';
 import 'custom_button.dart';
 import 'divider_sheet_widget.dart';
 
@@ -30,8 +33,9 @@ class _BookAndMeetSheetState extends State<BookAndMeetSheet> {
           children: [
             SizedBox(height: 10),
             DividerSheetCommon(),
-            SizedBox(height: 80),
-
+            SizedBox(height: 24),
+            SuccessImageWidget(),
+            SizedBox(height: 24),
             Container(
               width: 200,
               child: UiTextNew.customRubik(
@@ -44,6 +48,7 @@ class _BookAndMeetSheetState extends State<BookAndMeetSheet> {
             ),
             SizedBox(height: 24),
             Container(
+              width: double.infinity,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(16),
                 color: DefaultColors.grayLightBase,
@@ -60,8 +65,9 @@ class _BookAndMeetSheetState extends State<BookAndMeetSheet> {
                     UiTextNew.customRubik(
                       " 8.00am - 9.00am",
                       maxLines: 2,
-                      fontSize: 10,
-                      color: DefaultColors.grayBase,
+                      fontSize: 13,
+                      color: DefaultColors.black,
+                      fontWeight: FontWeight.w600,
                     ),
                     SizedBox(height: 24),
                     TitleSubTitleSheet(
@@ -77,8 +83,9 @@ class _BookAndMeetSheetState extends State<BookAndMeetSheet> {
                     UiTextNew.customRubik(
                       "Reference number: 123456789",
                       maxLines: 2,
-                      fontSize: 10,
-                      fontWeight: FontWeight.w400,
+                      fontSize: 11,
+                      fontWeight: FontWeight.w600,
+                      color: DefaultColors.grayBase,
                     ),
                   ],
                 ),
@@ -87,6 +94,7 @@ class _BookAndMeetSheetState extends State<BookAndMeetSheet> {
             SizedBox(height: 38),
             CustomButtonNewWidget(
               onPress: () {
+                context.router.replace(ReachUsPageRoute());
                 print(";;;;;;;;;;;;;;;;;;;;");
                 //   context.router.replace(ReachUsPageRoute());
               },
@@ -116,15 +124,17 @@ class TitleSubTitleSheet extends StatelessWidget {
         UiTextNew.customRubik(
           title,
           maxLines: 2,
-          fontSize: 10,
-          fontWeight: FontWeight.w400,
+          fontSize: 11,
+          fontWeight: FontWeight.w600,
+          color: DefaultColors.grayBase,
         ),
         SizedBox(height: 2),
         UiTextNew.customRubik(
           subTitle,
           maxLines: 2,
-          fontSize: 10,
-          color: DefaultColors.grayBase,
+          fontWeight: FontWeight.w700,
+          fontSize: 13,
+          color: DefaultColors.black,
         ),
       ],
     );

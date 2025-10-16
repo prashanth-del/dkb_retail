@@ -1,84 +1,174 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:db_uicomponents/db_uicomponents.dart';
 import 'package:dkb_retail/core/router/app_router.dart';
-import 'package:dkb_retail/core/utils/extensions/locale_extension.dart';
+import 'package:dkb_retail/features/common/data/models/otp_validate_models/validate_otp_request_request_info_dto.dart';
+import 'package:dkb_retail/features/common/presentation/components/auth_header_wrapper.dart';
+import 'package:dkb_retail/features/forgot_password/domain/entities/validate_card_entites/validate_card_response_data.dart';
+import 'package:dkb_retail/features/forgot_password/presentation/providers/forgot_password_validator.dart';
+import 'package:dkb_retail/features/forgot_password/presentation/providers/state/forgot_password_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../controller/forget_password_providers.dart';
+import '../../../../core/constants/app_strings/default_string.dart';
+import '../../../common/data/models/otp_generate_models/generate_otp_request.dart';
+import '../../../common/data/models/otp_generate_models/generate_otp_request_request_info_dto.dart';
+import '../../../common/data/models/otp_validate_models/validate_otp_request.dart';
+import '../../../common/domain/locators/common_locators.dart';
+import '../../../common/presentation/components/dialogs.dart';
+import '../providers/forget_password_providers.dart';
 import '../widgets/cardNumberFormatter.dart';
 
 @RoutePage()
-class ForgotPasswordScreen extends ConsumerWidget {
+class ForgotPasswordScreen extends ConsumerStatefulWidget {
   const ForgotPasswordScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<ForgotPasswordScreen> createState() =>
+      _ForgotPasswordScreenState();
+}
+
+class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
+  final _formKey = GlobalKey<FormState>();
+
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(() {
+      ref.read(forgotPasswordNotifierProvider.notifier).getActiveCards();
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final cardNumber = ref.watch(cardNumberProvider);
     final cardPin = ref.watch(pinNumberProvider);
+    final validators = ref.watch(forgotPasswordValidatorProvider);
+    final isVisible = ref.watch(isVisibleProvider);
+    final isCardValid = ref.watch(isCardValidProvider);
+    final isValid = _formKey.currentState?.validate() ?? false;
     final cardNode = ref.watch(cardFocusNodeProvider);
     final pinNode = ref.watch(pinFocusNodeProvider);
+
+    //listerner
+
+    ref.listen(forgotPasswordNotifierProvider, (previous, next) {
+      next.maybeWhen(
+        cardValidated: (data) {
+          _onValidateSuccess(data);
+        },
+        orElse: () {},
+        failure: (message) {
+          showErrorDialog(message, context, ref);
+        },
+      );
+    });
 
     return Scaffold(
       resizeToAvoidBottomInset: true,
       backgroundColor: DefaultColors.white,
-      body: SingleChildScrollView(
-        child: UiBackgroundWrapper(
+      body: AuthHeaderWrapper(
+        headerText: DefaultString.instance.forgotCredentials,
+        onBack: () {
+          if (isVisible && isCardValid) {
+            ref.watch(isVisibleProvider.notifier).state = false;
+            ref.watch(isCardValidProvider.notifier).state = false;
+            ref.read(pinNumberProvider.notifier).state = null;
+            ref.read(cardNumberProvider.notifier).state = null;
+          } else {
+            context.router.maybePop();
+          }
+        },
+        child: Form(
+          key: _formKey,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              UiSpace.vertical(40),
-              CommonAuthAppBar(title: "Forget Username/Password?"),
-              UiSpace.vertical(16),
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16),
-                child: UiTextNew.b14Medium(
-                  'Enter Your Card Details',
-                  color: DefaultColors.black,
+              UiSpace.vertical(20),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: UiTextNew.custom(
+                  DefaultString.instance.enterYourCardDetails,
+                  color: DefaultColors.grey_07,
+                  fontWeight: FontWeight.w700,
+                  fontSize: 15,
                 ),
               ),
               UiSpace.vertical(16),
 
               /// Card input
               UiTextField(
-                label: 'Enter debit/prepaid card number',
+                label: DefaultString.instance.enterCardNumber,
                 focusNode: cardNode,
                 inputFormatters: [
                   FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
                   CardNumberFormatter(),
                 ],
-                maxLength: 16 + 3, // 3 added for spaces
-                onTap: () => FocusNode().requestFocus(cardNode),
+                validator: (value) {
+                  if (cardNode.hasFocus) {
+                    return validators.validateCardNumber(value, context);
+                  }
+                  return null;
+                },
+                maxLength: 16 + 3,
+                onTap: () => FocusScope.of(context).requestFocus(cardNode),
                 keyboardType: const TextInputType.numberWithOptions(),
                 onChanged: (value) async {
                   ref.read(cardNumberProvider.notifier).state = value;
+
                   if (value.length == 19) {
-                    WidgetsBinding.instance.addPostFrameCallback((_) {
-                      FocusScope.of(context).requestFocus(pinNode);
-                    });
+                    // 🔹 Check if card number is actually valid before showing PIN
+                    final validationMessage = validators.validateCardNumber(
+                      value,
+                      context,
+                    );
+
+                    if (validationMessage == null) {
+                      // ✅ Card number is valid
+                      ref.read(isVisibleProvider.notifier).state = true;
+                      ref.read(isCardValidProvider.notifier).state = true;
+
+                      WidgetsBinding.instance.addPostFrameCallback((_) {
+                        if (mounted && pinNode.canRequestFocus) {
+                          FocusScope.of(context).requestFocus(pinNode);
+                        }
+                      });
+                    } else {
+                      // ❌ Invalid card — hide PIN
+                      ref.read(isVisibleProvider.notifier).state = false;
+                      ref.read(isCardValidProvider.notifier).state = false;
+                    }
+                  } else {
+                    ref.read(isVisibleProvider.notifier).state = false;
+                    ref.read(isCardValidProvider.notifier).state = false;
                   }
                 },
               ),
 
               UiSpace.vertical(20),
 
-              UiTextField(
-                label: 'Enter PIN',
-                hintText: '----',
-                focusNode: pinNode,
-                maxLength: 4,
-                obscureText: true,
-                keyboardType: const TextInputType.numberWithOptions(),
-                inputFormatters: [
-                  FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-                ],
-                onChanged: (value) {
-                  ref.read(pinNumberProvider.notifier).state = value;
-                },
-
-                onFieldSubmitted: (_) => pinNode.unfocus(),
-              ),
+              if (isVisible)
+                if (isCardValid)
+                  UiTextField(
+                    label: DefaultString.instance.enterPin,
+                    hintText: DefaultString.instance.pinHint,
+                    focusNode: pinNode,
+                    maxLength: 4,
+                    obscureText: true,
+                    keyboardType: const TextInputType.numberWithOptions(),
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+                    ],
+                    onChanged: (value) {
+                      ref.read(pinNumberProvider.notifier).state = value;
+                    },
+                    onFieldSubmitted: (_) => pinNode.unfocus(),
+                  ),
             ],
           ),
         ),
@@ -100,80 +190,91 @@ class ForgotPasswordScreen extends ConsumerWidget {
                   height: 48,
                   btnCurve: 30,
                   txtColor: DefaultColors.white,
-                  isDisabled:
-                      !((cardPin?.length ?? 0) == 4 &&
-                          (cardNumber?.length ?? 0) >= 19),
+                  isDisabled: isCardValid
+                      ? !((cardPin?.length ?? 0) == 4 &&
+                            (cardNumber?.length ?? 0) >= 19)
+                      : !isValid || (cardNumber?.length ?? 0) < 19,
                   backgroundColor: DefaultColors.blue9D,
                   onPressed: () {
-                    context.router.push(
-                      CommonOtpRoute(
-                        onResend: () {},
-                        suffixTap: () {
-                          context.router.popUntil(
-                            (route) =>
-                                route.settings.name == LoginRoute.name ||
-                                route.settings.name == WelcomeBackRoute.name,
-                          );
-                        },
-                        onVerify: (value) {
-                          context.router.push(
-                            ForgotPasswordCreateUsernameRoute(
-                              title: "Confirm or Update Username",
-                              onSubmit: (value) {
-                                context.router.push(
-                                  CommonSetPasswordRoute(
-                                    title: "Set New Password",
-                                    onConfirmed: (value) {
-                                      context.router.push(
-                                        ForgetPasswordTaskCompleteRoute(),
-                                      );
-                                    },
-                                    buttonLabel: "Confirm Password",
-                                  ),
-                                );
-                              },
+                    if ((_formKey.currentState?.validate() ?? false) &&
+                        (cardNumber != null) &&
+                        (cardPin != null)) {
+                      ref
+                          .read(forgotPasswordNotifierProvider.notifier)
+                          .validateCard(
+                            cardNumber: cardNumber.replaceAll(
+                              RegExp(r'\s+'),
+                              '',
                             ),
+                            cardPin: cardPin,
                           );
-                        },
-
-                        onCompleted: (value) {
-                          context.router.push(
-                            ForgotPasswordCreateUsernameRoute(
-                              title: "Confirm or Update Username",
-                              onSubmit: (value) {
-                                context.router.push(
-                                  CommonSetPasswordRoute(
-                                    title: "Set New Password",
-                                    onConfirmed: (value) {
-                                      context.router.push(
-                                        ForgetPasswordTaskCompleteRoute(),
-                                      );
-                                    },
-                                    buttonLabel: "Confirm Password",
-                                  ),
-                                );
-                              },
-                            ),
-                          );
-                        },
-                        title: ref.getLocaleString(
-                          "Enter OTP",
-                          defaultValue: "Enter OTP",
-                        ),
-                        description: ref.getLocaleString(
-                          "you will receive the OTP on your mobile number.",
-                          defaultValue:
-                              "You will receive the OTP on your registered mobile number",
-                        ),
-                      ),
-                    );
+                    }
                   },
-                  label: 'Get OTP',
+                  label: DefaultString.instance.getOtp,
                 ),
               ),
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  void _onValidateSuccess(ValidateCardResponseData data) {
+    print("data on success ${data.rimNumber}");
+    ref.read(forgotUsernameProvider.notifier).state =
+        data.userName ?? "username";
+    context.router.push(
+      CommonOtpRoute(
+        onResend: () {
+          final request = GenerateOtpRequest(
+            requestInfo: GenerateOtpRequestRequestInfoDto(
+              action: "login",
+              mobileNumber: "+97433333335",
+            ),
+          );
+          ref.read(commonRepositoryProvider).generateOtp(request: request);
+        },
+        suffixTap: () {
+          context.router.popUntil(
+            (route) =>
+                route.settings.name == LoginRoute.name ||
+                route.settings.name == WelcomeBackRoute.name,
+          );
+        },
+        onVerify: (value) async {
+          final request = ValidateOtpRequest(
+            requestInfo: ValidateOtpRequestRequestInfoDto(otp: value),
+          );
+          final result = await ref
+              .read(commonRepositoryProvider)
+              .validateOtp(request: request);
+          result.fold(
+            (failure) =>
+                showErrorDialog(failure.description.toString(), context, ref),
+            (otpValidate) {
+              context.router.push(ForgotPasswordCreateUsernameRoute());
+            },
+          );
+        },
+
+        onCompleted: (value) async {
+          final request = ValidateOtpRequest(
+            requestInfo: ValidateOtpRequestRequestInfoDto(otp: value),
+          );
+          final result = await ref
+              .read(commonRepositoryProvider)
+              .validateOtp(request: request);
+          result.fold(
+            (failure) =>
+                showErrorDialog(failure.description.toString(), context, ref),
+            (otpValidate) {
+              context.router.push(ForgotPasswordCreateUsernameRoute());
+            },
+          );
+        },
+        title: DefaultString.instance.enterOtp,
+        description: DefaultString.instance.otpDescriptionRegisteredNumber,
       ),
     );
   }

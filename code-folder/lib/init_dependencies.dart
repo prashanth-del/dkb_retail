@@ -11,7 +11,7 @@ import 'core/constants/build_enviornment/build_environment.dart';
 Future<void> initCache() async {
   final docs = await getApplicationDocumentsDirectory();
   final flavor = AppConfig.shared.flavor.name; // 'dev' or 'uat'
-  final hiveDir = p.join(docs.path, 'hive_$flavor');  // isolates data per flavor
+  final hiveDir = p.join(docs.path, 'hive_$flavor'); // isolates data per flavor
   await Hive.initFlutter(hiveDir);
 
   _registerHiveAdapters();

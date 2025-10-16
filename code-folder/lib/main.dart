@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'bootstrap.dart';
 
 Future<void> main() async {
+  // debugPaintSizeEnabled = true;
   // Catch Flutter framework errors
   FlutterError.onError = (details) {
     FlutterError.dumpErrorToConsole(details);
@@ -13,22 +14,27 @@ Future<void> main() async {
   };
 
   // Catch all other zone errors
-  runZonedGuarded<Future<void>>(() async {
-    WidgetsFlutterBinding.ensureInitialized();
+  runZonedGuarded<Future<void>>(
+    () async {
+      WidgetsFlutterBinding.ensureInitialized();
 
-    // System UI
-    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-      statusBarColor: Colors.white,
-      statusBarBrightness: Brightness.light,
-      statusBarIconBrightness: Brightness.dark,
-    ));
+      // System UI
+      SystemChrome.setSystemUIOverlayStyle(
+        const SystemUiOverlayStyle(
+          statusBarColor: Colors.white,
+          statusBarBrightness: Brightness.light,
+          statusBarIconBrightness: Brightness.dark,
+        ),
+      );
 
-    await bootstrap();
-  }, (error, stack) {
-    if (kDebugMode) {
-      // ignore: avoid_print
-      print('Uncaught: $error\n$stack');
-    }
-    // TODO: send to crashlytics/sentry
-  });
+      await bootstrap();
+    },
+    (error, stack) {
+      if (kDebugMode) {
+        // ignore: avoid_print
+        print('Uncaught: $error\n$stack');
+      }
+      // TODO: send to crashlytics/sentry
+    },
+  );
 }

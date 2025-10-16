@@ -3,6 +3,7 @@ import 'package:db_uicomponents/components.dart';
 import 'package:dkb_retail/core/router/app_router.dart';
 import 'package:flutter/material.dart';
 
+import '../../../../core/constants/app_strings/default_string.dart';
 import '../../../../core/constants/asset_path/asset_path.dart';
 import '../../../../core/constants/colors.dart';
 import '../widgets/prayer_time_app_bar.dart';
@@ -31,6 +32,7 @@ class PrayerTimingsPage extends StatelessWidget {
           child: Column(
             children: [
               PrayerTimesAppBar(
+                title: DefaultString.instance.prayerTimingsTitle,
                 onSettings: () {
                   context.router.push(const PrayerTimeSettingRoute());
                 },
@@ -104,7 +106,7 @@ class PrayerTimingsPage extends StatelessWidget {
                           AssetPath.image.prayerTimefajr,
                           fit: BoxFit.contain,
                         ),
-                        "Fajr",
+                        DefaultString.instance.fajr,
                         "4:13 AM",
                         size,
                       ),
@@ -113,13 +115,13 @@ class PrayerTimingsPage extends StatelessWidget {
                           AssetPath.image.prayerTimeSunrise,
                           fit: BoxFit.contain,
                         ),
-                        "Sunrise",
+                        DefaultString.instance.sunrise,
                         "5:31 AM",
                         size,
                       ),
                       _buildPrayerRow(
                         Icon(Icons.sunny),
-                        "Dhuhr",
+                        DefaultString.instance.dhuhr,
                         "11:20 AM",
                         size,
                       ),
@@ -128,7 +130,7 @@ class PrayerTimingsPage extends StatelessWidget {
                           AssetPath.image.prayerTimeAsr,
                           fit: BoxFit.contain,
                         ),
-                        "Asr",
+                        DefaultString.instance.asr,
                         "2:40 PM",
                         size,
                       ),
@@ -138,13 +140,13 @@ class PrayerTimingsPage extends StatelessWidget {
                           fit: BoxFit.contain,
                           color: Colors.black,
                         ),
-                        "Maghrib",
+                        DefaultString.instance.maghrib,
                         "5:08 PM",
                         size,
                       ),
                       _buildPrayerRow(
                         Icon(Icons.dark_mode_outlined),
-                        "Isha",
+                        DefaultString.instance.isha,
                         "6:38 PM",
                         size,
                       ),
@@ -171,7 +173,7 @@ class PrayerTimingsPage extends StatelessWidget {
                       SizedBox(width: size.width * 0.02),
                       Expanded(
                         child: Text(
-                          "Qibla Finder",
+                          DefaultString.instance.qiblaFinder,
                           style: TextStyle(
                             fontSize: size.width * 0.04,
                             fontWeight: FontWeight.w700,
@@ -199,11 +201,11 @@ class PrayerTimingsPage extends StatelessWidget {
   }
 
   Widget _buildPrayerRow(
-    Widget leadingWidget,
-    String name,
-    String time,
-    Size size,
-  ) {
+      Widget leadingWidget,
+      String name,
+      String time,
+      Size size,
+      ) {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: size.height * 0.015),
       child: Row(

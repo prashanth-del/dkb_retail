@@ -1,72 +1,41 @@
+import 'package:async_ui/async_ui.dart';
 import 'package:auto_route/annotations.dart';
 import 'package:db_uicomponents/components.dart';
 import 'package:dkb_retail/core/constants/colors.dart';
+import 'package:dkb_retail/features/reach_us/data/models/fetch_faq_request.dart';
+import 'package:dkb_retail/features/reach_us/presentation/state/fetch_faq_state.dart';
 import 'package:flutter/Material.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/constants/app_strings/default_string.dart';
-import '../../../../core/utils/ui_components/auto_leading_widget.dart';
+import '../../../common/presentation/components/auth_header_wrapper.dart';
 import '../../../login/presentation/widgets/search_widget.dart';
+import '../../domain/entities/faqs_faq_list_item.dart';
+import '../controller/fetch_faq_notifier.dart';
+import '../widgets/empty_widget.dart';
 
 @RoutePage(name: "FaqScreenRoute")
-class FaqScreen extends StatefulWidget {
+class FaqScreen extends ConsumerStatefulWidget {
   const FaqScreen({super.key});
   @override
-  State<FaqScreen> createState() => _FaqScreenState();
+  ConsumerState<FaqScreen> createState() => _FaqScreenState();
 }
 
-class _FaqScreenState extends State<FaqScreen> {
+class _FaqScreenState extends ConsumerState<FaqScreen> {
   final TextEditingController _searchController = TextEditingController();
-
-  // Your FAQ data
-  final List<Map<String, String>> _faqData = [
-    {
-      "title": "How do I open a savings account?",
-      "description":
-          "You can open a savings account by visiting our branch or applying online",
-    },
-    {
-      "title": "What documents are required for KYC?",
-      "description":
-          "You will need a valid ID proof, address proof, and passport-size photograph",
-    },
-    {
-      "title": "How can I reset my online banking password?",
-      "description":
-          "Go to the login page, click on ‘Forgot Password’ and follow the steps",
-    },
-    {
-      "title": "Is there a minimum balance requirement?",
-      "description":
-          "Yes, maintaining a minimum balance depends on the type of account",
-    },
-    {
-      "title": "How do I apply for a debit card?",
-      "description":
-          "You can apply for a debit card via internet banking or at your nearest branch",
-    },
-  ]; // todo fetch this from server later
-
-  late List<Map<String, String>> _filteredFaqs;
 
   @override
   void initState() {
     super.initState();
-    _filteredFaqs = _faqData; // initially show all
-    _searchController.addListener(_onSearchChanged);
-  }
 
-  void _onSearchChanged() {
-    final query = _searchController.text.toLowerCase();
-    setState(() {
-      _filteredFaqs = _faqData.where((faq) {
-        final title = faq["title"]!.toLowerCase();
-        final desc = faq["description"]!.toLowerCase();
-        return title.contains(query) || desc.contains(query);
-      }).toList();
+    Future.microtask(() {
+      // todo add this for new structrure
+      ref
+          .read(fetchFaqNotifierProvider.notifier)
+          .fetchFaq(request: FetchFaqRequest(/* add required params */));
     });
   }
-
-  int? _expandedIndex; // index of currently expanded FAQ
 
   @override
   void dispose() {
@@ -76,77 +45,203 @@ class _FaqScreenState extends State<FaqScreen> {
 
   @override
   Widget build(BuildContext context) {
+    //  final asyncState = ref.watch(faqNotifierProvider);
+
     return Scaffold(
       backgroundColor: DefaultColors.white,
-      appBar: UIAppBar.secondary(
-        title: '',
-        autoLeadingWidget: LeadingWidget(
-          title: DefaultString.instance.faqsTitle,
+      body: AuthHeaderWrapper(
+        headerText: DefaultString.instance.faqsTitle,
+        child: RxView<FetchFaqState, List<FaqsFaqListItem>>(
+          stateProvider: fetchFaqNotifierProvider,
+          map: (FetchFaqState state) {
+            return state.when(
+              initial: () => const AsyncValue.data([]),
+              loading: () => const AsyncValue.loading(),
+              success: (value) => AsyncValue.data(value!.faqList),
+              failure: (error) => AsyncValue.error(error, StackTrace.current),
+            );
+          },
+          data: (BuildContext context, List<FaqsFaqListItem> data) {
+            return data.isNotEmpty
+                ? FaqWidget(faqListItem: data)
+                : const Center(child: Text('No Data Available'));
+          },
+          // loading: (context) =>
+          //     const Center(child: CircularProgressIndicator()),
+          error: (context, error, stack) => ErrorCommonWidget(
+            error: error.toString(),
+            onPressed: () {
+              ref
+                  .read(fetchFaqNotifierProvider.notifier)
+                  .fetchFaq(request: FetchFaqRequest());
+            },
+          ),
+          //     Center(
+          //   child: ConstrainedBox(
+          //     constraints: BoxConstraints(
+          //       minHeight: MediaQuery.of(
+          //         context,
+          //       ).size.height, // full screen height
+          //     ),
+          //     child: Column(
+          //       mainAxisSize: MainAxisSize.min, // content size
+          //       mainAxisAlignment: MainAxisAlignment.center,
+          //       crossAxisAlignment: CrossAxisAlignment.center,
+          //       children: [
+          //         UiTextNew.customRubik(
+          //           error.toString(),
+          //           fontSize: 14,
+          //           textAlign: TextAlign.center,
+          //           overflow: TextOverflow.ellipsis,
+          //
+          //           maxLines: 3,
+          //         ),
+          //         const SizedBox(height: 16),
+          //         ElevatedButton(
+          //           onPressed: () => ref
+          //               .read(fetchFaqNotifierProvider.notifier)
+          //               .fetchFaq(request: FetchFaqRequest()),
+          //           child: const UiTextNew.customRubik(
+          //             "Retry",
+          //             fontSize: 15,
+          //             color: DefaultColors.blue,
+          //           ),
+          //         ),
+          //       ],
+          //     ),
+          //   ),
+          // ),
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        child: Column(
-          children: [
-            //  UIFormTextField.underlined(hintText: hintText)
-            // Search box
-            SearchTextFilled(
-              controller: _searchController,
-              hintText: DefaultString.instance.searchForFaqTitle,
-            ),
-            const SizedBox(height: 24),
 
-            // If no results, show "No Data" in the center
-            Expanded(
-              child: _filteredFaqs.isNotEmpty
-                  ? ListView.separated(
-                      separatorBuilder: (context, index) =>
-                          const SizedBox(height: 6),
-                      itemCount: _filteredFaqs.length,
-                      itemBuilder: (context, index) {
-                        final faq = _filteredFaqs[index];
-                        return ItemWidget(
-                          title: faq["title"]!,
-                          description: faq["description"]!,
-                          isExpanded: _expandedIndex == index,
-                          onTap: () {
-                            setState(() {
-                              if (_expandedIndex == index) {
-                                _expandedIndex =
-                                    null; // collapse if tapping same FAQ
-                              } else {
-                                _expandedIndex = index; // expand new FAQ
-                              }
-                            });
-                          },
-                        );
-                      },
-                    )
-                  : Center(
-                      child: UiTextNew.customRubik(
-                        DefaultString.instance.noResultSearch,
-                        fontSize: 14,
-                        color: DefaultColors.black,
-                      ),
-                    ),
-            ),
-          ],
-        ),
-      ),
+      // AuthHeaderWrapper(
+      //   headerText: DefaultString.instance.faqsTitle,
+      //   child: RxView<FetchFaqState, List<FaqsFaqListItem>>(
+      //     stateProvider: fetchFaqNotifierProvider,
+      //     map: (FetchFaqState state) {
+      //       return state.when(
+      //         initial: () {
+      //           return AsyncValue.data([]);
+      //         },
+      //         loading: () {
+      //           return AsyncValue.loading();
+      //         },
+      //         success: (value) {
+      //           return AsyncValue.data(value!.faqList);
+      //         },
+      //         failure: (error) {
+      //           return AsyncValue.error(error, StackTrace.current);
+      //         },
+      //       );
+      //     },
+      //     data: (BuildContext context, List<FaqsFaqListItem> data) {
+      //       return data.isNotEmpty
+      //           ? FaqWidget(faqListItem: data)
+      //           : Center(child: Text('No Data Available')); //EmptyWidget
+      //     },
+      //   ),
+      // ),
     );
   }
 }
 
+class FaqWidget extends StatefulWidget {
+  final List<FaqsFaqListItem> faqListItem;
+  const FaqWidget({super.key, required this.faqListItem});
+
+  @override
+  _FaqWidgetState createState() => _FaqWidgetState();
+}
+
+class _FaqWidgetState extends State<FaqWidget> {
+  final TextEditingController _searchController = TextEditingController();
+  List<FaqsFaqListItem> _filteredFaqs = [];
+  int? _expandedIndex;
+
+  @override
+  void initState() {
+    super.initState();
+    _filteredFaqs = widget.faqListItem;
+    _searchController.addListener(_onSearchChanged);
+  }
+
+  void _onSearchChanged() {
+    final query = _searchController.text.toLowerCase();
+    setState(() {
+      _filteredFaqs = widget.faqListItem.where((faq) {
+        final question = faq.question?.toLowerCase() ?? "";
+        final answer = faq.answer?.toLowerCase() ?? "";
+        return question.contains(query) || answer.contains(query);
+      }).toList();
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const SizedBox(height: 32),
+          SearchTextFilled(
+            controller: _searchController,
+            hintText: DefaultString.instance.searchForFaqTitle,
+          ),
+          const SizedBox(height: 24),
+          _filteredFaqs.isNotEmpty
+              ? ListView.separated(
+                  padding: EdgeInsets.zero,
+                  physics: const NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  separatorBuilder: (context, index) =>
+                      const SizedBox(height: 6),
+                  itemCount: _filteredFaqs.length,
+                  itemBuilder: (context, index) {
+                    final faq = _filteredFaqs[index];
+                    return ItemWidget(
+                      question: faq.question ?? "",
+                      answer: faq.answer ?? "",
+                      isExpanded: _expandedIndex == index,
+                      onTap: () {
+                        setState(() {
+                          _expandedIndex = _expandedIndex == index
+                              ? null
+                              : index;
+                        });
+                      },
+                    );
+                  },
+                )
+              : Center(
+                  child: UiTextNew.customRubik(
+                    DefaultString.instance.noResultSearch,
+                    fontSize: 14,
+                    color: DefaultColors.black,
+                  ),
+                ),
+        ],
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+}
+
 class ItemWidget extends StatelessWidget {
-  final String title;
-  final String description;
+  final String question;
+  final String answer;
   final bool isExpanded;
   final VoidCallback onTap;
 
   const ItemWidget({
     super.key,
-    required this.title,
-    required this.description,
+    required this.question,
+    required this.answer,
     required this.isExpanded,
     required this.onTap,
   });
@@ -159,6 +254,7 @@ class ItemWidget extends StatelessWidget {
         color: DefaultColors.grayLightBase,
       ),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           GestureDetector(
             onTap: onTap,
@@ -169,7 +265,7 @@ class ItemWidget extends StatelessWidget {
                 children: [
                   Expanded(
                     child: UiTextNew.custom(
-                      title,
+                      question,
                       color: DefaultColors.black,
                       fontWeight: FontWeight.w600,
                       fontSize: 12,
@@ -190,11 +286,11 @@ class ItemWidget extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.only(left: 12, right: 12, bottom: 12),
               child: UiTextNew.custom(
-                description,
+                answer,
                 color: DefaultColors.black,
                 fontWeight: FontWeight.w400,
                 fontSize: 11,
-                maxLines: 2,
+                maxLines: 4,
               ),
             ),
         ],

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Web Chat</title>
+  <script src="https://www.dukhanbank.com/personal/digital-banking/rashid"></script>
+</head>
+
+<body>
+  <div id="WebChatDiv1" style="width: 100%; height: 100vh;"></div>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      if (typeof WeaverWebChatInit === 'function') {
+        WeaverWebChatInit({
+          id: "1",
+          serviceUrl: "https://chatbot.dukhanbank.com/jurikd652hjspwmvn56/webchatprod/index.js", // Replace with correct serviceUrl
+          initContexts: "",
+          elementId: "WebChatDiv1",
+          useVoice: false,
+          useFile: false,
+          skipIntro: false,
+          hideMenu: false,
+          hideMinimize: false,
+          languages: [
+            { name: "Sr", value: "sr-Latn-Cs", default: true },
+            { name: "En", value: "en-US", default: false }
+          ],
+          onMessage: null,
+          onMinimize: null,
+          useLocalMap: true,
+          readMoreLimit: 300,
+          translateResources: [
+            {
+              language: "en-US",
+              resources: {
+                webchatTitle: "Webchat",
+                welcomeMessage: "Welcome to Webchat!",
+                typingText: "Typing...",
+                allowedFileSize: "File is too large!"
+              }
+            }
+          ]
+        });
+      } else {
+        console.log('Error: WeaverWebChatInit is not defined');
+      }
+    });
+  </script>
+</body>
+
+</html>

@@ -3,7 +3,9 @@ import 'package:dartz/dartz.dart';
 import 'package:dkb_retail/core/errors/failures.dart';
 import 'package:dkb_retail/features/product_offering/data/datasource/product_offering_datasource.dart';
 import 'package:dkb_retail/features/product_offering/data/models/apply_products_dto.dart';
+import 'package:dkb_retail/features/product_offering/data/models/contact_us_modal_payload_item_dto.dart';
 import 'package:dkb_retail/features/product_offering/domain/entities/apply_products.dart';
+import 'package:dkb_retail/features/product_offering/domain/entities/contact_us_modal_payload_item.dart';
 
 import '../../domain/repository/product_offering_repository.dart';
 // import '../datasource/product_offering_datasource.dart';
@@ -33,6 +35,38 @@ class ProductOfferingRepositoryImpl implements ProductOfferingRepository {
       final entities = data
           .map((dto) => dto.toEntity())
           .toList(growable: false);
+      // Convert DTO to domain
+
+      return right(entities);
+    } catch (e) {
+      return left(ServiceFailure(e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<ContactUsModalPayloadItem>>>
+  getContactUsFields() async {
+    // TODO: implement getContactUsFields
+    // throw UnimplementedError();
+
+    try {
+      final response = await productOfferingDataSource.getContactUsFields();
+
+      // if (!response.ok) {
+      //   return left(ServiceFailure(response.status.description.toString()));
+      // }
+      // consoleLog('api status: ${response.appStatus}');
+      // consoleLog('api message: ${response.message}');
+
+      final data = response.data;
+      if (data == null) {
+        return left(ServiceFailure(response.status.description.toString()));
+      }
+      final entities = data
+          .map((dto) => dto.toEntity())
+          .toList(growable: false);
+
+      // final entities = data.toEntity();
       // Convert DTO to domain
 
       return right(entities);

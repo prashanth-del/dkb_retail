@@ -1,4 +1,4 @@
-import 'package:dkb_retail/features/registration/data/modals/username_validation.dart';
+import 'package:dkb_retail/features/registration/data/models/username_validation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class UsernameNotifier extends StateNotifier<UsernameValidation> {

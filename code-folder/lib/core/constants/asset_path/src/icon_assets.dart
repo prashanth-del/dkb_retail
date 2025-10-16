@@ -21,6 +21,7 @@ class IconAssets with _BasePaths {
   final received = '${_iconPath}received.svg';
   final pending = '${_iconPath}pending.svg';
   final back_right = '${_iconPath}back_right.svg';
+  final arrow_up_right = '${_iconPath}up_right_arrow.svg';
 
   final received_new = '${_iconPath}received_new.svg';
   final three_dot = '${_iconPath}three_dot.svg';

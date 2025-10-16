@@ -1,24 +1,16 @@
 import 'package:fpdart/fpdart.dart';
 
-import '../entities/user.dart';
+import '../../../../network/domain/models/api_error.dart';
+import '../../data/models/sign_in_with_credentials_models/signwith_credentials_request.dart';
+import '../entities/sign_with_credentials_entity/login_response.dart';
 import 'login_failure.dart';
 
 abstract class LoginRepository {
-  Future<Either<LoginFailure, User>> signInUsingUsernamePassword({
-    required String customerId,
-    required String username,
-    required String password,
-  });
+  Future<Option<LoginFailure>> validateOtp({required String otp});
 
-  Future<Option<LoginFailure>> validateOtp({
-    required String otp,
+  Future<Either<ApiError, LoginResponse>> signWithCredentials({
+    required SignwithCredentialsRequest request,
   });
 
   Future<Option<LoginFailure>> resendOtp();
-  //
-  // Future<Option<LoginFailure>> logout();
-  //
-  // Future<Option<LoginFailure>> changePassword({required String oldPassword, required String newPassword, required bool isLogin});
-  //
-  // Future<Either<MenuFailure, List<Menu>>> getMenuItems(String screenId);
 }

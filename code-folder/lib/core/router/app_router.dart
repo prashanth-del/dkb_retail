@@ -7,10 +7,10 @@ import 'package:dkb_retail/features/beneficiary/presentation/pages/otp_approval_
 import 'package:dkb_retail/features/beneficiary/presentation/pages/view_beneficiary_transfer_page.dart';
 import 'package:dkb_retail/features/charts/presentation/pages/chart_page.dart';
 import 'package:dkb_retail/features/charts/presentation/pages/transaction_data_table_page.dart';
-import 'package:dkb_retail/features/common/components/common_create_username_page.dart';
-import 'package:dkb_retail/features/common/components/common_otp_page.dart';
-import 'package:dkb_retail/features/common/components/common_set_password_page.dart';
-import 'package:dkb_retail/features/common/components/user_interests_page.dart';
+import 'package:dkb_retail/features/common/presentation/components/common_create_username_page.dart';
+import 'package:dkb_retail/features/common/presentation/components/common_otp_page.dart';
+import 'package:dkb_retail/features/common/presentation/components/common_set_password_page.dart';
+import 'package:dkb_retail/features/common/presentation/components/user_interests_page.dart';
 import 'package:dkb_retail/features/forgot_password/presentation/pages/forgot_password_create_username_screen.dart';
 import 'package:dkb_retail/features/login/presentation/pages/login_page.dart';
 import 'package:dkb_retail/features/login/presentation/pages/preference_page.dart';
@@ -21,6 +21,7 @@ import 'package:dkb_retail/features/onboarding/presentation/pages/onboarding_otp
 import 'package:dkb_retail/features/product_offering/presentation/pages/product_contact_us_page.dart';
 import 'package:dkb_retail/features/product_offering/presentation/pages/product_offering_details_page.dart';
 import 'package:dkb_retail/features/product_offering/presentation/pages/product_offering_page.dart';
+import 'package:dkb_retail/features/rashid/presentation/pages/rashid_webview_page.dart';
 import 'package:dkb_retail/features/registration/presentation/pages/registration_initial_page.dart';
 import 'package:dkb_retail/features/registration/presentation/registration_using_active_card/create_username_page.dart';
 import 'package:dkb_retail/features/registration/presentation/registration_using_active_card/registeration_otp_page.dart';
@@ -38,12 +39,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../features/accounts/presentation/pages/account_page.dart';
 import '../../features/accounts/presentation/pages/accounts_page.dart';
-import '../../features/common/components/terms_condition_screen.dart';
+import '../../features/common/presentation/components/common_task_complete_screen.dart';
+import '../../features/common/presentation/components/terms_condition_screen.dart';
+import '../../features/dashboard/presentation/pages/customized_widget.dart';
 import '../../features/dashboard/presentation/pages/dashboard_page.dart';
-import '../../features/forgot_password/presentation/pages/forgot_password_completed_screen.dart';
 import '../../features/forgot_password/presentation/pages/forgot_password_new_password_screen.dart';
 import '../../features/forgot_password/presentation/pages/forgot_password_screen.dart';
 import '../../features/home/presentation/pages/home_page.dart';
+import '../../features/login/domain/entities/sign_with_credentials_entity/login_response.dart';
 import '../../features/login/domain/entities/user.dart';
 import '../../features/login/presentation/pages/login_otp_screen.dart';
 import '../../features/onboard/presentation/pages/onboard_page.dart';
@@ -73,6 +76,7 @@ import '../../features/onboarding/presentation/pages/tax_residency/onboarding_ta
 import '../../features/prayer/presentation/pages/prayer_notification_page.dart';
 import '../../features/prayer/presentation/pages/prayer_setting_page.dart';
 import '../../features/prayer/presentation/pages/prayer_time_page.dart';
+import '../../features/product_offering/domain/entities/bank_products_sub_product.dart';
 import '../../features/rates/presentation/pages/fx_rates_screen.dart';
 import '../../features/rates/presentation/pages/profit_rates_screen.dart';
 import '../../features/rates/presentation/pages/profit_rates_screen_new.dart';
@@ -85,7 +89,7 @@ import '../../features/reach_us/presentation/pages/social_media_page.dart';
 import '../../features/transfer/data/model/beneficiary_model.dart';
 import '../../features/transfer/presentation/pages/transfer_amount_page.dart';
 import '../../features/welcome_back/presentation/pages/welcome_back.dart';
-import '../../startup/introduction/presentation/wallet_screen.dart';
+import '../../startup/introduction/presentation/pages/Introduction_screen.dart';
 import '../../startup/splash/presentation/pages/splash_page.dart';
 
 part 'app_router.gr.dart';
@@ -123,6 +127,7 @@ class AppRouter extends RootStackRouter {
     AutoRoute(path: '/common-otp-page', page: CommonOtpRoute.page),
     AutoRoute(path: '/common-password-page', page: CommonSetPasswordRoute.page),
     AutoRoute(path: '/card-inactive', page: RegistrationCardInactiveRoute.page),
+    AutoRoute(path: '/rashid-chatbot', page: RashidWebviewRoute.page),
     AutoRoute(
       path: '/common-create-username-page',
       page: CommonCreateUsernameRoute.page,
@@ -169,7 +174,7 @@ class AppRouter extends RootStackRouter {
       page: ProductOfferingDetailsRoute.page,
     ),
     AutoRoute(path: '/forget-password-screen', page: ForgotPasswordRoute.page),
-    AutoRoute(path: '/fwallet-screen', page: WalletRoute.page),
+    AutoRoute(path: '/fwallet-screen', page: IntroductionRoute.page),
     // AutoRoute(path: '/fx-rates-screen', page: FxRatesRoute.page),
     CustomRoute(
       path: '/fx-rates-screen',
@@ -194,11 +199,9 @@ class AppRouter extends RootStackRouter {
       duration: Duration(milliseconds: 800),
       reverseDuration: Duration(milliseconds: 800),
     ),
-    AutoRoute(path: '/fx-rates-screen', page: ProfitRatesRoute.page),
-    // AutoRoute(path: '/fx-rates-screen-new', page: ProfitRatesPageRoute.page),
     CustomRoute(
       path: '/profit-rates-screen',
-      page: ProfitRatesPageRoute.page,
+      page: ProfitRatesRoute.page,
       transitionsBuilder: (context, animation, secondaryAnimation, child) {
         const begin = Offset(0.0, 1.0);
         const end = Offset.zero;
@@ -218,16 +221,39 @@ class AppRouter extends RootStackRouter {
       duration: Duration(milliseconds: 800),
       reverseDuration: Duration(milliseconds: 800),
     ),
+    // AutoRoute(path: '/fx-rates-screen-new', page: ProfitRatesPageRoute.page),
+    // CustomRoute(
+    //   path: '/profit-rates-screen-new',
+    //   page: ProfitRatesPageRoute.page,
+    //   transitionsBuilder: (context, animation, secondaryAnimation, child) {
+    //     const begin = Offset(0.0, 1.0);
+    //     const end = Offset.zero;
+    //     const curve = Curves.easeInOut;
+    //     var tween = Tween(
+    //       begin: begin,
+    //       end: end,
+    //     ).chain(CurveTween(curve: curve));
+    //     return FadeTransition(
+    //       opacity: animation,
+    //       child: SlideTransition(
+    //         position: animation.drive(tween),
+    //         child: child,
+    //       ),
+    //     );
+    //   },
+    //   duration: Duration(milliseconds: 800),
+    //   reverseDuration: Duration(milliseconds: 800),
+    // ),
     AutoRoute(path: '/forget-password-otp-screen', page: LoginOtpRoute.page),
-    AutoRoute(
-      path: '/forget-password-otp-screen',
-      page: ForgetPasswordTaskCompleteRoute.page,
-    ),
+    AutoRoute(path: '/task-success-screen', page: CommonTaskCompleteRoute.page),
     AutoRoute(
       path: '/forgot-password-create-username-screen',
       page: ForgotPasswordCreateUsernameRoute.page,
     ),
-    AutoRoute(path: '/set-password-screen', page: SetNewPasswordRoute.page),
+    AutoRoute(
+      path: '/set-password-screen',
+      page: ForgotPasswordSetPasswordRoute.page,
+    ),
     AutoRoute(
       path: '/home',
       page: HomeRoute.page,
@@ -264,6 +290,7 @@ class AppRouter extends RootStackRouter {
         // ),
       ],
     ),
+    AutoRoute(path: '/customize-dashboard', page: CustomizeDashboardRoute.page),
     // AutoRoute(
     //   path: '/accounts',
     //   page: AccountDashboardRoute.page,

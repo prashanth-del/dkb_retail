@@ -5,7 +5,7 @@ import 'package:dkb_retail/core/router/app_router.dart';
 import 'package:dkb_retail/features/onboarding/presentation/widget/image_slider.dart';
 
 import '../../../../core/constants/asset_path/asset_path.dart';
-import '../../../common/components/auto_leading_widget.dart';
+import '../../../common/presentation/components/auto_leading_widget.dart';
 @RoutePage()
 class OnboardingAccountScreen extends StatelessWidget {
   const OnboardingAccountScreen({super.key});

@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
-import '../../../common/components/auto_leading_widget.dart';
+import '../../../common/presentation/components/auto_leading_widget.dart';
 import '../../data/models/onboard_model.dart';
 
 @RoutePage()

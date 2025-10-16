@@ -99,138 +99,155 @@ class _LoginAppBarState extends ConsumerState<LoginAppBar> {
     final dir = isRtl ? TextDirection.rtl : TextDirection.ltr;
     consoleLog('lan index $selectedLanguageIndex, $isRtl ');
 
+    final size = MediaQuery.of(context).size;
     return Directionality(
       textDirection: TextDirection.ltr,
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          widget.animatedProfile ?? false
-              ? AnimatedProfilePhoto()
-              : CircleAvatar(
-                  radius: 20,
+      child: Container(
+        height: size.height * 0.075,
+        width: double.infinity,
 
-                  backgroundColor: Colors.black,
-                  child: Image.asset(
-                    AssetPath.image.loginHeaderlogo,
-                    height: 40,
-                  ),
-                ),
+        alignment: Alignment.topCenter,
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            widget.animatedProfile ?? false
+                ? AnimatedProfilePhoto()
+                : SizedBox(
+                    height: size.height * 0.07,
+                    child: CircleAvatar(
+                      radius: size.aspectRatio * 50,
 
-          AnimatedContainer(
-            duration: const Duration(milliseconds: 500),
-            width: 118,
-            height: 30,
-            decoration: BoxDecoration(
-              color: DefaultColors.white_500.withAlpha(50),
-              borderRadius: BorderRadius.circular(
-                MediaQuery.of(context).size.width * 1,
-              ),
-            ),
-            alignment: Alignment.center,
-            child: Stack(
-              children: [
-                AnimatedAlign(
-                  // alignment: ref.watch(selectedLanguageProvider) == 0
-                  //     ? Alignment.centerLeft
-                  //     : Alignment.centerRight,
-                  alignment: isRtl
-                      ? Alignment.centerRight
-                      : Alignment.centerLeft,
-                  duration: const Duration(milliseconds: 200),
-                  child: Container(
-                    width: isRtl ? 74 : 50,
-                    decoration: BoxDecoration(
-                      color: DefaultColors.white_300.withAlpha(50),
-                      borderRadius: BorderRadius.circular(
-                        MediaQuery.of(context).size.width * 1,
+                      backgroundColor: Colors.black,
+                      child: Image.asset(
+                        AssetPath.image.loginHeaderlogo,
+                        fit: BoxFit.cover,
                       ),
                     ),
                   ),
-                ),
-                Center(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: languageOptions
-                        .mapWithIndex<Widget>(
-                          (lang, index) => GestureDetector(
-                            onTap: () {
-                              if (LocaleCache.instance.getLocaleId() == 'en') {
-                                ref.switchLocale(LocaleId.ar);
-                                ref
-                                        .read(selectedLanguageProvider.notifier)
-                                        .state =
-                                    index;
-                              } else {
-                                ref.switchLocale(LocaleId.en);
-                                ref
-                                        .read(selectedLanguageProvider.notifier)
-                                        .state =
-                                    index;
-                              }
 
-                              consoleLog('Language Chnage ${ref.getLocale()} ');
-                            },
-                            child: Text(
-                              lang,
-                              style: TextStyle(
-                                fontSize: 14,
-                                color: DefaultColors.white,
+            AnimatedContainer(
+              duration: const Duration(milliseconds: 500),
+              width: 118,
+              height: 30,
+              decoration: BoxDecoration(
+                color: DefaultColors.white_500.withAlpha(50),
+                borderRadius: BorderRadius.circular(
+                  MediaQuery.of(context).size.width * 1,
+                ),
+              ),
+              alignment: Alignment.center,
+              child: Stack(
+                children: [
+                  AnimatedAlign(
+                    // alignment: ref.watch(selectedLanguageProvider) == 0
+                    //     ? Alignment.centerLeft
+                    //     : Alignment.centerRight,
+                    alignment: isRtl
+                        ? Alignment.centerRight
+                        : Alignment.centerLeft,
+                    duration: const Duration(milliseconds: 200),
+                    child: Container(
+                      width: isRtl ? 74 : 50,
+                      decoration: BoxDecoration(
+                        color: DefaultColors.white_300.withAlpha(50),
+                        borderRadius: BorderRadius.circular(
+                          MediaQuery.of(context).size.width * 1,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Center(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: languageOptions
+                          .mapWithIndex<Widget>(
+                            (lang, index) => GestureDetector(
+                              onTap: () {
+                                if (LocaleCache.instance.getLocaleId() ==
+                                    'en') {
+                                  ref.switchLocale(LocaleId.ar);
+                                  ref
+                                          .read(
+                                            selectedLanguageProvider.notifier,
+                                          )
+                                          .state =
+                                      index;
+                                } else {
+                                  ref.switchLocale(LocaleId.en);
+                                  ref
+                                          .read(
+                                            selectedLanguageProvider.notifier,
+                                          )
+                                          .state =
+                                      index;
+                                }
+
+                                consoleLog(
+                                  'Language Chnage ${ref.getLocale()} ',
+                                );
+                              },
+                              child: Text(
+                                lang,
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: DefaultColors.white,
+                                ),
                               ),
                             ),
-                          ),
-                        )
-                        .toList(),
+                          )
+                          .toList(),
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
 
-          // Container(
-          //     margin: const EdgeInsets.only(right: 10),
-          //     padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-          //     decoration: BoxDecoration(
-          //         border: Border.all(color: DefaultColors.white_500),
-          //         borderRadius: const BorderRadius.all(Radius.circular(30))),
-          //     child: UiTextNew.b14Semibold(
-          //       ref.getLocaleString("Eng", defaultValue: "Eng"),
-          //       color: DefaultColors.secondaryBlue,
-          //     )),
-          // UIButton.rounded(
-          //   onPressed: _buildLanguageSelection,
-          //   backgroundColor: DefaultColors.transparent,
-          //   label: ref.getLocaleString("qatar", defaultValue: "Eng"),
-          //   txtColor: DefaultColors.button_back,
-          //   borderColor: DefaultColors.white_500,
-          //   // iconPath: AssetPath.icon.dropDownIcon,
-          //   btnCurve: 5,
-          //   height: 35,
-          // ),
-          // const UiSpace.horizontal(5),
-          // Row(
-          //   mainAxisAlignment: MainAxisAlignment.start,
-          //   children: [
-          //     UIIconContainer(
-          //       imgAsset: langFlagPath,
-          //       color: DefaultColors.white,
-          //       size: 28,
-          //     ),
-          //     UIIconContainer(
-          //       onTap: _buildLanguageSelection,
-          //       imgAsset: AssetPath.icon.chevron_down,
-          //       color: DefaultColors.white,
-          //       size: 28,
-          //     )
-          //   ],
-          // ),
-          // UIIconContainer(
-          //   imgAsset: langFlagPath,
-          //   color: DefaultColors.whiteF3,
-          //   size: 28,
-          // ),
-          // const UiSpace.horizontal(10),
-        ],
+            // Container(
+            //     margin: const EdgeInsets.only(right: 10),
+            //     padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+            //     decoration: BoxDecoration(
+            //         border: Border.all(color: DefaultColors.white_500),
+            //         borderRadius: const BorderRadius.all(Radius.circular(30))),
+            //     child: UiTextNew.b14Semibold(
+            //       ref.getLocaleString("Eng", defaultValue: "Eng"),
+            //       color: DefaultColors.secondaryBlue,
+            //     )),
+            // UIButton.rounded(
+            //   onPressed: _buildLanguageSelection,
+            //   backgroundColor: DefaultColors.transparent,
+            //   label: ref.getLocaleString("qatar", defaultValue: "Eng"),
+            //   txtColor: DefaultColors.button_back,
+            //   borderColor: DefaultColors.white_500,
+            //   // iconPath: AssetPath.icon.dropDownIcon,
+            //   btnCurve: 5,
+            //   height: 35,
+            // ),
+            // const UiSpace.horizontal(5),
+            // Row(
+            //   mainAxisAlignment: MainAxisAlignment.start,
+            //   children: [
+            //     UIIconContainer(
+            //       imgAsset: langFlagPath,
+            //       color: DefaultColors.white,
+            //       size: 28,
+            //     ),
+            //     UIIconContainer(
+            //       onTap: _buildLanguageSelection,
+            //       imgAsset: AssetPath.icon.chevron_down,
+            //       color: DefaultColors.white,
+            //       size: 28,
+            //     )
+            //   ],
+            // ),
+            // UIIconContainer(
+            //   imgAsset: langFlagPath,
+            //   color: DefaultColors.whiteF3,
+            //   size: 28,
+            // ),
+            // const UiSpace.horizontal(10),
+          ],
+        ),
       ),
     );
   }

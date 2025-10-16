@@ -1,8 +1,7 @@
-
 import 'package:db_uicomponents/db_uicomponents.dart';
 import 'package:flutter/material.dart';
 import 'package:dkb_retail/features/beneficiary/presentation/widgets/bottomSheet/view_bottom_sheet.dart';
-import 'package:dkb_retail/features/common/styles/ui_text_styles.dart';
+import 'package:dkb_retail/features/common/presentation/styles/ui_text_styles.dart';
 import 'package:dkb_retail/features/transfer/data/model/transfer_model.dart';
 import 'package:dkb_retail/features/transfer/presentation/provider/transfer_provider.dart';
 import 'package:dkb_retail/features/transfer/presentation/widgets/bottom_sheet/confirm_transaction_sheet.dart';
@@ -14,11 +13,7 @@ import 'bottom_sheet/attach_bottom_sheet.dart';
 import 'bottom_sheet/charge_type_bottom_sheet.dart';
 
 class IftTransferPage2 extends ConsumerStatefulWidget {
-
-  const IftTransferPage2({
-    Key? key,
-
-  }) : super(key: key);
+  const IftTransferPage2({Key? key}) : super(key: key);
 
   @override
   ConsumerState<IftTransferPage2> createState() => _IftTransferPage2State();
@@ -27,7 +22,7 @@ class IftTransferPage2 extends ConsumerStatefulWidget {
 class _IftTransferPage2State extends ConsumerState<IftTransferPage2> {
   String? _purpose;
   String? _fund;
-  final  TextEditingController transactionRemarks = TextEditingController();
+  final TextEditingController transactionRemarks = TextEditingController();
   final TextEditingController chargeTypeController = TextEditingController();
   final TextEditingController attachController = TextEditingController();
 
@@ -39,9 +34,9 @@ class _IftTransferPage2State extends ConsumerState<IftTransferPage2> {
   void _updateFile() {
     setState(() {
       uploadedText = "File Uploaded";
-      attachController.text=uploadedText;
+      attachController.text = uploadedText;
       isFileUploaded = true;
-      isDropDownAttach=!isDropDownAttach;
+      isDropDownAttach = !isDropDownAttach;
       isPrefixAttach = !isPrefixAttach;
     });
   }
@@ -50,49 +45,41 @@ class _IftTransferPage2State extends ConsumerState<IftTransferPage2> {
     setState(() {
       uploadedText = "Click to attach";
       isFileUploaded = false;
-      attachController.text="";
-      isDropDownAttach=!isDropDownAttach;
+      attachController.text = "";
+      isDropDownAttach = !isDropDownAttach;
       isPrefixAttach = !isPrefixAttach;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-
     final selectedTransfer = ref.watch(selectedTransferProvider);
-    return  Padding(
+    return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
       child: Column(
         children: [
           Expanded(
             child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _buildCard(),
-                    const UiSpace.vertical(10),
-                    _buildPurpose(),
-                    _buildSourceFund(),
-                    if(selectedTransfer?.index==0)...{
-                    _buildChargeType(),
-                    },
-                     UiSpace.vertical(10),
-                    _buildInput(
-                      label: "Transaction Remarks",
-                      hint: "Please Enter",
-                      controller: transactionRemarks,
-                      isDropdown: false,
-                    ),
-                    const UiSpace.vertical(10),
-                    if(selectedTransfer?.index==0)...
-                    {
-                    _buildAttachmentBox(),
-                   },
-                    const UiSpace.vertical(10),
-
-                  ],
-                ),
-
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildCard(),
+                  const UiSpace.vertical(10),
+                  _buildPurpose(),
+                  _buildSourceFund(),
+                  if (selectedTransfer?.index == 0) ...{_buildChargeType()},
+                  UiSpace.vertical(10),
+                  _buildInput(
+                    label: "Transaction Remarks",
+                    hint: "Please Enter",
+                    controller: transactionRemarks,
+                    isDropdown: false,
+                  ),
+                  const UiSpace.vertical(10),
+                  if (selectedTransfer?.index == 0) ...{_buildAttachmentBox()},
+                  const UiSpace.vertical(10),
+                ],
+              ),
             ),
           ),
           _buildSendButton(),
@@ -110,8 +97,10 @@ class _IftTransferPage2State extends ConsumerState<IftTransferPage2> {
         UiDropdown(
           items: [
             UiDropdownValue(value: 'Pilgrimage', labelText: 'Pilgrimage'),
-            UiDropdownValue(value: 'School Fees', labelText: 'School Fees'), // Added
-
+            UiDropdownValue(
+              value: 'School Fees',
+              labelText: 'School Fees',
+            ), // Added
           ],
           height: 50,
           hintText: DefaultString.instance.plsSelect,
@@ -125,19 +114,23 @@ class _IftTransferPage2State extends ConsumerState<IftTransferPage2> {
       ],
     );
   }
+
   Widget _buildChargeType() {
     final chargeTypes = [
       {
         'title': 'All Charges Borne by Me',
-        'description': 'All transfers charges will be recovered from your Account\nDukhan Bank charges QAR 15'
+        'description':
+            'All transfers charges will be recovered from your Account\nDukhan Bank charges QAR 15',
       },
       {
         'title': 'Split the Charges',
-        'description': 'Dukhan Bank charges QAR 15 will be recovered from your account and correspondent bank charges will be from beneficiary'
+        'description':
+            'Dukhan Bank charges QAR 15 will be recovered from your account and correspondent bank charges will be from beneficiary',
       },
       {
         'title': 'All Charges Borne by Beneficiary',
-        'description': 'All transfer charges will be recovered from beneficiary\nDukhan Bank charges QAR 15'
+        'description':
+            'All transfer charges will be recovered from beneficiary\nDukhan Bank charges QAR 15',
       },
     ];
     return Column(
@@ -170,7 +163,6 @@ class _IftTransferPage2State extends ConsumerState<IftTransferPage2> {
     );
   }
 
-
   Widget _buildSourceFund() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -180,7 +172,9 @@ class _IftTransferPage2State extends ConsumerState<IftTransferPage2> {
         UiDropdown(
           items: [
             UiDropdownValue(
-                value: 'Personal Savings', labelText: 'Personal Savings'),
+              value: 'Personal Savings',
+              labelText: 'Personal Savings',
+            ),
             UiDropdownValue(value: 'Salary', labelText: 'Salary'),
           ],
           height: 50,
@@ -208,7 +202,6 @@ class _IftTransferPage2State extends ConsumerState<IftTransferPage2> {
     );
   }
 
-
   Widget _buildAttachmentBox() {
     return _buildInput(
       label: "Attachments",
@@ -235,21 +228,21 @@ class _IftTransferPage2State extends ConsumerState<IftTransferPage2> {
       ),
       suffixIcon: isFileUploaded
           ? Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          GestureDetector(
-            onTap: _deleteFile,
-            child: Padding(
-              padding: const EdgeInsets.only(left: 8, right: 10),
-              child: Icon(
-                Icons.delete_outline,
-                color: DefaultColors.primaryBlue,
-                size: 22,
-              ),
-            ),
-          ),
-        ],
-      )
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                GestureDetector(
+                  onTap: _deleteFile,
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 8, right: 10),
+                    child: Icon(
+                      Icons.delete_outline,
+                      color: DefaultColors.primaryBlue,
+                      size: 22,
+                    ),
+                  ),
+                ),
+              ],
+            )
           : null,
     );
   }
@@ -258,7 +251,7 @@ class _IftTransferPage2State extends ConsumerState<IftTransferPage2> {
     final selectedTransfer = ref.watch(selectedTransferProvider);
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 20),
-      child:  UIButton.rounded(
+      child: UIButton.rounded(
         label: "SEND",
         backgroundColor: DefaultColors.blue_300,
         txtColor: Colors.white,
@@ -269,14 +262,14 @@ class _IftTransferPage2State extends ConsumerState<IftTransferPage2> {
             title: "Confirm Transactions",
             heightPercentage: 0.6,
             child: ConfirmTransactionSheet(
-              transferType :"ift",
+              transferType: "ift",
               isConfirm: true,
-              transactionDetails: TransactionHelper.getTransactionDetails(selectedTransfer,isNextPage: false),
-
-            )
+              transactionDetails: TransactionHelper.getTransactionDetails(
+                selectedTransfer,
+                isNextPage: false,
+              ),
+            ),
           );
-
-
         },
       ),
     );
@@ -288,17 +281,17 @@ class _IftTransferPage2State extends ConsumerState<IftTransferPage2> {
     required TextEditingController controller,
     bool isDropdown = false,
     bool isEnabled = true,
-    bool isPrefix =false,
-    String dropDownLabel="",
+    bool isPrefix = false,
+    String dropDownLabel = "",
     double? dropheightPercentage,
     ValueChanged<String>? onChanged,
     VoidCallback? onReset,
     Widget? suffixIcon,
     Widget sheetWidget = const SizedBox.shrink(),
   }) {
-    TextStyle? textStyle = UiTextStyles.uiInfoTitleSmallBold(context)
-        ?.copyWith(color: DefaultColors.gray2D);
-
+    TextStyle? textStyle = UiTextStyles.uiInfoTitleSmallBold(
+      context,
+    )?.copyWith(color: DefaultColors.gray2D);
 
     bool fieldEnabled = !isEnabled;
 
@@ -312,22 +305,26 @@ class _IftTransferPage2State extends ConsumerState<IftTransferPage2> {
           readOnly: fieldEnabled,
           hintText: hint,
           validator: (value) {},
-          suffixIcon: suffixIcon ??
+          suffixIcon:
+              suffixIcon ??
               (isDropdown
                   ? Padding(
-                padding: const EdgeInsets.only(right: 12),
-                child: Icon(
-                  Icons.keyboard_arrow_down,
-                  color: DefaultColors.blue_300,
-                  size: 20,
-                ),
-              )
+                      padding: const EdgeInsets.only(right: 12),
+                      child: Icon(
+                        Icons.keyboard_arrow_down,
+                        color: DefaultColors.blue_300,
+                        size: 20,
+                      ),
+                    )
                   : null),
-          prefixIcon: isPrefix?
-          Container(
-            child: Icon(Icons.attach_file, color: DefaultColors.primaryBlue),
-          )
-              :null,
+          prefixIcon: isPrefix
+              ? Container(
+                  child: Icon(
+                    Icons.attach_file,
+                    color: DefaultColors.primaryBlue,
+                  ),
+                )
+              : null,
           onChanged: (value) {
             onChanged?.call(value);
             // _validateForm();

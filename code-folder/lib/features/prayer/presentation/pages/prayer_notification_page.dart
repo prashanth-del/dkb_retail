@@ -1,8 +1,9 @@
 import 'package:auto_route/annotations.dart';
 import 'package:db_uicomponents/db_uicomponents.dart';
 import 'package:flutter/material.dart';
-
-import '../widgets/prayer_time_app_bar.dart';
+import '../../../../core/constants/app_strings/default_string.dart';
+import '../../../common/presentation/components/auth_header_wrapper.dart';
+import '../../../../core/constants/asset_path/asset_path.dart';
 
 @RoutePage(name: "PrayerNotificationsPageRoute")
 class PrayerNotificationsPage extends StatefulWidget {
@@ -15,25 +16,25 @@ class PrayerNotificationsPage extends StatefulWidget {
 
 class _PrayerNotificationsPageState extends State<PrayerNotificationsPage> {
   final Map<String, Map<String, dynamic>> prayerTimes = {
-    'Fajr': {'time': '4:13 AM', 'enabled': true, 'icon': Icons.brightness_3},
-    'Sunrise': {
+    DefaultString.instance.fajr: {'time': '4:13 AM', 'enabled': true, 'icon': Icons.brightness_3},
+    DefaultString.instance.sunrise: {
       'time': '5:31 AM',
       'enabled': true,
       'icon': Icons.wb_sunny_outlined,
     },
-    'Dhuhr': {'time': '11:20 AM', 'enabled': false, 'icon': Icons.wb_sunny},
-    'Asr': {'time': '2:40 PM', 'enabled': true, 'icon': Icons.cloud},
-    'Maghrib': {'time': '5:08 PM', 'enabled': true, 'icon': Icons.nights_stay},
-    'Isha': {'time': '6:38 PM', 'enabled': true, 'icon': Icons.dark_mode},
+    DefaultString.instance.dhuhr: {'time': '11:20 AM', 'enabled': false, 'icon': Icons.wb_sunny},
+    DefaultString.instance.asr: {'time': '2:40 PM', 'enabled': true, 'icon': Icons.cloud},
+    DefaultString.instance.maghrib: {'time': '5:08 PM', 'enabled': true, 'icon': Icons.nights_stay},
+    DefaultString.instance.isha: {'time': '6:38 PM', 'enabled': true, 'icon': Icons.dark_mode},
   };
 
   String selectedAdhan = "Silent";
 
   final List<Map<String, dynamic>> adhanSounds = [
-    {"name": "Silent", "icon": Icons.volume_off},
-    {"name": "Makkah", "icon": Icons.play_circle_outline},
-    {"name": "Madina", "icon": Icons.play_circle_outline},
-    {"name": "Abdul Basit", "icon": Icons.play_circle_outline},
+    {"name": DefaultString.instance.silent, "icon": Icons.volume_off},
+    {"name": DefaultString.instance.makkah, "icon": Icons.play_circle_outline},
+    {"name": DefaultString.instance.madina, "icon": Icons.play_circle_outline},
+    {"name": DefaultString.instance.abdulBasit, "icon": Icons.play_circle_outline},
   ];
 
   @override
@@ -43,32 +44,29 @@ class _PrayerNotificationsPageState extends State<PrayerNotificationsPage> {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SafeArea(
-            child: PrayerTimesAppBar(
-              showSettings: false,
-              title: 'Prayer Notifications',
-              textColor: const Color(0xFF0D3E7F),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(
-              left: size.width * 0.09,
-              top: size.height * 0.0,
-            ),
-            child: const Text(
-              "Notification",
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                color: Colors.black,
+      body: AuthHeaderWrapper(
+        headerText: DefaultString.instance.prayerNotifications,
+        showBackButton: true,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: EdgeInsets.only(
+                left: size.width * 0.09,
+                top: size.height * 0.04,
+              ),
+              child: Text(
+                DefaultString.instance.notifications,
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                ),
               ),
             ),
-          ),
-          Expanded(
-            child: ListView(
+            ListView(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
               padding: EdgeInsets.symmetric(
                 horizontal: padding,
                 vertical: size.height * 0.015,
@@ -79,9 +77,7 @@ class _PrayerNotificationsPageState extends State<PrayerNotificationsPage> {
                   final details = entry.value;
 
                   return Padding(
-                    padding: EdgeInsets.symmetric(
-                      vertical: size.height * 0.005,
-                    ),
+                    padding: EdgeInsets.symmetric(vertical: size.height * 0.005),
                     child: UiCard(
                       borderColor: Colors.white,
                       padding: EdgeInsets.symmetric(
@@ -122,9 +118,8 @@ class _PrayerNotificationsPageState extends State<PrayerNotificationsPage> {
                               });
                             },
                             activeThumbColor: const Color(0xFF4197CB),
-                            activeTrackColor: const Color(
-                              0xFF4197CB,
-                            ).withValues(alpha: 0.2),
+                            activeTrackColor:
+                            const Color(0xFF4197CB).withAlpha(50),
                           ),
                         ],
                       ),
@@ -141,8 +136,8 @@ class _PrayerNotificationsPageState extends State<PrayerNotificationsPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
-                        "Adhan Sound",
+                      Text(
+                        DefaultString.instance.adhanSound,
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 15,
@@ -150,7 +145,6 @@ class _PrayerNotificationsPageState extends State<PrayerNotificationsPage> {
                         ),
                       ),
                       SizedBox(height: size.height * 0.015),
-
                       ...adhanSounds.map((sound) {
                         return Row(
                           children: [
@@ -160,8 +154,6 @@ class _PrayerNotificationsPageState extends State<PrayerNotificationsPage> {
                               size: 30,
                             ),
                             SizedBox(width: size.width * 0.03),
-
-                            // Label
                             Expanded(
                               child: Text(
                                 sound["name"],
@@ -187,10 +179,11 @@ class _PrayerNotificationsPageState extends State<PrayerNotificationsPage> {
                     ],
                   ),
                 ),
+                SizedBox(height: size.height * 0.05), // add bottom spacing
               ],
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

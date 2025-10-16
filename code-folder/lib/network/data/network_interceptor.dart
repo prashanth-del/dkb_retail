@@ -1,20 +1,21 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+
+import 'package:async_ui/async_ui.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:db_uicomponents/db_uicomponents.dart';
 import 'package:dio/dio.dart';
 import 'package:dkb_retail/common/utils.dart';
+import 'package:dkb_retail/core/i18n/controller/i18n_notifiers.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
-import 'package:local_session_timeout/local_session_timeout.dart';
 import 'package:path_provider/path_provider.dart';
+
 import '../../core/cache/global_cache.dart';
-import '../../core/cache/locale_cache.dart';
 import '../../core/constants/asset_path/asset_path.dart';
 import '../../core/router/app_router.dart';
-import '../../core/services/session_manager/session_manager.dart';
 import '../../core/utils/method_channel/custom_method_channel.dart';
 import '../../startup/start_up/domain/entity/security_threat.dart';
 import '../../startup/start_up/provider/dialog_provider.dart';
@@ -31,29 +32,30 @@ class NetworkInterceptor implements Interceptor {
   NetworkInterceptor(this.cookieManager, this.ref);
 
   InterceptorsWrapper get interceptorsWrapper => InterceptorsWrapper(
-        onRequest: onRequest,
-        onResponse: onResponse,
-        onError: onError,
-      );
+    onRequest: onRequest,
+    onResponse: onResponse,
+    onError: onError,
+  );
 
   @override
   void onRequest(
-      RequestOptions options, RequestInterceptorHandler handler) async {
+    RequestOptions options,
+    RequestInterceptorHandler handler,
+  ) async {
     final initLogout = ref.read(initLogoutProvider);
-    final localeId = LocaleCache.instance.getLocaleId(); // en or ar
+    // final localeId = LocaleCache.instance.getLocaleId(); // en or ar
+    final localeId = ref.watch(localePodProvider).languageCode;
     // todo: get unit and Accept-Language from cache dynamically.
     final commonHeaders = {
       'Accept': 'application/json',
       'Content-type': 'application/json',
       'charset': 'utf-8',
       'Accept-Language': options.headers['Accept-Language'] ?? localeId,
-      'channel': 'MB',
-      'unit': 'PRD',
+      'channel': options.headers['channel'] ?? 'MB',
+      'unit': options.headers['unit'] ?? 'PRD',
     };
 
-    options.headers.addAll({
-      'cookie': cookieManager.generateCookieHeader(),
-    });
+    options.headers.addAll({'cookie': cookieManager.generateCookieHeader()});
 
     // if (options.uri.path
     //         .endsWith('/common-service/common/txnMetricsByService') ||
@@ -63,6 +65,15 @@ class NetworkInterceptor implements Interceptor {
     // }
 
     options.headers.addAll(commonHeaders);
+
+    // opt out per request: Options(extra: {'noLock': true})
+    final shouldLock = options.extra['noLock'] != true;
+    if (shouldLock) {
+      final tok = ref
+          .read(globalLockProvider.notifier)
+          .acquire(source: 'dio:${options.path}');
+      options.extra['_lockTok'] = tok; // keep for later
+    }
 
     bool isVpnConnected = false;
     if (Platform.isAndroid) {
@@ -78,32 +89,35 @@ class NetworkInterceptor implements Interceptor {
       ref.read(isDialogHappened.notifier).state = true;
       await UIPopupDialog()
           .showPopup(
-        viewModel: UIPopupViewModel(
-            image: AssetPath.svg.error,
-            context: context,
-            barrierDismissible: false,
-            title: "Error",
-            content: getMessage(
+            viewModel: UIPopupViewModel(
+              image: AssetPath.svg.error,
+              context: context,
+              barrierDismissible: false,
+              title: "Error",
+              content: getMessage(
                 securityThreat: const SecurityThreat.vpnDetected(),
-                localeId: localeId),
-            buttonText: "Exit",
-            onButtonPressed: () {
-              exit(0);
-            },
-            onClosePressed: () {
-              exit(0);
-            }),
-      )
+                localeId: localeId,
+              ),
+              buttonText: "Exit",
+              onButtonPressed: () {
+                exit(0);
+              },
+              onClosePressed: () {
+                exit(0);
+              },
+            ),
+          )
           .then((val) {
-        ref.read(isDialogHappened.notifier).state = false;
-      });
+            ref.read(isDialogHappened.notifier).state = false;
+          });
       return;
     }
 
     if (options.data != null && _encRequired(uri: options.uri.path)) {
       consoleLog('Normal Data : ${options.data}');
-      var encryptedData =
-          await _encryptPayload(payload: jsonEncode(options.data));
+      var encryptedData = await _encryptPayload(
+        payload: jsonEncode(options.data),
+      );
       consoleLog('Encrypted Data : $encryptedData');
       options.data = encryptedData;
     }
@@ -154,6 +168,9 @@ class NetworkInterceptor implements Interceptor {
     // if (!response.realUri.path.endsWith("auth-service/auth/v1/public/rp")) {
     //   cookieManager.updateCookie(response);
     // }
+    final tok = response.requestOptions.extra['_lockTok'] as LockToken?;
+    tok?.release();
+
     cookieManager.updateCookie(response);
     if (kDebugMode) {
       consoleLog('Response : ${response.data}');
@@ -162,7 +179,9 @@ class NetworkInterceptor implements Interceptor {
     // 1) Decrypt (if required) -> String JSON
     if (response.data != null && _encRequired(uri: response.realUri.path)) {
       consoleLog('Response Data before decrypt: ${response.data}');
-      final decrypted = await _decryptPayload(payload: jsonEncode(response.data));
+      final decrypted = await _decryptPayload(
+        payload: jsonEncode(response.data),
+      );
       consoleLog('after native debug Data : $decrypted');
       if (decrypted != null && decrypted.isNotEmpty) {
         // IMPORTANT: decode to structured JSON
@@ -182,18 +201,22 @@ class NetworkInterceptor implements Interceptor {
 
   @override
   void onError(DioException error, ErrorInterceptorHandler handler) async {
-    final initLogout = ref.read(initLogoutProvider);
+    final tok = error.requestOptions.extra['_lockTok'] as LockToken?;
+    tok?.release();
 
-    final List<ConnectivityResult> connectivityResult =
-        await (Connectivity().checkConnectivity());
+    final initLogout = ref.read(initLogoutProvider);
+    final List<ConnectivityResult> connectivityResult = await (Connectivity()
+        .checkConnectivity());
 
     if (connectivityResult.contains(ConnectivityResult.none)) {
       UiToast().showToast('No internet connection');
-      return handler.next(DioException(
-        requestOptions: error.requestOptions,
-        error: 'No internet connection',
-        type: DioExceptionType.connectionError,
-      ));
+      return handler.next(
+        DioException(
+          requestOptions: error.requestOptions,
+          error: 'No internet connection',
+          type: DioExceptionType.connectionError,
+        ),
+      );
     }
 
     final response = error.response;
@@ -237,23 +260,30 @@ class NetworkInterceptor implements Interceptor {
 
     if (response != null && response.data is Map) {
       ApiDioException apiError = ApiDioException(
-          requestOptions: error.requestOptions,
-          error: ApiError.fromJson(response.data),
-          response: error.response,
-          type: error.type);
+        requestOptions: error.requestOptions,
+        error: ApiError.fromJson(response.data),
+        response: error.response,
+        type: error.type,
+      );
       switch (response.statusCode) {
         case HttpStatus.unauthorized:
-          return handler.next(ApiUnAuthenticatedError(
+          return handler.next(
+            ApiUnAuthenticatedError(
               requestOptions: error.requestOptions,
               error: ApiError.fromJson(response.data),
               response: error.response,
-              type: error.type));
+              type: error.type,
+            ),
+          );
         case HttpStatus.notFound:
-          return handler.next(ApiNotFoundError(
+          return handler.next(
+            ApiNotFoundError(
               requestOptions: error.requestOptions,
               error: ApiError.fromJson(response.data),
               response: error.response,
-              type: error.type));
+              type: error.type,
+            ),
+          );
         default:
           return handler.next(apiError);
       }
@@ -274,7 +304,8 @@ class NetworkInterceptor implements Interceptor {
       // Check if the file exists, create it if it doesn't
       if (!await file.exists()) {
         await file.create(
-            recursive: true); // This creates the file if it doesn't exist
+          recursive: true,
+        ); // This creates the file if it doesn't exist
       }
 
       // Get current timestamp
@@ -296,11 +327,13 @@ class NetworkInterceptor implements Interceptor {
     late final String? encryptedPayload;
     try {
       if (Platform.isIOS) {
-        encryptedPayload =
-            await CustomMethodChannel().encryptCode(toEncrypt: toEncrypt);
+        encryptedPayload = await CustomMethodChannel().encryptCode(
+          toEncrypt: toEncrypt,
+        );
       } else {
-        encryptedPayload =
-            await dbComponentsPlugin.encrypt(toEncrypt: toEncrypt);
+        encryptedPayload = await dbComponentsPlugin.encrypt(
+          toEncrypt: toEncrypt,
+        );
       }
     } catch (e) {
       consoleLog('Error in encryption : $e');
@@ -314,11 +347,13 @@ class NetworkInterceptor implements Interceptor {
     late final String? decryptedPayLoad;
     try {
       if (Platform.isIOS) {
-        decryptedPayLoad =
-            await CustomMethodChannel().decryptPayload(toDecrypt: toDecrypt);
+        decryptedPayLoad = await CustomMethodChannel().decryptPayload(
+          toDecrypt: toDecrypt,
+        );
       } else {
-        decryptedPayLoad =
-            await dbComponentsPlugin.decryptPayLoad(toDecrypt: toDecrypt);
+        decryptedPayLoad = await dbComponentsPlugin.decryptPayLoad(
+          toDecrypt: toDecrypt,
+        );
       }
     } catch (e) {
       consoleLog('Error in encryption : $e');
@@ -335,8 +370,7 @@ bool _encRequired({required String uri}) {
       !uri.endsWith("/common/labels") &&
       !uri.endsWith("/common-service/common/banner") &&
       !uri.endsWith("/auth/v1/user/forceupdate") &&
-      !uri.endsWith("/common-service/common/termsandcondition")
-  ) {
+      !uri.endsWith("/common-service/common/termsandcondition")) {
     retVal = true;
   }
   return retVal;

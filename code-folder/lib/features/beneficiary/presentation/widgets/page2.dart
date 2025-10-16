@@ -3,7 +3,7 @@ import 'package:dkb_retail/core/constants/app_strings/default_string.dart';
 import 'package:dkb_retail/core/constants/asset_path/asset_path.dart';
 import 'package:dkb_retail/core/utils/extensions/locale_extension.dart';
 import 'package:dkb_retail/features/beneficiary/presentation/controller/beneficiary_provider.dart';
-import 'package:dkb_retail/features/common/styles/ui_text_styles.dart';
+import 'package:dkb_retail/features/common/presentation/styles/ui_text_styles.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

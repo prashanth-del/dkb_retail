@@ -13,5 +13,6 @@ dependencies:
 dev_dependencies: {}
 
 executables:
-  schemacast: bin/json2freezed.dart
+  featurecast: bin/featurecast.dart
+  schemacast: bin/schemacast.dart
   seed: bin/seed.dart

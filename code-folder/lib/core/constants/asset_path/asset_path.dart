@@ -1,3 +1,4 @@
+part 'src/gif_assets.dart';
 part 'src/flag_assets.dart';
 part 'src/icon_assets.dart';
 part 'src/image_assets.dart';
@@ -12,6 +13,7 @@ mixin _BasePaths {
   static const svgPath = 'assets/svg/';
   static const lottiePath = 'assets/lottie/';
   static const flagPath = 'assets/images/flags/';
+  static const gifPath = 'assets/gif/';
 }
 
 /// AssetPath
@@ -26,4 +28,5 @@ class AssetPath {
   static final SvgAssets svg = SvgAssets();
   static final LottieAssets lottie = LottieAssets();
   static final FlagAssets flag = FlagAssets();
+  static final GifAssets gif = GifAssets();
 }

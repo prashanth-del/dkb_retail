@@ -1,7 +1,7 @@
 import 'package:auto_route/annotations.dart';
 import 'package:db_uicomponents/db_uicomponents.dart';
 import 'package:flutter/material.dart';
-import 'package:dkb_retail/features/common/components/auto_leading_widget.dart';
+import 'package:dkb_retail/features/common/presentation/components/auto_leading_widget.dart';
 import 'package:dkb_retail/features/transfer/presentation/pages/western_union_page.dart';
 
 import 'local_fund_transfer.dart';

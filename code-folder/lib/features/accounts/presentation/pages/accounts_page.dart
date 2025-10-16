@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/constants/colors.dart';
-import '../../../common/components/card_stack.dart';
-import '../../../common/models/account_details.dart';
+import '../../../common/presentation/components/card_stack.dart';
+import '../../../common/data/models/account_details.dart';
 
 // If needed elsewhere, otherwise remove
 final selectedIndexProvider = StateProvider<int>((ref) => 0);

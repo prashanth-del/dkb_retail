@@ -3,7 +3,7 @@ import 'package:db_uicomponents/db_uicomponents.dart';
 import 'package:flutter/material.dart';
 import 'package:dkb_retail/core/constants/app_strings/default_string.dart';
 import 'package:dkb_retail/core/constants/asset_path/asset_path.dart';
-import 'package:dkb_retail/features/common/components/auto_leading_widget.dart';
+import 'package:dkb_retail/features/common/presentation/components/auto_leading_widget.dart';
 import 'package:dkb_retail/features/transfer/data/model/transfer_model.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

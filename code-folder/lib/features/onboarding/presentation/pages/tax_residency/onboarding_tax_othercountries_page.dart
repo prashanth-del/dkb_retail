@@ -9,8 +9,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../../../core/constants/colors.dart';
-import '../../../../common/components/auto_leading_widget.dart';
-import '../../../../common/dialog/ui_dialogs.dart';
+import '../../../../common/presentation/components/auto_leading_widget.dart';
+import '../../../../common/presentation/dialog/ui_dialogs.dart';
 import '../../controller/notifier/onboarding_save_stage_data_notifier.dart';
 import '../../provider/onboarding_provider.dart';
 import 'onboarding_country_selection_page.dart';

@@ -16,5 +16,7 @@ abstract class HeaderManagerInterface {
     String? subModuleId,
     String? screenId,
     String? customerId,
+    String? channel,
+    String? unit,
   });
 }

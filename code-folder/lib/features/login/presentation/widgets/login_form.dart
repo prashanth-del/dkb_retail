@@ -6,6 +6,9 @@ import 'package:flutter/services.dart'; // 👈 needed for inputFormatters
 import 'package:db_uicomponents/db_uicomponents.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../common/presentation/components/common_textfeild_style_2.dart';
+import '../../../../core/constants/app_strings/default_string.dart';
+
 class LoginFormWidget extends ConsumerWidget {
   final GlobalKey<FormState> loginFormKey;
   final TextEditingController userController;
@@ -28,89 +31,51 @@ class LoginFormWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return GestureDetector(
-      behavior: HitTestBehavior.translucent,
-      onTap: () => FocusScope.of(context).unfocus(), // close keyboard
+    final size = MediaQuery.of(context).size;
+
+    return Container(
+      decoration: BoxDecoration(
+        color: DefaultColors.white.withAlpha(50),
+        borderRadius: BorderRadius.circular(size.aspectRatio * 60),
+      ),
+      padding: EdgeInsets.all(size.aspectRatio * 40),
+      margin: EdgeInsets.zero,
       child: Form(
         key: loginFormKey,
         child: Column(
           children: [
+            UiSpace.vertical(size.height * 0.03),
             // Username / Email
-            TextField(
+            CustomTextFieldStyle2(
               controller: userController,
-              cursorColor: Colors.white,
               inputFormatters: [
                 FilteringTextInputFormatter.deny(RegExp(r'\s')), // ❌ no spaces
               ],
-              style: const TextStyle(
-                color: DefaultColors.white,
-                fontWeight: FontWeight.normal,
-                fontSize: 16,
-              ),
-              decoration: InputDecoration(
-                labelText: 'Email or Phone number',
-                labelStyle: const TextStyle(
-                  color: DefaultColors.white,
-                  fontWeight: FontWeight.normal,
-                  fontSize: 16,
-                ),
-                floatingLabelBehavior: FloatingLabelBehavior.auto,
-                filled: true,
-                fillColor: DefaultColors.white.withAlpha(30),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  borderSide: const BorderSide(color: DefaultColors.white),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  borderSide: const BorderSide(color: DefaultColors.white),
-                ),
-              ),
+              label: DefaultString.instance.userNameTextField,
+              floatingLabelBehavior: FloatingLabelBehavior.auto,
             ),
-            const SizedBox(height: 16),
 
-            // Password
-            TextField(
+            const SizedBox(height: 16),
+            CustomTextFieldStyle2(
               controller: passwordController,
               obscureText: !isPasswordVisible,
-              cursorColor: Colors.white,
               inputFormatters: [
                 FilteringTextInputFormatter.deny(RegExp(r'\s')),
               ],
-              style: const TextStyle(
-                color: DefaultColors.white,
-                fontWeight: FontWeight.normal,
-                fontSize: 16,
-              ),
-              decoration: InputDecoration(
-                labelText: 'Password',
-                labelStyle: const TextStyle(
+              label: DefaultString.instance.passwordTextField,
+              floatingLabelBehavior: FloatingLabelBehavior.auto,
+              allowCopyPaste: false,
+              suffixIcon: GestureDetector(
+                onTap: onTogglePassword,
+                child: Icon(
+                  isPasswordVisible
+                      ? Icons.visibility_outlined
+                      : Icons.visibility_off_outlined,
                   color: DefaultColors.white,
-                  fontWeight: FontWeight.normal,
-                  fontSize: 16,
-                ),
-                floatingLabelBehavior: FloatingLabelBehavior.auto,
-                suffixIcon: GestureDetector(
-                  onTap: onTogglePassword,
-                  child: Icon(
-                    isPasswordVisible
-                        ? Icons.visibility_outlined
-                        : Icons.visibility_off_outlined,
-                    color: DefaultColors.white,
-                  ),
-                ),
-                filled: true,
-                fillColor: DefaultColors.white.withAlpha(30),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  borderSide: const BorderSide(color: DefaultColors.white),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  borderSide: const BorderSide(color: DefaultColors.white),
                 ),
               ),
             ),
+
             const SizedBox(height: 12),
 
             // Forgot Password link
@@ -119,10 +84,11 @@ class LoginFormWidget extends ConsumerWidget {
               child: InkWell(
                 onTap: () => context.router.push(ForgotPasswordRoute()),
                 child: UiTextNew.b11Regular(
-                  "Forgot Username/Password ?",
+                  DefaultString.instance.forgotUsernamePassword,
+
                   decoration: TextDecoration.underline,
-                  decorationColor: DefaultColors.white,
-                  color: Colors.white,
+                  decorationColor: DefaultColors.blue_200,
+                  color: DefaultColors.blue_200,
                 ),
               ),
             ),
@@ -134,7 +100,7 @@ class LoginFormWidget extends ConsumerWidget {
               isRoundedButton: true,
               maxWidth: MediaQuery.of(context).size.width,
               height: 45,
-              label: ref.getLocaleString("Login", defaultValue: "Login"),
+              label: DefaultString.instance.login,
               btnCurve: 20,
               backgroundColor: DefaultColors.white,
               txtColor: DefaultColors.black,
@@ -143,7 +109,7 @@ class LoginFormWidget extends ConsumerWidget {
             const SizedBox(height: 16),
 
             _buildRegisterSection(ref: ref),
-            const SizedBox(height: 16),
+            UiSpace.vertical(size.height * 0.03),
           ],
         ),
       ),
@@ -154,7 +120,7 @@ class LoginFormWidget extends ConsumerWidget {
     return GestureDetector(
       onTap: onRegisterPressed,
       child: UiTextNew.b11Regular(
-        "Register Now",
+        DefaultString.instance.registerNow,
         decoration: TextDecoration.underline,
         decorationColor: DefaultColors.white,
         color: Colors.white,

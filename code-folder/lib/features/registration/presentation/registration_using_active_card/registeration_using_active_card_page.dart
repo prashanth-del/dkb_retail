@@ -1,13 +1,21 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:db_uicomponents/db_uicomponents.dart';
 import 'package:dkb_retail/common/utils.dart';
+import 'package:dkb_retail/core/constants/app_strings/default_string.dart';
 import 'package:dkb_retail/core/router/app_router.dart';
-import 'package:dkb_retail/core/utils/extensions/locale_extension.dart';
+import 'package:dkb_retail/features/common/presentation/components/auth_header_wrapper.dart';
 import 'package:dkb_retail/features/registration/presentation/controller/registration_active_controllers.dart';
+import 'package:dkb_retail/features/registration/presentation/controller/registration_controller.dart';
+import 'package:dkb_retail/features/registration/presentation/controller/registration_notifiers.dart';
 import 'package:dkb_retail/features/registration/presentation/widget/card_number_formatter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../../../common/data/models/otp_validate_models/validate_otp_request.dart';
+import '../../../common/data/models/otp_validate_models/validate_otp_request_request_info_dto.dart';
+import '../../../common/domain/locators/common_locators.dart';
+import '../../../common/presentation/components/dialogs.dart';
 
 @RoutePage()
 class RegisterationUsingActiveCardPage extends ConsumerStatefulWidget {
@@ -22,6 +30,16 @@ class _RegisterationUsingActiveCardPageState
     extends ConsumerState<RegisterationUsingActiveCardPage> {
   final usernameController = TextEditingController();
   final passwordController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    Future.microtask(() {
+      ref.watch(registrationNotifierProvider.notifier).getCardValidations();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,47 +49,50 @@ class _RegisterationUsingActiveCardPageState
     final pinNode = ref.watch(pinFocusNodeProvider);
     final isVisible = ref.watch(isVisibleProvider);
     final isCardValid = ref.watch(isCardValidProvider);
+    final cardValidator = ref.watch(regCardValidatorProvider);
+    final isValid = _formKey.currentState?.validate() ?? false;
+    consoleLog("isvalid $isValid ");
 
     return Scaffold(
       resizeToAvoidBottomInset: true,
-      backgroundColor: DefaultColors.white,
-      body: SingleChildScrollView(
-        child: UiBackgroundWrapper(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              UiSpace.vertical(40),
-              CommonAuthAppBar(
-                title: ref.getLocaleString(
-                  "Register Using Your Card",
-                  defaultValue: "Register Using Your Card",
-                ),
-                onBack: () {
-                  if (isVisible && isCardValid) {
-                    ref.watch(isVisibleProvider.notifier).state = false;
-                    ref.watch(isCardValidProvider.notifier).state = false;
-                    ref.watch(pinNumberControllerProvider).clear();
-                  } else {
-                    context.router.maybePop();
-                  }
-                },
+      body: AuthHeaderWrapper(
+        headerText: DefaultString.instance.registrationCard,
+        onBack: () {
+          if (isVisible && isCardValid) {
+            ref.watch(isVisibleProvider.notifier).state = false;
+            ref.watch(isCardValidProvider.notifier).state = false;
+            ref.watch(pinNumberControllerProvider).clear();
+            cardController.clear();
+          } else {
+            context.router.maybePop();
+          }
+        },
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            UiSpace.vertical(30),
+            Padding(
+              padding: const EdgeInsets.only(left: 16),
+              child: UiTextNew.b1Semibold(
+                DefaultString.instance.enterYourDebitOrPrepaidCardNumber,
               ),
-              UiSpace.vertical(16),
-              UiTextField(
+            ),
+            UiSpace.vertical(30),
+            Form(
+              key: _formKey,
+              child: UiTextField(
                 autoFocus: true,
                 isReadOnly: isCardValid,
                 controller: cardController,
-                label: ref.getLocaleString(
-                  'Enter Debit/Perpaid Card Number',
-                  defaultValue: 'Enter Debit/Perpaid Card Number',
-                ),
+                label: DefaultString.instance.enterDebitPerpaidCardNumber,
                 maxLength: 19,
                 keyboardType: TextInputType.numberWithOptions(),
+                validator: cardValidator.validate,
                 onChanged: (value) async {
                   setState(() {});
                   if (value.length == 19) {
                     ref.read(isVisibleProvider.notifier).state = true;
-                    if (value == '1234 1234 1234 1234') {
+                    if (value == '1234 5678 9876 5432') {
                       ref.read(isCardValidProvider.notifier).state = true;
                     }
                     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -90,32 +111,29 @@ class _RegisterationUsingActiveCardPageState
                   CardNumberFormatter(),
                 ],
               ),
+            ),
 
-              UiSpace.vertical(20),
-              isVisible
-                  ? isCardValid
-                        ? UiTextField(
-                            obscureText: true,
-                            controller: pinController,
-                            label: ref.getLocaleString(
-                              "Enter PIN",
-                              defaultValue: "Enter PIN",
-                            ),
-                            keyboardType: TextInputType.numberWithOptions(),
-                            maxLength: 4,
-                            onChanged: (value) {
-                              setState(() {});
-                            },
-                            inputFormatters: [
-                              FilteringTextInputFormatter.allow(
-                                RegExp(r'[0-9]'),
-                              ), // Allow only digits
-                            ],
-                          )
-                        : SizedBox()
-                  : SizedBox(),
-            ],
-          ),
+            UiSpace.vertical(20),
+            isVisible
+                ? isCardValid
+                      ? UiTextField(
+                          obscureText: true,
+                          controller: pinController,
+                          label: DefaultString.instance.enterPin,
+                          keyboardType: TextInputType.numberWithOptions(),
+                          maxLength: 4,
+                          onChanged: (value) {
+                            setState(() {});
+                          },
+                          inputFormatters: [
+                            FilteringTextInputFormatter.allow(
+                              RegExp(r'[0-9]'),
+                            ), // Allow only digits
+                          ],
+                        )
+                      : SizedBox()
+                : SizedBox(),
+          ],
         ),
       ),
       bottomNavigationBar: SafeArea(
@@ -127,31 +145,28 @@ class _RegisterationUsingActiveCardPageState
             mainAxisSize: MainAxisSize.min,
             children: [
               isVisible
-                  ? RichText(
-                      text: TextSpan(
-                        style: TextStyle(
-                          color: DefaultColors.black,
-                          fontSize: 12,
-                          fontWeight: FontWeight.w500,
-                        ),
-                        text: ref.getLocaleString(
-                          'By clicking on Next you accept our ',
-                          defaultValue: 'By clicking on Next you accept our ',
-                        ),
-                        children: [
-                          TextSpan(
-                            style: TextStyle(
-                              color: DefaultColors.blue60,
-                              decoration: TextDecoration.underline,
+                  ? isValid
+                        ? RichText(
+                            text: TextSpan(
+                              style: TextStyle(
+                                color: DefaultColors.black,
+                                fontSize: 12,
+                                fontWeight: FontWeight.w500,
+                              ),
+                              text: DefaultString.instance.acceptTermsMessage,
+                              children: [
+                                TextSpan(
+                                  style: TextStyle(
+                                    color: DefaultColors.blue60,
+                                    decoration: TextDecoration.underline,
+                                  ),
+                                  text:
+                                      DefaultString.instance.termsAndConditions,
+                                ),
+                              ],
                             ),
-                            text: ref.getLocaleString(
-                              'Terms and Conditions',
-                              defaultValue: 'Terms and Conditions',
-                            ),
-                          ),
-                        ],
-                      ),
-                    )
+                          )
+                        : SizedBox()
                   : SizedBox(),
               // UiSpace.vertical(12),
               Container(
@@ -166,32 +181,40 @@ class _RegisterationUsingActiveCardPageState
                                 pinController.text.length < 4
                             ? true
                             : false
-                      : cardController.text.isEmpty ||
-                            cardController.text.length < 19,
+                      : !isValid || cardController.text.length < 19,
                   backgroundColor: DefaultColors.blue9D,
                   onPressed: () {
                     // context.router.push(RegisterationOtpRoute());
                     if (isCardValid) {
                       context.router.push(
                         CommonOtpRoute(
-                          title: ref.getLocaleString(
-                            "Enter OTP",
-                            defaultValue: "Enter OTP",
-                          ),
-                          description: ref.getLocaleString(
-                            "You will receive the OTP on your registered mobile number.",
-                            defaultValue:
-                                "You will receive the OTP on your registered mobile number.",
-                          ),
+                          title: DefaultString.instance.enterOtp,
+                          description: DefaultString.instance.otpReceiveMessage,
                           otpLength: 6,
                           timerDuration: const Duration(seconds: 60),
-                          suffixTap: () {
-                            context.router.replaceAll([LoginRoute()]);
-                          },
-                          onVerify: (otp) {
+                          // suffixTap: () {
+                          //   context.router.replaceAll([LoginRoute()]);
+                          // },
+                          onVerify: (otp) async {
                             // validate OTP API call
                             consoleLog('otp submitted');
-                            context.router.push(CreateUsernameRoute());
+                            final request = ValidateOtpRequest(
+                              requestInfo: ValidateOtpRequestRequestInfoDto(
+                                  otp: otp
+                              ),
+                            );
+                            final result = await ref.read(commonRepositoryProvider).validateOtp(request: request);
+
+                            result.fold(
+                              (failure) => showErrorDialog(
+                                failure.description.toString(),
+                                context,
+                                ref,
+                              ),
+                              (otpValidate) {
+                                context.router.replace(CreateUsernameRoute());
+                              },
+                            );
                             // context.router.push(
                             //   CommonCreateUsernameRoute(
                             //     title: 'Create Username',
@@ -218,19 +241,35 @@ class _RegisterationUsingActiveCardPageState
                             //   ),
                             // );
                           },
-                          onCompleted: (value) {
-                            context.router.push(CreateUsernameRoute());
+                          onCompleted: (otp) async {
+                            final request = ValidateOtpRequest(
+                              requestInfo: ValidateOtpRequestRequestInfoDto(
+                                  otp: otp
+                              ),
+                            );
+                            final result = await ref.read(commonRepositoryProvider).validateOtp(request: request);
+
+                            result.fold(
+                              (failure) => showErrorDialog(
+                                failure.description.toString(),
+                                context,
+                                ref,
+                              ),
+                              (otpValidate) {
+                                context.router.replace(CreateUsernameRoute());
+                              },
+                            );
                             consoleLog('otp completed');
                           },
 
                           onResend: () {
                             //Resend OTP API call
                           },
+                          suffixTap: () {
+                            context.router.replaceAll([LoginRoute()]);
+                          },
 
-                          verifyButtonLabel: ref.getLocaleString(
-                            "Verify",
-                            defaultValue: "Verify",
-                          ),
+                          verifyButtonLabel: DefaultString.instance.verify,
                           // nextRouteName: CreateUsernameRoute(),
                         ),
                       );
@@ -238,7 +277,7 @@ class _RegisterationUsingActiveCardPageState
                       context.router.push(RegistrationCardInactiveRoute());
                     }
                   },
-                  label: ref.getLocaleString('Next', defaultValue: 'Next'),
+                  label: DefaultString.instance.nextTitle,
                 ),
               ),
             ],

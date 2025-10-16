@@ -172,6 +172,7 @@ class SvgAssets {
   // final slide1 = '${_svgPath}slide1.svg';
 
   //////////////login_icons////////////////
+  ///
 
   final moreIcon =
       '$_loginSVGPath'
@@ -185,4 +186,7 @@ class SvgAssets {
   final ratesIcon =
       '$_loginSVGPath'
       'rates.svg';
+  final prayerTimeIcon =
+      '$_loginSVGPath'
+      'prayer_time_sun.svg';
 }

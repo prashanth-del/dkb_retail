@@ -145,6 +145,7 @@ class DefaultColors {
   static const Color grayMedBase = Color(0xFFAFB7BB);
   static const Color greenBase = Color(0xFF70C651);
   static const Color blueDarkBase = Color(0xFF0D3E7F);
+  static const Color blue = Color(0xFF0078FF);
 
   static const Color yellow48 = Color.fromRGBO(254, 253, 237, 1);
 

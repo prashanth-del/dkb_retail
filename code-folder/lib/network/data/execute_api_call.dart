@@ -1,5 +1,8 @@
 import 'dart:convert';
+
 import 'package:dio/dio.dart';
+import 'package:dkb_retail/common/utils.dart';
+
 import '../domain/models/api_envelope.dart';
 import 'handle_exception.dart';
 
@@ -24,7 +27,7 @@ Future<ApiEnvelope<R>> executeApiCall<R>({
     if (asMap != null) return mapJson(asMap);
     return handleException<R>('Invalid server response');
   } catch (e) {
+    consoleLog('*******error $e *************');
     return handleException<R>(e);
   }
 }
-

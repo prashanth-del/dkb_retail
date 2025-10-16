@@ -2,18 +2,20 @@ import 'package:db_uicomponents/components.dart';
 import 'package:db_uicomponents/utils.dart';
 import 'package:dkb_retail/core/constants/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../controller/reach_us_providers.dart';
 import 'custom_button.dart';
 
-class CallUsSheet extends StatefulWidget {
+class CallUsSheet extends ConsumerStatefulWidget {
   const CallUsSheet({super.key});
 
   @override
-  State<CallUsSheet> createState() => _CallUsSheetState();
+  ConsumerState<CallUsSheet> createState() => _CallUsSheetState();
 }
 
-class _CallUsSheetState extends State<CallUsSheet> {
+class _CallUsSheetState extends ConsumerState<CallUsSheet> {
   Future<void> _makePhoneCall(String phoneNumber) async {
     final Uri launchUri = Uri(scheme: 'tel', path: phoneNumber);
     if (await canLaunchUrl(launchUri)) {
@@ -25,6 +27,9 @@ class _CallUsSheetState extends State<CallUsSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final bankDetails = ref.read(reachUsNotifierProvider).bankDetails;
+    print(";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;");
+    print(bankDetails);
     return Column(
       children: [
         Container(
@@ -37,14 +42,15 @@ class _CallUsSheetState extends State<CallUsSheet> {
             children: [
               GestureDetector(
                 onTap: () {
-                  _makePhoneCall("+9748008555");
+                  _makePhoneCall("${bankDetails!.contact!}");
                 },
                 child: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 13),
                   child: UiTextNew.customRubik(
-                    "+974 800 8555 (Local)",
-                    color: DefaultColors.blueLightBase,
-                    fontSize: 14,
+                    "${bankDetails!.contact} (Local)",
+                    color: DefaultColors.blue,
+                    fontSize: 15,
+                    fontWeight: FontWeight.w500,
                   ),
                 ),
               ),
@@ -53,14 +59,15 @@ class _CallUsSheetState extends State<CallUsSheet> {
 
               GestureDetector(
                 onTap: () {
-                  _makePhoneCall("+974 4410 0888");
+                  _makePhoneCall("${bankDetails!.internationalContact}");
                 },
                 child: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 13),
                   child: UiTextNew.customRubik(
-                    "+974 4410 0888 (Overseas)",
-                    color: DefaultColors.blueLightBase,
-                    fontSize: 14,
+                    "${bankDetails!.internationalContact} (Overseas)",
+                    color: DefaultColors.blue,
+                    fontSize: 15,
+                    fontWeight: FontWeight.w500,
                   ),
                 ),
               ),
@@ -74,8 +81,10 @@ class _CallUsSheetState extends State<CallUsSheet> {
             Navigator.pop(context);
           },
           title: "Cancel",
-          titleColor: DefaultColors.blueLightBase,
+          titleColor: DefaultColors.blue,
           buttonColor: Colors.white,
+          fontWeight: FontWeight.w600,
+          fontSize: 16,
         ),
         SizedBox(height: 8),
       ],

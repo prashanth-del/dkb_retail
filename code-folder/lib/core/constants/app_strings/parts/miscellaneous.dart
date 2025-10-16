@@ -21,8 +21,6 @@ extension DefaultStringMiscelleneous on DefaultString {
       _i18nText(key: I18nKeys.setPassword, fallback: "Set Password");
   String get enterPassword =>
       _i18nText(key: I18nKeys.enterPassword, fallback: "Enter Password");
-  String get confirmPassword =>
-      _i18nText(key: I18nKeys.confirmPassword, fallback: "Confirm Password");
   String get enhanceSecurity => _i18nText(
       key: I18nKeys.enhanceSecurity, fallback: "Enhance your security");
   String get enhanceSecuritySubText => _i18nText(
@@ -33,8 +31,6 @@ extension DefaultStringMiscelleneous on DefaultString {
       _i18nText(key: I18nKeys.enterMPin, fallback: "Enter pin");
   String get haveAgreedTo => _i18nText(
       key: I18nKeys.haveAgreedTo, fallback: "I have read and agree to the");
-  String get termsAndConditions => _i18nText(
-      key: I18nKeys.termsAndConditions, fallback: " terms and conditions.");
   String get welcomeToDohaBank => _i18nText(
       key: I18nKeys.welcomeToDohaBank, fallback: "Welcome to Doha Bank");
   String get successfullyRegisteredAccount => _i18nText(

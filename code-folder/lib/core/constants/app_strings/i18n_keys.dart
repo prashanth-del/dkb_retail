@@ -11,6 +11,51 @@ final class I18nKeys {
   static const noInternet = 'no_internet';
   static const connectionTimeout = 'connection_timeout';
 
+  // Registrations
+  static const registrationCard = 'register_using_card';
+  static const registrationQIDPassport = 'enter_qid_passport';
+  static const enterRegisteredMobileNumber = 'enter_registered_mobile_number';
+  static const enterDebitPerpaidCardNumber = 'enter_debit_perpaid_card_number';
+  static const acceptTermsMessage = 'accept_terms_message';
+  static const enterOtp = 'enter_otp';
+  static const otpReceiveMessage = 'otp_receive_message';
+
+  static const verify = 'verify';
+  static const createUsername = 'create_username';
+  static const availableUsernames = 'available_usernames';
+  static const setNewPassword = 'set_new_password';
+  static const createPin = 'create_pin';
+  static const cardActivatedSuccessfully = 'card_activated_successfully';
+  static const cardInactiveMessage = 'card_inactive_message';
+  static const register = 'register';
+  static const activateNow = 'activate_now';
+  static const resendOtp = 'resend_otp';
+
+  static const enterValidPassword = 'enter_valid_password';
+  static const enterQidPassportAndMobileNumber =
+      'enter_qid_passport_and_mobile_number';
+  static const createOrSelectAUsername = 'create_or_select_a_username';
+  static const enterYourDebitOrPrepaidCardNumber =
+      'enter_your_debit_or_prepaid_card_number';
+  static const createNewPinToActivateYourCard =
+      'create_new_pin_to_activate_your_card';
+  static const oopsYourCardIsInactive = 'oops_your_card_is_inactive';
+  static const yourInterests = 'your_interests';
+  static const selectYourInterestsToCurateYourExperience =
+      'select_your_interests_to_curate_your_experience';
+  static const registrationCompletedSuccessfully =
+      'registration_completed_successfully';
+  static const takingYouToLogin = 'taking_you_to_login';
+  static const completeRegistration = 'complete_registration';
+  static const skipForNow = 'skip_for_now';
+  static const youCanSetYourInterestLaterOnceYouLogin =
+      'you_can_set_your_interest_later_once_you_login';
+  static const products = 'products';
+  static const apply = 'apply';
+  static const contactDetails = 'contact_details';
+  static const provideYourDetailsAndWeWillCallYouToExplainTheProduct =
+      'provide_your_details_and_we_will_call_you_to_explain_the_product';
+
   // ---- Misc common
   static const error = 'error';
   static const loading = 'loading';
@@ -41,6 +86,13 @@ final class I18nKeys {
   static const newUser = 'new_user';
   static const signUP = 'sign_up';
   static const passwdRstSucc = "Password reset successfully";
+
+  static const emergencyBlock = 'emergencyBlock';
+  static const rates = 'rates';
+  static const more = 'more';
+
+  static const nextPrayerTime = "nextPrayerTime";
+
   //Reach_Us
   static const reachUs = "reach_us";
   static const faqs = "faqs";
@@ -64,6 +116,61 @@ final class I18nKeys {
 
   static const searchForFaq = "Search_for_a_FAQs";
   static const noResultSearch = "no_results_found";
+  static const enableLocation =
+      "Please_enable_location_to_view_nearest_branch/atm/kiosk";
+  static const requestCallback = "Request_callBack";
+
+  static const mobileNumberRequest = "Mobile_number";
+  static const emailOptional = "Email_(Optional)";
+
+  static const reason = "Reason";
+  static const selectReason = "Select Reason";
+
+  static const All = "All";
+  static const BranchFilter = "Branch";
+  static const AtmFilter = "Atm";
+  static const kiosk = "kiosk";
+
+  static const locateUs = "locate_us";
+  static const direction = "Directions";
+  static const nextTitle = "Next";
+  static const requiredTitle = "This_field_is_required";
+  static const onlyNumberValidate = "Only_numeric_digits_are_allowed";
+  static const mobileNumberValidate =
+      "Mobile_number_should_be_of_8_characters.";
+  static const mobileQatarValidate =
+      "Mobile_number_should_start_only_with 3, 5, 6 and 7.";
+  static const fullNameValidate = "Only_alphabets_and_spaces_are_allowed";
+  static const nameSpaceValidate = "MSG004";
+  static const nameProfanityValidate = "Profanity_Not_Allowed";
+  static const emailValidate = "Enter_a_valid_email_address";
+  static const allBranchesTitle = "All_Branched";
+  static const nearestTitle = "nearest";
+  static const allKiosks = "All_Kiosks";
+
+  static const allAtms = "All_atms";
+  static const cashDeposit = "cash_deposit";
+  static const cashWithdrawals = "cash_withdrawals";
+
+  static const chequeDeposit = "cheque_Deposit";
+  static const specialNeeds = "special_Needs";
+
+  static const someThingError = "Something_went_wrong._Please_try_again_later";
+  static const noEmailConfigured = "No_email_application_configured";
+  static const branchNameLoading = "Fetching_nearest_branch...";
+  static const successRequest = "success_Request";
+  static const weWillCallYouWithin1day =
+      "We_will_call_you_back_within_1_business_day";
+  static const referenceNum = "reference_Num";
+  static const bookAnAppointment = "book_an_appointment";
+  static const done = "Done";
+
+  static const branches = "branches";
+  static const atms = "atms";
+  static const kiosks = "kiosks";
+  static const OperationHours = "Operation_hours";
+  static const infoTitle = "info";
+  static const okTitle = "ok";
 
   // ---- Quick links / login bottom sheet
   static const quickLinksTitle = 'quick_links_title';
@@ -87,6 +194,9 @@ final class I18nKeys {
   static const tc = 'tc';
   static const socioConnect = 'socio_connect';
   static const dohaVersion = 'doha_version';
+  static const downloadStatement = 'download_statement';
+  static const myBookOffers = 'my_book_offers';
+  static const switchToCorporate = 'switch_to_Corporate';
 
   // ---- Transfers / Payments
   static const payments = 'payments';
@@ -128,7 +238,7 @@ final class I18nKeys {
   static const mobileNumber = 'mobile_number';
   static const selectCards = 'select_cards';
   static const regisTermsAndCondText1 =
-      'These terms and conditions (\"Terms and Conditions\") set out the rights and obligations of you \"the customer\", and us, Doha Bank QSC \"Doha Bank\" in connection with your use of the Service. All the terms and conditions of this agreement are legally binding, so please read them through carefully before you agree to be bound by them.';
+      'These terms and conditions ("Terms and Conditions") set out the rights and obligations of you "the customer", and us, Doha Bank QSC "Doha Bank" in connection with your use of the Service. All the terms and conditions of this agreement are legally binding, so please read them through carefully before you agree to be bound by them.';
   static const regisTermsAndCondText2 = "Definitions";
   static const regisTermsAndCondText3 =
       "The following terms when used in these Terms and Conditions shall have the meanings ascribed to such terms as under:";
@@ -183,6 +293,25 @@ final class I18nKeys {
   static const currency = 'currency';
   static const beneType = 'bene_type';
   static const donationAmount = 'donation_amount';
+
+  //----- Dashboard
+
+  static const customizeDashtitle = 'Customise your dashboard';
+  static const customizeDashDesc = 'Explore more banking features';
+
+  // Wallet screen
+  static const walletBankName = 'wallet_title';
+  static const walletCardType = 'wallet_subtitle';
+  static const walletCardNumber = 'wallet_card';
+  static const walletCardHolder = 'wallet_card_holder';
+  static const walletCardExpiry = 'wallet_card_expiry';
+  static const walletLogin = 'wallet_login';
+  static const walletCarouselTitle1 = 'wallet_carousel_title1';
+  static const walletCarouselSubtitle1 = 'wallet_carousel_subtitle1';
+  static const walletCarouselTitle2 = 'wallet_carousel_title2';
+  static const walletCarouselSubtitle2 = 'wallet_carousel_subtitle2';
+  static const walletCarouselTitle3 = 'wallet_carousel_title3';
+  static const walletCarouselSubtitle3 = 'wallet_carousel_subtitle3';
 
   // ---- Biometric
   static const biometricDisableSuccessDesc = 'biometric_disable_success_desc';
@@ -370,6 +499,36 @@ final class I18nKeys {
   static const changeLanguage = 'changeLanguage';
   static const eng = 'eng';
   static const ar = 'ar';
+
+  //welcome back
+  static const welcomeBack = "welcomeBack";
+  static const switchProfile = "switchProfile";
+  static const login = "login";
+  static const useFaceId = "useFaceId";
+  static const useFingerprint = "useFingerprint";
+  static const forgotUsernamePassword = "forgotUsernamePassword";
+  static const viewAccountBalance = "viewAccountBalance";
+  static const registerNow = "registerNow";
+
+  static const biometricNotAvailable = "biometricNotAvailable";
+  static const fingerprintNotAvailable = "fingerprintNotAvailable";
+  static const faceIdNotAvailable = "faceIdNotAvailable";
+  static const authFingerprintReason = "authFingerprintReason";
+  static const authFaceIdReason = "authFaceIdReason";
+  static const passwordEmptyError = "passwordEmptyError";
+
+  // Forgot Password Screen keys
+  static const forgotCredentials = 'forgotCredentials';
+  static const enterYourCardDetails = 'enterYourCardDetails';
+  static const enterCardNumber = 'enterCardNumber';
+  static const pinHint = 'pinHint';
+  static const getOtp = 'getOtp';
+  static const otpDescriptionRegisteredNumber =
+      'otpDescriptionRegisteredNumber';
+  static const confirmOrUpdateUsername = 'confirmOrUpdateUsername';
+  static const createSelectUsername = 'createSelectUsername';
+  static const createStrongPassword = 'createStrongPassword';
+  static const passwordUpdatedSuccessfully = 'passwordUpdatedSuccessfully';
 
   // ---- OTP
   static const otpAuthenticationText = 'otpAuthenticationText';
@@ -628,4 +787,53 @@ final class I18nKeys {
   static const String enterMonths = "enter_months";
   static const String enterValidNumber = "enter_valid_number";
   static const String maximumMonths = "maximum_months";
+
+  // rates
+
+  static const fxRatesTitle = 'fx_rates_title';
+  static const profitRatesTitle = 'fx_rates_title';
+  static const fxRatesErrorLoadingFlags = 'fx_rates_error_loading_flags';
+  static const tagRetail = 'tag_retail';
+  static const category = 'category';
+  static const creationDate = 'creation_date';
+  static const lastMonthDate = 'last_month_date';
+  static const chooseRateType = 'choose_rates_type';
+  static const growthTillDate = 'growth_till_date';
+  //static const done = 'done';
+  static const categoryRetail = 'category_retail';
+  static const buy = 'buy';
+  static const sell = 'sell';
+  static const chooseCurrency = 'choose_currency';
+  static const searchCurrency = 'search_currency';
+  // ---- ProfitRatesScreen Tabs / Product Types
+  static const productTimeDeposit = 'product_time_deposit';
+  static const productSavings = 'product_savings';
+  static const productFaseel = 'product_faseel';
+  static const productExceptionalSavingPlus = 'product_exceptional_saving_plus';
+  static const productProfitInAdvanceDeposit =
+      'product_profit_in_advance_deposit';
+  static const productExceptionalSavings = 'product_exceptional_savings';
+  // ---- Empty / Error States
+  static const noDataAvailable = 'no_data_available';
+
+  // prayer
+
+  static const prayerTimings = 'prayer_timings';
+  static const qiblaFinder = 'qibla_finder';
+  static const prayerTimeSettings = 'prayer_time_settings';
+  static const method = 'method';
+  static const hijriDate = 'hijri_date';
+  static const notifications = 'notifications';
+  static const prayerNotifications = 'prayer_notifications';
+  static const fajr = 'fajr';
+  static const sunrise = 'sunrise';
+  static const dhuhr = 'dhuhr';
+  static const asr = 'asr';
+  static const maghrib = 'maghrib';
+  static const isha = 'isha';
+  static const adhanSound = 'adhan_sound';
+  static const silent = 'silent';
+  static const makkah = 'makkah';
+  static const madina = 'madina';
+  static const abdulBasit = 'abdel_basit';
 }

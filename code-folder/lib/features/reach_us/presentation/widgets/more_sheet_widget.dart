@@ -1,11 +1,12 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:db_uicomponents/db_uicomponents.dart' hide DefaultColors;
-import 'package:dkb_retail/core/constants/app_strings/default_string.dart';
 import 'package:dkb_retail/core/constants/colors.dart' show DefaultColors;
 import 'package:flutter/material.dart';
 
+import '../../../../core/constants/app_strings/default_string.dart';
 import '../../../../core/constants/asset_path/asset_path.dart';
 import '../../../../core/router/app_router.dart';
+import 'divider_sheet_widget.dart';
 
 class MoreSheetWidget extends StatefulWidget {
   const MoreSheetWidget({super.key});
@@ -18,40 +19,28 @@ class _MoreSheetWidgetState extends State<MoreSheetWidget> {
   List<Map<String, dynamic>> moreActionList = [
     {
       "title": DefaultString.instance.chequeBookRequest,
-      "subTitle": "Request",
+
       "icon": AssetPath.image.defualtImage,
     },
     {
-      "title": "Download ",
-      "subTitle": "Statement",
+      "title": DefaultString.instance.downloadStatement,
+
       "icon": AssetPath.image.defualtImage,
     },
-    {
-      "title": "Quick ",
-      "subTitle": "link",
-      "icon": AssetPath.image.defualtImage,
-    },
-    {
-      "title": "Quick ",
-      "subTitle": "link",
-      "icon": AssetPath.image.defualtImage,
-    },
+    {"title": "Quick\nlink", "icon": AssetPath.image.defualtImage},
+    {"title": "Quick\nlink", "icon": AssetPath.image.defualtImage},
     {"title": "Reach Us", "subTitle": "", "icon": AssetPath.image.reachImage},
     {
-      "title": "My Book ",
-      "subTitle": "Offers",
+      "title": DefaultString.instance.myBookOffers,
+
       "icon": AssetPath.image.defualtImage,
     },
     {
-      "title": "Switch to",
-      "subTitle": "Corporate",
+      "title": DefaultString.instance.switchToCorporate,
+
       "icon": AssetPath.image.defualtImage,
     },
-    {
-      "title": "Quick",
-      "subTitle": "link",
-      "icon": AssetPath.image.defualtImage,
-    },
+    {"title": "Quick\nlink", "icon": AssetPath.image.defualtImage},
   ];
   @override
   Widget build(BuildContext context) {
@@ -60,23 +49,8 @@ class _MoreSheetWidgetState extends State<MoreSheetWidget> {
         HeaderSheetWidget(
           withCloseIcon: false,
           titleSheet: "More Services",
-          // Row(
-          //   crossAxisAlignment: CrossAxisAlignment.start,
-          //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          //   children: [
-          //     SizedBox(),
-          //     Padding(
-          //       padding: const EdgeInsets.symmetric(horizontal: 4),
-          //       child: GestureDetector(
-          //         onTap: () {
-          //           Navigator.pop(context);
-          //         },
-          //         child: Icon(Icons.close, color: DefaultColors.white, size: 28),
-          //       ),
-          //     ),
-          //   ],
-          // ),
-          // UiSpace.vertical(10),
+
+          titleColor: Colors.black,
           contentSheet: Container(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
@@ -143,21 +117,21 @@ class _MoreSheetWidgetState extends State<MoreSheetWidget> {
                               ),
                               UiSpace.vertical(5),
                               SizedBox(
-                                width: double.infinity,
+                                // width: 84,
                                 child: Column(
                                   children: [
-                                    UiTextNew.custom(
+                                    UiTextNew.b14Medium(
+                                      fontSize: 12,
                                       moreActionList[index]["title"],
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 11,
                                       textAlign: TextAlign.center,
+                                      maxLines: 2,
                                     ),
-                                    UiTextNew.custom(
-                                      moreActionList[index]["subTitle"],
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 11,
-                                      textAlign: TextAlign.center,
-                                    ),
+                                    // UiTextNew.custom(
+                                    //   moreActionList[index]["subTitle"],
+                                    //   fontWeight: FontWeight.w600,
+                                    //   fontSize: 12,
+                                    //   textAlign: TextAlign.center,
+                                    // ),
                                   ],
                                 ),
                               ),
@@ -234,12 +208,14 @@ class HeaderSheetWidget extends StatelessWidget {
   final Widget contentSheet;
   final String? titleSheet;
   final bool withCloseIcon;
+  final Color? titleColor;
 
   const HeaderSheetWidget({
     super.key,
     required this.contentSheet,
     this.titleSheet,
     this.withCloseIcon = true,
+    this.titleColor,
   });
 
   @override
@@ -251,17 +227,18 @@ class HeaderSheetWidget extends StatelessWidget {
           topLeft: Radius.circular(16),
           topRight: Radius.circular(16),
         ),
-        color: DefaultColors.grayLightBase,
+        color: DefaultColors.white,
       ),
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
         child: SingleChildScrollView(
           child: Column(
             // mainAxisSize: MainAxisSize.max, // 👈 IMPORTANT
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              // DividerSheetCommon(),
+              DividerSheetCommon(),
+              SizedBox(height: 30),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -270,7 +247,7 @@ class HeaderSheetWidget extends StatelessWidget {
                       ? UiTextNew.customRubik(
                           titleSheet!,
                           fontSize: 16,
-                          color: DefaultColors.blueBase,
+                          color: titleColor ?? DefaultColors.blueBase,
                           textAlign: TextAlign.start,
                           fontWeight: FontWeight.w700,
                         )

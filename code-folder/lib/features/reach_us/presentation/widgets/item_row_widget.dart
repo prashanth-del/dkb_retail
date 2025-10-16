@@ -34,14 +34,14 @@ class ItemRowWidget extends StatelessWidget {
               SizedBox(height: 33),
               UiTextNew.customRubik(
                 title,
-                fontSize: 13,
-                fontWeight: FontWeight.w800,
+                fontSize: 14,
+                fontWeight: FontWeight.w700,
               ),
               SizedBox(height: 4),
               UiTextNew.custom(
                 subTitle,
                 color: DefaultColors.grayBase,
-                fontSize: 13,
+                fontSize: 12,
                 fontWeight: FontWeight.w600,
               ),
             ],
@@ -81,8 +81,8 @@ class ItemWidget extends StatelessWidget {
             children: [
               UiTextNew.customRubik(
                 title,
-                fontSize: 13,
-                fontWeight: FontWeight.w800,
+                fontSize: 14,
+                fontWeight: FontWeight.w700,
               ),
               Image.asset(icon, width: 24, height: 24),
             ],

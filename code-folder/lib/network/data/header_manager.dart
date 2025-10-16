@@ -13,14 +13,18 @@ class HeaderManager implements HeaderManagerInterface {
     String? subModuleId,
     String? screenId,
     String? customerId,
+    String? channel,
+    String? unit,
   }) {
     Map<String, String> headers = {};
 
-    if(serviceId != null) headers['serviceId'] = serviceId;
-    if(moduleId != null) headers['moduleId'] = moduleId;
-    if(subModuleId != null) headers['subModuleId'] = subModuleId;
-    if(screenId != null) headers['screenId'] = screenId;
-    if(customerId != null) headers['customerId'] = customerId;
+    if (serviceId != null) headers['serviceId'] = serviceId;
+    if (moduleId != null) headers['moduleId'] = moduleId;
+    if (subModuleId != null) headers['subModuleId'] = subModuleId;
+    if (screenId != null) headers['screenId'] = screenId;
+    if (customerId != null) headers['customerId'] = customerId;
+    if (channel != null) headers['channel'] = channel;
+    if (unit != null) headers['unit'] = unit;
 
     return headers;
   }

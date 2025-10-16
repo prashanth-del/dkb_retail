@@ -5,7 +5,7 @@ import 'package:dkb_retail/features/beneficiary/presentation/widgets/bottomSheet
 import 'package:dkb_retail/features/beneficiary/presentation/widgets/bottomSheet/confirm_bank_sheet.dart';
 import 'package:dkb_retail/features/beneficiary/presentation/widgets/bottomSheet/view_bottom_sheet.dart';
 import 'package:dkb_retail/features/beneficiary/presentation/widgets/tabPages/beneficiary_user_card.dart';
-import 'package:dkb_retail/features/common/styles/ui_text_styles.dart';
+import 'package:dkb_retail/features/common/presentation/styles/ui_text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

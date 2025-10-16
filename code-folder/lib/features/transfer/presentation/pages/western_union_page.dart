@@ -5,7 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/constants/asset_path/asset_path.dart';
 import '../../../beneficiary/presentation/widgets/bottomSheet/view_bottom_sheet.dart';
-import '../../../common/styles/ui_text_styles.dart';
+import '../../../common/presentation/styles/ui_text_styles.dart';
 import '../../data/model/transfer_model.dart';
 import '../provider/transfer_provider.dart';
 import '../widgets/bottom_sheet/confirm_transaction_sheet.dart';
@@ -13,7 +13,8 @@ import '../widgets/bottom_sheet/confirm_transaction_sheet.dart';
 class WesternUnionPage extends ConsumerStatefulWidget {
   final String title;
 
-  const WesternUnionPage({Key? key, required this.title, required onSubmit}) : super(key: key);
+  const WesternUnionPage({Key? key, required this.title, required onSubmit})
+    : super(key: key);
 
   @override
   ConsumerState<WesternUnionPage> createState() => _WesternUnionPageState();
@@ -23,7 +24,8 @@ class _WesternUnionPageState extends ConsumerState<WesternUnionPage> {
   DateTime? _startDate;
   DateTime? _endDate;
   final TextEditingController mtcnController = TextEditingController();
-  final TextEditingController transactionSeqController = TextEditingController();
+  final TextEditingController transactionSeqController =
+      TextEditingController();
   bool showTransactionStatus = false;
 
   void _onSubmit() {
@@ -34,8 +36,10 @@ class _WesternUnionPageState extends ConsumerState<WesternUnionPage> {
 
   void _showTransactionBottomSheet() {
     final selectedTransfer = ref.read(selectedTransferProvider);
-    final transactionDetails =
-    TransactionHelper.getTransactionDetails(selectedTransfer, isNextPage: false);
+    final transactionDetails = TransactionHelper.getTransactionDetails(
+      selectedTransfer,
+      isNextPage: false,
+    );
 
     viewBottomSheet(
       context: context,
@@ -102,7 +106,11 @@ class _WesternUnionPageState extends ConsumerState<WesternUnionPage> {
             ],
           ),
           UiSpace.vertical(10),
-          _buildInput(label: "MTCN", hint: "Enter MTCN", controller: mtcnController),
+          _buildInput(
+            label: "MTCN",
+            hint: "Enter MTCN",
+            controller: mtcnController,
+          ),
           _buildInput(
             label: "Transaction Sequence Number",
             hint: "Enter Transaction Sequence Number",
@@ -146,15 +154,23 @@ class _WesternUnionPageState extends ConsumerState<WesternUnionPage> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
-                                  UiTextNew.h5Regular("MTCN", color: DefaultColors.grey),
-                                  UiTextNew.h5Regular("Transaction Seq No.", color: DefaultColors.grey),
+                                  UiTextNew.h5Regular(
+                                    "MTCN",
+                                    color: DefaultColors.grey,
+                                  ),
+                                  UiTextNew.h5Regular(
+                                    "Transaction Seq No.",
+                                    color: DefaultColors.grey,
+                                  ),
                                 ],
                               ),
                               const SizedBox(height: 4),
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   UiTextNew.b14Medium("1234543234"),
                                   UiTextNew.b14Medium("123456"),
@@ -188,8 +204,9 @@ class _WesternUnionPageState extends ConsumerState<WesternUnionPage> {
           labelUiText: UiTextNew.b2Semibold(label),
           hintText: hint,
           controller: controller,
-          textStyle: UiTextStyles.uiInfoTitleSmallBold(context)
-              ?.copyWith(color: DefaultColors.gray2D),
+          textStyle: UiTextStyles.uiInfoTitleSmallBold(
+            context,
+          )?.copyWith(color: DefaultColors.gray2D),
         ),
         UiSpace.vertical(10),
       ],

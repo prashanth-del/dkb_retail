@@ -13,7 +13,7 @@ class ImageAssets with _BasePaths {
   final profile = "${_imagePath}profile.png";
   final cardBg = "${_imagePath}cardBg.png";
   final cardBgNew = "${_imagePath}cardBgNew.png";
-  final taskcompletedScreenBg = "${_imagePath}task_completed_background.jpg";
+  final taskcompletedScreenBg = "${_imagePath}task_completed_background.png";
   // final new_d = "${_imagePath}new_d.jpg";
   final userprofile = "${_imagePath}user_profile.png";
   final qatarFlag = "${_imagePath}flags/qatar.png";
@@ -54,6 +54,13 @@ class ImageAssets with _BasePaths {
   final vectorright = "${_imagePath}product/vectorright.png";
   final productCards = "${_imagePath}product/productcards.png";
   final productTicketCopy = "${_imagePath}product/Copy.svg";
+  final reg1 = "${_imagePath}product/reg1.png";
+  final reg2 = "${_imagePath}product/reg2.png";
+  final card1 = "${_imagePath}product/Card1.png";
+  final card2 = "${_imagePath}product/Card2.png";
+  final card3 = "${_imagePath}product/Card3.png";
+  final financeimg = "${_imagePath}product/financeimg.png";
+  final successgif = "${_imagePath}product/succcessgif.gif";
 
   //retail
   final cardBgIntersectImg = "${_imagePath}retail/Vector.png";
@@ -127,7 +134,9 @@ class ImageAssets with _BasePaths {
   final pin_kiosk = "${_imagePath}pin_kiosk.png";
   final expand = "${_imagePath}Expand.png";
 
-  final background = "${_imagePath}Prelogin Screen - BG.jpg";
+  final headerbackground = "${_imagePath}headerBG.png";
+  final Loginbackground = "${_imagePath}loginbg.png";
+  final backgroundGradient = "${_imagePath}Bg_gradient.png";
   final loginHeaderlogo = "${_imagePath}Marketing Status - Dashboard.png";
 
   final mapEmpty = "${_imagePath}locate_image/map_empty.png";

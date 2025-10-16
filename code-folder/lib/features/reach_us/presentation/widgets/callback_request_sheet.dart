@@ -1,6 +1,8 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:db_uicomponents/components.dart';
+import 'package:dkb_retail/core/constants/app_strings/default_string.dart';
 import 'package:dkb_retail/core/constants/colors.dart';
+import 'package:dkb_retail/features/reach_us/presentation/widgets/success_image_widget.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../core/router/app_router.dart';
@@ -32,12 +34,14 @@ class _CallbackRequestSheetState extends State<CallbackRequestSheet> {
           children: [
             SizedBox(height: 10),
             DividerSheetCommon(),
-            SizedBox(height: 80),
+            SizedBox(height: 24),
+            SuccessImageWidget(),
+            SizedBox(height: 24),
 
             Container(
               width: 200,
               child: UiTextNew.customRubik(
-                "Thank you for your callback request",
+                DefaultString.instance.successRequestTitle,
                 maxLines: 2,
                 fontSize: 16,
                 textAlign: TextAlign.center,
@@ -55,14 +59,14 @@ class _CallbackRequestSheetState extends State<CallbackRequestSheet> {
                 child: Column(
                   children: [
                     UiTextNew.customRubik(
-                      "We will call you back within 1 business day",
+                      DefaultString.instance.weWillCallYouWithin1dayTitle,
                       maxLines: 2,
                       fontSize: 13,
                       fontWeight: FontWeight.w700,
                     ),
                     SizedBox(height: 14),
                     UiTextNew.customRubik(
-                      "Reference number: 123456789",
+                      "${DefaultString.instance.referenceNumTitle} 123456789",
                       maxLines: 2,
                       fontSize: 10,
                       color: DefaultColors.grayBase,
@@ -75,9 +79,11 @@ class _CallbackRequestSheetState extends State<CallbackRequestSheet> {
             CustomButtonNewWidget(
               onPress: () {
                 print(";;;;;;;;;;;;;;;;;;;;");
-                context.router.replace(ReachUsPageRoute());
+                context.router.popUntil((route) {
+                  return route.settings.name == ReachUsPageRoute.name;
+                });
               },
-              title: "Done",
+              title: DefaultString.instance.doneTitle,
             ),
             SizedBox(height: 25),
           ],

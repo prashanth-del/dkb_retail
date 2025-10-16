@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 
 class LeadingWidget extends StatefulWidget {
   final String title;
-  const LeadingWidget({super.key, required this.title});
+  void Function()? onTap;
+  LeadingWidget({super.key, required this.title, this.onTap});
 
   @override
   State<LeadingWidget> createState() => _AutoLeadingWidgetState();
@@ -14,38 +15,31 @@ class _AutoLeadingWidgetState extends State<LeadingWidget> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    final dynamicHeight = size.height * 0.08; // ~8% of screen height
-    final iconSize = size.width * 0.03;
-    final horizontalPadding = size.width * 0.04; // dynamic padding
-    final fontSize = size.width * 0.045;
     return Row(
       children: [
         GestureDetector(
-          onTap: () => Navigator.pop(context),
-          child: Container(
-            padding: EdgeInsets.all(size.width * 0.01),
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              border: Border.all(color: DefaultColors.black25.withAlpha(60)),
-            ),
-            child: Icon(
-              Icons.arrow_back_ios_new,
-              size: iconSize,
-              color: DefaultColors.blue98,
-            ),
+          onTap: () {
+            widget.onTap ?? Navigator.pop(context);
+          },
+          child: Icon(
+            Icons.arrow_back_ios_sharp,
+            size: 20,
+            color: DefaultColors.black.withOpacity(0.8),
           ),
           // SvgPicture.asset(
-          //   "assets/images/locate_image/Back.svg",
-          //   width: 24,
-          //   height: 24,
+          //   "assets/images/locate_image/Buttons.svg",
+          //   width: 40,
+          //   height: 40,
+          //   fit: BoxFit.cover,
           // ),
         ),
-        SizedBox(width: size.width * 0.02),
+
+        SizedBox(width: size.width * 0.04),
         UiTextNew.custom(
           widget.title,
           color: DefaultColors.blueBase,
-          fontWeight: FontWeight.w700,
-          fontSize: 15,
+          fontWeight: FontWeight.w600,
+          fontSize: 16,
           overflow: TextOverflow.ellipsis,
         ),
       ],

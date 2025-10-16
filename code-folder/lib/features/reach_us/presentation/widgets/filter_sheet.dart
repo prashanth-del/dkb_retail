@@ -1,16 +1,20 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:db_uicomponents/components.dart';
 import 'package:dkb_retail/core/constants/colors.dart';
+import 'package:dkb_retail/core/router/app_router.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../../../core/constants/app_strings/default_string.dart';
 import '../../../../core/constants/asset_path/asset_path.dart';
+import '../controller/reach_us_providers.dart';
 import 'custom_button.dart';
 import 'more_sheet_widget.dart';
 
-class FilterSheet extends StatefulWidget {
+class FilterSheet extends ConsumerStatefulWidget {
   final int selectedTabIndex; // 1 = Branches, 2 = ATMs, 3 = Kiosks
   final int selectedIndex; // current selection for this tab
-
   const FilterSheet({
     Key? key,
     required this.selectedTabIndex,
@@ -18,49 +22,73 @@ class FilterSheet extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<FilterSheet> createState() => _FilterSheetState();
+  ConsumerState<FilterSheet> createState() => _FilterSheetState();
 }
 
-class _FilterSheetState extends State<FilterSheet> {
+class _FilterSheetState extends ConsumerState<FilterSheet> {
   late List<Map<String, dynamic>> list;
   String? title;
 
   @override
   void initState() {
     super.initState();
+    final reachUsState = ref.read(reachUsNotifierProvider); // ✅ correct
+    // or ref.watch in consumer
 
     if (widget.selectedTabIndex == 1) {
+      // ✅ BRANCHES
       list = [
-        {"title": "All Branches", "isSelected": false},
-        {"title": "Nearest", "isSelected": false},
-        {"title": "Grand Hamad Street", "isSelected": false},
-        {"title": "Al Rayyan Branch", "isSelected": false},
-        {"title": "City Centre Branch", "isSelected": false},
-        {"title": "Doha Festival City Branch", "isSelected": false},
-        {"title": "Lagoona Branch", "isSelected": false},
-        {"title": "Al Wakra Branch", "isSelected": false},
-        {"title": "Qatar Airways Branch", "isSelected": false},
+        {"title": DefaultString.instance.allBranchesTitle, "isSelected": false},
+        {"title": DefaultString.instance.nearestTitle, "isSelected": false},
+        ...reachUsState.branches.map(
+          (b) => {"title": b.fullAddress!.trim(), "isSelected": false},
+        ),
       ];
-      title = "Branches";
+      title = title = DefaultString.instance.branches;
     } else if (widget.selectedTabIndex == 2) {
+      // ✅ ATMS
+      bool hasCashDeposit = reachUsState.atms.any((a) => a.cashDeposit == 1);
+      bool hasCashOut = reachUsState.atms.any((a) => a.cashOut == 1);
+      bool hasChequeDeposit = reachUsState.atms.any(
+        (a) => a.chequeDeposit == 1,
+      );
+      bool hasSpecialNeeds = reachUsState.atms.any((a) => a.disablePeople == 1);
+
       list = [
-        {"title": "All ATMs", "isSelected": false},
-        {"title": "Nearest", "isSelected": false},
-        {"title": "Cash Deposits", "isSelected": false},
-        {"title": "Cash Withdrawls", "isSelected": false},
-        {"title": "Cheque Deposits", "isSelected": false},
-        {"title": "Special Needs", "isSelected": false},
+        {"title": DefaultString.instance.allAtmsTitle, "isSelected": false},
+        {"title": DefaultString.instance.nearestTitle, "isSelected": false},
+        if (hasCashDeposit)
+          {
+            "title": DefaultString.instance.cashDepositTitle,
+            "isSelected": false,
+          },
+        if (hasCashOut)
+          {
+            "title": DefaultString.instance.cashWithdrawalsTitle,
+            "isSelected": false,
+          },
+        if (hasChequeDeposit)
+          {
+            "title": DefaultString.instance.chequeDepositTitle,
+            "isSelected": false,
+          },
+        if (hasSpecialNeeds)
+          {
+            "title": DefaultString.instance.specialNeedsTitle,
+            "isSelected": false,
+          },
       ];
-      title = "ATMs";
+      title = title = DefaultString.instance.atms;
     } else {
+      // ✅ KIOSKS
       list = [
-        {"title": "All Kiosk", "isSelected": false},
-        {"title": "Nearest", "isSelected": false},
+        {"title": DefaultString.instance.allKiosksTitle, "isSelected": false},
+        {"title": DefaultString.instance.nearestTitle, "isSelected": false},
       ];
-      title = "Kiosks";
+      title = DefaultString.instance.kiosks;
     }
 
-    // ✅ apply selection for this tab only
+    // ✅ Apply previous selected index
     if (widget.selectedIndex >= 0 && widget.selectedIndex < list.length) {
       list[widget.selectedIndex]["isSelected"] = true;
     }
@@ -83,7 +111,6 @@ class _FilterSheetState extends State<FilterSheet> {
               }
               list[index]["isSelected"] = true;
               setState(() {});
-
               // ✅ return new index to parent
               Navigator.pop(context, index);
             },
@@ -91,7 +118,9 @@ class _FilterSheetState extends State<FilterSheet> {
               decoration: BoxDecoration(
                 border: Border(
                   bottom: BorderSide(
-                    color: DefaultColors.grayLightBase,
+                    color: (index != list.length - 1)
+                        ? DefaultColors.grayLightBase
+                        : Colors.transparent,
                     width: 1,
                   ),
                 ),
@@ -100,7 +129,7 @@ class _FilterSheetState extends State<FilterSheet> {
               padding: const EdgeInsets.symmetric(vertical: 13),
               child: UiTextNew.customRubik(
                 list[index]["title"],
-                fontSize: 12,
+                fontSize: 13,
                 fontWeight: FontWeight.w500,
                 color: list[index]["isSelected"]
                     ? DefaultColors.blueLightBase
@@ -115,8 +144,8 @@ class _FilterSheetState extends State<FilterSheet> {
 }
 
 class ItemSearchSheet extends StatefulWidget {
-  final String typeSearch;
-  const ItemSearchSheet({super.key, required this.typeSearch});
+  final Map<String, dynamic> item;
+  const ItemSearchSheet({super.key, required this.item});
 
   @override
   State<ItemSearchSheet> createState() => _ItemSearchSheetState();
@@ -147,6 +176,8 @@ class _ItemSearchSheetState extends State<ItemSearchSheet> {
 
   @override
   Widget build(BuildContext context) {
+    String raw = widget.item["workingHours"] ?? "";
+    String formatted = raw.replaceAll(r'\n', '\n');
     return HeaderSheetWidget(
       withCloseIcon: false,
       contentSheet: Column(
@@ -155,9 +186,8 @@ class _ItemSearchSheetState extends State<ItemSearchSheet> {
         children: [
           ClipRRect(
             borderRadius: BorderRadius.circular(20),
-
             child: Image.asset(
-              AssetPath.image.branchDefaultImage,
+              AssetPath.image.branchDefaultImage, // change later
               width: double.infinity,
               height: 185,
               fit: BoxFit.fitWidth,
@@ -172,19 +202,21 @@ class _ItemSearchSheetState extends State<ItemSearchSheet> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   UiTextNew.customRubik(
-                    "City Center, Doha",
+                    "${widget.item["name"]}",
                     fontWeight: FontWeight.w800,
                     fontSize: 14,
                   ),
                   SizedBox(height: 4),
                   UiTextNew.customRubik(
-                    "Industrial Area, Qatar",
+                    "${widget.item["address"] ?? "${widget.item["name"]}"}, ${widget.item["country"] ?? ""}",
                     fontSize: 11,
                     fontWeight: FontWeight.w600,
                   ),
                   SizedBox(height: 4),
                   UiTextNew.customRubik(
-                    "Nearest",
+                    widget.item["isNearest"]
+                        ? DefaultString.instance.nearestTitle
+                        : "",
                     fontSize: 11,
                     fontWeight: FontWeight.w600,
                   ),
@@ -194,7 +226,11 @@ class _ItemSearchSheetState extends State<ItemSearchSheet> {
               GestureDetector(
                 onTap: () {
                   print(";;;;;;;;;;;;;;;;;;;;;;;;;;;");
-                  _openMap(query: "Doha, Qatar");
+                  _openMap(
+                    query: "${widget.item["name"]}",
+                    lng: widget.item["long"],
+                    lat: widget.item["lat"],
+                  );
                 },
                 child: Center(
                   child: Image.asset(
@@ -207,35 +243,42 @@ class _ItemSearchSheetState extends State<ItemSearchSheet> {
             ],
           ),
           SizedBox(height: 24),
-          widget.typeSearch == "branch"
-              ? Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    UiTextNew.customRubik(
-                      "Operation Hours",
-                      color: DefaultColors.grayBase,
-                      fontSize: 12,
-                      fontWeight: FontWeight.w500,
-                    ),
-                    UiTextNew.customRubik(
-                      "Sunday to Thursday, 7:30am - 1:00pm",
-                      color: DefaultColors.grayBase,
-                      fontWeight: FontWeight.w500,
-                      fontSize: 12,
-                    ),
-                    SizedBox(height: 20),
-                    CustomButtonNewWidget(
-                      title: "Book and Meet",
-                      onPress: () {},
-                    ),
-                  ],
-                )
-              : UiTextNew.customRubik(
-                  "Open 24/7",
-                  fontWeight: FontWeight.w800,
-                  fontSize: 14,
-                ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              UiTextNew.customRubik(
+                DefaultString.instance.operationHours,
+                color: DefaultColors.grayBase,
+                fontSize: 12,
+                fontWeight: FontWeight.w500,
+              ),
+              UiTextNew.customRubik(
+                formatted,
+                // getOperatingHours(widget.item, widget.item["type"]),
+                // "Sunday to Thursday, 7:30am - 1:00pm",
+                color: DefaultColors.grayBase,
+                fontWeight: FontWeight.w500,
+                fontSize: 12,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
+              SizedBox(height: 20),
+              widget.item["type"] == "Branch"
+                  ? CustomButtonNewWidget(
+                      title: DefaultString.instance.bookAndMeetTitle,
+                      onPress: () {
+                        context.router.push(BookAndMeetPageRoute());
+                      },
+                    )
+                  : SizedBox(),
+            ],
+          ),
+          // : UiTextNew.customRubik(
+          //     "Open 24/7",
+          //     fontWeight: FontWeight.w800,
+          //     fontSize: 14,
+          //   ),
           SizedBox(height: 12),
         ],
       ),
